@@ -431,7 +431,7 @@ export const StyledUser = styled(motion.main)`
   #dashboard {
     /* border: 2px solid gold; */
     width: 100%;
-    min-height: ${fixedHeight(150)}px;
+    min-height: ${fixedHeight(149)}px;
     height: auto;
     display: flex;
     flex-direction: column;
@@ -869,6 +869,8 @@ export const StyledUser = styled(motion.main)`
           height: 7.5%;
           display: flex;
           align-items: center;
+          isolation: isolate;
+          z-index: 2;
 
           > h5 {
             z-index: 1;
@@ -913,6 +915,14 @@ export const StyledUser = styled(motion.main)`
                 width: 100%;
                 height: ${fixedHeight(5)}px;
                 border-radius: 10px;
+                >button{
+                  width: 100%;
+                  height: 100%;
+                  background: transparent;
+                  >ion-icon{
+                    font-size: ${fixedHeight(2.5)}px;
+                  }
+                }
               }
             }
           }
