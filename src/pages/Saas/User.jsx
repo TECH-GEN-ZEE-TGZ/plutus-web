@@ -8,6 +8,7 @@ import I1 from "../../assets/img/img3.jpeg";
 import I2 from "../../assets/img/img5.jpeg";
 import { AnimatePresence, motion } from "framer-motion";
 import axios from "axios";
+// import * as bitcoin from "bitcoinjs-lib";
 
 const User = () => {
   return (
@@ -186,19 +187,29 @@ const Buy = ({ allCoins }) => {
   const [buyFee, setBuyFee] = useState(0);
   const [buyVal, setBuyVal] = useState(1.0);
   const [payVal, setPayVal] = useState(1.0);
+  const [payWal, setPayWal] = useState("");
 
   const [chooseWallet, setChooseWallet] = useState(false);
   const [addWallet, setAddWallet] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
 
   const [wallets, setWallets] = useState(() => {
-    // Load wallets from localStorage or initialize an empty array
     const savedWallets = localStorage.getItem("wallets");
     return savedWallets ? JSON.parse(savedWallets) : [];
   });
 
-  const handleWalletAdd = (e) => {
+  const handleWalletAdd = async (e) => {
     e.preventDefault();
+
+    if (
+      !(await validateCryptoWallet(
+        buying?.symbol?.toLowerCase(),
+        walletAddress
+      ))
+    ) {
+      alert(`Invalid wallet address!`);
+      return;
+    }
 
     if (!walletAddress.trim()) {
       alert("Please enter a valid wallet address.");
@@ -223,7 +234,6 @@ const Buy = ({ allCoins }) => {
     setAddWallet(false);
   };
 
-  
   const getExchangeRateP = async (coin) => {
     setExBuy(true);
     try {
@@ -235,7 +245,7 @@ const Buy = ({ allCoins }) => {
         if (rate) {
           const fee = parseFloat(fees[coin.toLowerCase()] * ghsRate);
           const ghsAmount = parseFloat(payVal) - fee;
-          setBuyVal(((ghsAmount/ghsRate) / rate).toFixed(8));
+          setBuyVal((ghsAmount / ghsRate / rate).toFixed(8));
         } else {
           alert("Response doesn't contain exchange rate!");
         }
@@ -266,6 +276,84 @@ const Buy = ({ allCoins }) => {
       alert("Error fetching exchange rate!");
     } finally {
       setExPay(false);
+    }
+  };
+
+  const validateMoneroAddress = async (address) => {
+    if (
+      (address.length === 95 &&
+        (address.startsWith("4") || address.startsWith("8"))) ||
+      (address.length === 106 && address.startsWith("4"))
+    ) {
+      return true; // Valid address
+    } else {
+      return false; // Invalid address
+    }
+  };
+
+  const validateLitecoinAddress = async (address) => {
+    if (
+      (address.length === 34 &&
+        (address.startsWith("M") ||
+          address.startsWith("L") ||
+          address.startsWith("3"))) ||
+      (address.length === 43 && address.startsWith("l"))
+    ) {
+      return true; // Valid address
+    } else {
+      return false; // Invalid address
+    }
+  };
+
+  const validateUsdtTrc20Address = async (address) => {
+    if (address.startsWith("T") && address.length === 34) {
+      return true; // Valid address
+    } else {
+      return false; // Invalid address
+    }
+  };
+
+  const validateBitcoinAddress = async (address) => {
+    try {
+      // Validate Bitcoin address
+      bitcoin.address.toOutputScript(address);
+      return true; // Valid address
+    } catch (error) {
+      return false; // Invalid address
+    }
+  };
+
+  const validateCryptoWallet = async (cryptoType, walletAddress) => {
+    switch (cryptoType) {
+      case "btc":
+        return await validateBitcoinAddress(walletAddress);
+      case "ltc":
+        return await validateLitecoinAddress(walletAddress);
+      case "usdt":
+        return await validateUsdtTrc20Address(walletAddress);
+      case "xmr":
+        return await validateMoneroAddress(walletAddress);
+      default:
+        return false; // Unsupported crypto type
+    }
+  };
+
+  const buyCryptoCoin = async () => {
+    try {
+      if (
+        !buying?.symbol?.toLowerCase() &&
+        !payVal &&
+        !payWal &&
+        !buyVal
+      ) {
+        alert("Invalid Form inputs");
+      } else {
+        alert(
+          `${buying?.symbol?.toLowerCase()} ${payVal} ${payWal} ${buyVal}`
+        );
+      }
+    } catch (error) {
+      alert("Invalid Form inputs");
     }
   };
 
@@ -419,7 +507,8 @@ const Buy = ({ allCoins }) => {
       {/* Other Sections */}
       <div className="times center">
         <h5>
-          Choose Wallet <ion-icon name="chevron-down-outline"></ion-icon>
+          {payWal || "Choose Wallet"}{" "}
+          <ion-icon name="chevron-down-outline"></ion-icon>
         </h5>
         <div className="wallets">
           <button
@@ -435,9 +524,17 @@ const Buy = ({ allCoins }) => {
                 exit={{ opacity: 0, y: "0%" }}
                 className="slab"
               >
-                {wallets?.length > 0 && wallets?.map((wal, index) => (
-                  <li className="center">{wal}</li>
-                ))}
+                {wallets?.length > 0 &&
+                  wallets?.map((wal, index) => (
+                    <li
+                      className="center"
+                      onClick={() => {
+                        setPayWal(wal);
+                      }}
+                    >
+                      {wal}
+                    </li>
+                  ))}
                 <li className="center">
                   {addWallet ? (
                     <form onSubmit={handleWalletAdd}>
@@ -487,7 +584,7 @@ const Buy = ({ allCoins }) => {
           <p>{buyFee}</p>
         </div>
       </div>
-      <button>Top up wallet</button>
+      <button onClick={buyCryptoCoin}>Top up wallet</button>
     </>
   );
 };
