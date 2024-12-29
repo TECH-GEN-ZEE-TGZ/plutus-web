@@ -139,9 +139,9 @@ export const motionImgItem3 = {
   },
 };
 
-const navigate = useNavigate();
+// const navigate = useNavigate();
 
-export const makeapiCall = (username, password, onSucess, onError) => {
+export const makeapiCall = (username, password, onSucess, onError, navigate) => {
   axios
     .post(
       `http://localhost:9090/optimus/v1/api/users/login`,

@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { StyledForm } from "../../components/Form/Form";
 import { useContext, useState } from "react";
 import axios from "axios";
@@ -7,6 +7,7 @@ import AuthContext from "../../context/AuthContext";
 import { makeapiCall } from "../../Functions";
 
 const Login = () => {
+  const navigate = useNavigate();
 
   const { authInfo, seAuthInfo } = useContext(AuthContext);
  
@@ -60,7 +61,13 @@ const Login = () => {
         });
 
         if (response.ok) {
-          makeapiCall(username, password, setLoading(false), setError);
+          makeapiCall(
+            username,
+            password,
+            setLoading(false),
+            setError,
+            navigate
+          );
         } else {
           const errorResult = await response.json();
           setError(`CAPTCHA verification failed: ${errorResult.message || "Unknown error"}`);
