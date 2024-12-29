@@ -4,12 +4,13 @@ import { useContext, useState } from "react";
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import AuthContext from "../../context/AuthContext";
+import { makeapiCall } from "../../Functions";
 
 const Login = () => {
 
   const { authInfo, seAuthInfo } = useContext(AuthContext);
 
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [agree, setAgree] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -18,7 +19,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!email || !password) {
+    if (!username || !password) {
       setError("Please fill in all fields.");
       return;
     }
@@ -32,21 +33,49 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("/api/auth/login", {
-        email,
-        password,
-      });
+      // Check if fields are filled
+      if (username === "" || password === "") {
+        setError("Please fill in both fields.");
+        return;
+      }
 
-      console.log("Login successful", response.data);
-      // Handle success (e.g., save token, redirect user)
-    } catch (err) {
-      console.error("Login error", err);
-      setError("Invalid email or password.");
+      // Call Google reCAPTCHA v3
+      await grecaptcha.ready(async function () {
+        const recaptchaToken = await grecaptcha.execute('6LeG0KEqAAAAAB0ij0gsJi4IFC6RC1dU-UpLFjfQ', { action: 'submit' });
+
+        console.log("CAPTCHA Token:", recaptchaToken);
+
+        // Send the token and form data to your backend
+        const response = await fetch("http://localhost:9090/api/verify-captcha", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-API-KEY": "your-api-key" // Replace with your actual API key
+          },
+          body: JSON.stringify({
+            token: recaptchaToken, // CAPTCHA token
+            username: username,    // Include username
+            password: password     // Include password
+          }),
+        });
+
+        if (response.ok) {
+          makeapiCall(username, password, setLoading(false), setError);
+        } else {
+          const errorResult = await response.json();
+          setError(`CAPTCHA verification failed: ${errorResult.message || "Unknown error"}`);
+          grecaptcha.reset(); // Reset the CAPTCHA if needed
+        }
+      });
+    } catch (error) {
+      console.error("An error occurred:", error);
+      setError("An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
+  
   return (
     <StyledForm
       initial={{ opacity: 0, scale: 0.75 }}
@@ -71,11 +100,11 @@ const Login = () => {
       </AnimatePresence>
 
       <input
-        type="email"
-        placeholder="Email Address"
-        value={email}
+        type="text"
+        placeholder="Username"
+        value={username}
         onChange={(e) => {
-          setEmail(e.target.value);
+          setUsername(e.target.value);
           setError("");
         }}
       />

@@ -1,6 +1,9 @@
 import zIndex from "@mui/material/styles/zIndex";
 import { motion } from "framer-motion";
+import { useContext } from "react";
 import styled from "styled-components";
+import AuthContext from "./context/AuthContext";
+const { authInfo, setAuthInfo } = useContext(AuthContext);
 
 export const fixedHeight = (height) => {
   return (height / 100) * window.innerHeight;
@@ -10,7 +13,7 @@ export const fixedWidth = (width) => {
 };
 
 export const inMobileView = () => {
-  return (window.innerWidth < 768 )
+  return (window.innerWidth < 768)
 }
 
 export const getFirstWords = (text, wordCount) => {
@@ -47,7 +50,7 @@ export const motionContainerL = {
 };
 
 export const motIt1 = {
-  hidden: { x: "100%", zIndex: 1, scale: 1, rotate: "0deg", opacity:1 },
+  hidden: { x: "100%", zIndex: 1, scale: 1, rotate: "0deg", opacity: 1 },
   visible: {
     x: 0,
     zIndex: 1,
@@ -66,7 +69,7 @@ export const motIt2 = {
   transition: { duration: 0.1, type: "tween" },
 };
 export const motIt3 = {
-  hidden: { x: "-100%", zIndex: 2, scale: 1, rotate: "0deg", opacity:1 },
+  hidden: { x: "-100%", zIndex: 2, scale: 1, rotate: "0deg", opacity: 1 },
   visible: {
     x: 0,
     zIndex: 2,
@@ -135,5 +138,38 @@ export const motionImgItem3 = {
   },
 };
 
+export const makeapiCall = (username, password, onSucess, onError) => {
+  fetch("http://localhost:9090/optimus/v1/api/users/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "your-api-key" // Replace
+    },
+    body: JSON.stringify({
+      username: username,
+      password: password
+    }),
+  })
+    .then(response => {
+      if (response.ok) {
+        return response.json(); // Parse JSON here
+      } else {
+        onError("Invalid username or password");
+      }
+    })
+    .then(data => {
+      if (data && data.token) {
+        setAuthInfo((prevAuthInfo) => ({
+          ...prevAuthInfo, // Retain previous fields
+          username: username,
+          token: data.token, // Update the token
+        }));
+        onSucess;
+      }
+    })
+    .catch(error => {
+      onError("An error occured");
+    })
+};
 
 
