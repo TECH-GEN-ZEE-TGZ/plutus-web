@@ -5,11 +5,12 @@ const AuthContext = createContext({});
 export const AuthContextProvider = ({ children }) => {
   const [authInfo, setAuthInfo] = useState({
     username: "",
-    token: "",
+    token: "45678",
   })
   
   useEffect(() => {
-    setAuthInfo(JSON.parse(localStorage.getItem("plutusAuth")));
+    !authInfo?.token &&
+      setAuthInfo(JSON.parse(localStorage.getItem("plutusAuth")));
   }, [authInfo, localStorage.getItem("plutusAuth")]);
 
   return (

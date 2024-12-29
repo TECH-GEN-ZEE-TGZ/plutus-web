@@ -43,6 +43,46 @@ const StyledNav = styled(motion.nav)`
       }
     }
   }
+  > .account {
+    column-gap: ${fixedWidth(0.5)}px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 25%;
+    width: auto;
+    height: 100%;
+    .logout {
+      width: ${fixedHeight(5)}px;
+      height: ${fixedHeight(5)}px;
+      border-radius: 50%;
+      background: #0000;
+      > ion-icon {
+        font-size: ${fixedHeight(2.5)}px;
+        color: #9e5dad;
+      }
+    }
+    .img {
+      width: ${fixedHeight(5)}px;
+      height: ${fixedHeight(5)}px;
+      border-radius: 50%;
+      background: #9e5dad;
+      > h1 {
+        font-size: ${fixedHeight(2)}px;
+        color: white;
+      }
+    }
+    .text {
+      display: flex;
+      flex-direction: column;
+      text-align: right;
+      > p {
+        font-size: ${fixedHeight(1.5)}px;
+      }
+      > h4 {
+        font-size: ${fixedHeight(1.75)}px;
+      }
+    }
+  }
   > .buttons {
     column-gap: ${fixedWidth(0.5)}px;
     display: flex;
@@ -50,7 +90,8 @@ const StyledNav = styled(motion.nav)`
     justify-content: flex-end;
     width: 25%;
     height: 100%;
-    > button, a {
+    > button,
+    a {
       height: 65%;
       width: auto;
       background: transparent;
@@ -62,11 +103,11 @@ const StyledNav = styled(motion.nav)`
       display: flex;
       align-items: center;
       justify-content: center;
-      
+
       &:nth-child(odd) {
-          background: transparent;
-          color: black;
-          box-shadow: 0 0 2.5px 1px #0004;
+        background: transparent;
+        color: black;
+        box-shadow: 0 0 2.5px 1px #0004;
       }
       &:nth-child(even) {
         background: black;
@@ -105,10 +146,25 @@ const SaasNav = () => {
           <NavLink>Download</NavLink>
         </li>
       </ul>
-      {authInfo?.token ? (<></>) : (<div className="buttons">
-        <NavLink to={"/auth/login"}>Login</NavLink>
-        <NavLink to={"/auth/signup"}>Sign up</NavLink>
-      </div>)}
+      {authInfo?.token ? (
+        <div className="account">
+          <div className="text">
+            <p>Account</p>
+            <h4>Account Name</h4>
+          </div>
+          <div className="img center">
+            {authInfo?.image ? <img src="" alt="" /> : <h1>AN</h1>}
+          </div>
+          <motion.button whileTap={{ scale: 0.9 }} onClick={() => { localStorage.removeItem("plutusAuth");  setAuthInfo({username:"", token: ""})}} className="logout center">
+            <ion-icon name="log-out"></ion-icon>
+          </motion.button>
+        </div>
+      ) : (
+        <div className="buttons">
+          <NavLink to={"/auth/login"}>Login</NavLink>
+          <NavLink to={"/auth/signup"}>Sign up</NavLink>
+        </div>
+      )}
     </StyledNav>
   );
 };

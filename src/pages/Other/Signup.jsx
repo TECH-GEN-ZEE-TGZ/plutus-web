@@ -129,7 +129,7 @@ const Signup = () => {
       </select>
       <button type="submit" disabled={loading}>
         {loading ? (
-          <ion-icon name="sync-outline" className="spinner"></ion-icon>
+          <i className="bx bx-loader bx-spin"></i>
         ) : (
           <>
             Sign up <ion-icon name="arrow-forward"></ion-icon>

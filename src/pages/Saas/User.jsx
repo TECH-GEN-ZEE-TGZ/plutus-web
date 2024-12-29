@@ -52,6 +52,17 @@ const Dashboard = () => {
               <h3>$23,235,649.23</h3>
             </div>
           </div>
+          <div className="otherIcons">
+            <button>
+              <ion-icon name="notifications"></ion-icon>
+            </button>
+            <button>
+              <i className="bx bx-support bx-tada"></i>
+            </button>
+            <button>
+              <ion-icon name="cog"></ion-icon>
+            </button>
+          </div>
         </div>
       </div>
       <div className="top">
@@ -247,11 +258,13 @@ const Buy = ({ allCoins }) => {
           const ghsAmount = parseFloat(payVal) - fee;
           setBuyVal((ghsAmount / ghsRate / rate).toFixed(8));
         } else {
-          alert("Response doesn't contain exchange rate!");
+          // alert("Response doesn't contain exchange rate!");
+          setBuyVal(0);
         }
       }
     } catch (error) {
-      alert("Error fetching exchange rate!");
+      // alert("Error fetching exchange rate!");
+      setBuyVal(0);
     } finally {
       setExBuy(false);
     }
@@ -269,11 +282,13 @@ const Buy = ({ allCoins }) => {
           const ghsAmount = parseFloat(buyVal * rate * ghsRate).toFixed(2);
           setPayVal((ghsAmount - fee).toFixed(8));
         } else {
-          alert("Response doesn't contain exchange rate!");
+          // alert("Response doesn't contain exchange rate!");
+          setPayVal(0);
         }
       }
     } catch (error) {
-      alert("Error fetching exchange rate!");
+      // alert("Error fetching exchange rate!");
+      setPayVal(0);
     } finally {
       setExPay(false);
     }
@@ -340,17 +355,10 @@ const Buy = ({ allCoins }) => {
 
   const buyCryptoCoin = async () => {
     try {
-      if (
-        !buying?.symbol?.toLowerCase() &&
-        !payVal &&
-        !payWal &&
-        !buyVal
-      ) {
+      if (!buying?.symbol?.toLowerCase() && !payVal && !payWal && !buyVal) {
         alert("Invalid Form inputs");
       } else {
-        alert(
-          `${buying?.symbol?.toLowerCase()} ${payVal} ${payWal} ${buyVal}`
-        );
+        alert(`${buying?.symbol?.toLowerCase()} ${payVal} ${payWal} ${buyVal}`);
       }
     } catch (error) {
       alert("Invalid Form inputs");
@@ -575,6 +583,10 @@ const Buy = ({ allCoins }) => {
         </div>
       </div>
       <div className="stat">
+        <div className="line">
+          <h3>Rate</h3>
+          <p>{ghsRate}</p>
+        </div>
         <div className="line">
           <h3>Rate</h3>
           <p>{ghsRate}</p>

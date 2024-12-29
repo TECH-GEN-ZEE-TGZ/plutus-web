@@ -447,8 +447,10 @@ export const StyledUser = styled(motion.main)`
         background: #9e5dad;
         display: flex;
         align-items: center;
+        justify-content: space-between;
         padding: ${fixedWidth(0.5)}px;
         > .balance {
+          width: auto;
           display: flex;
           align-items: center;
           column-gap: ${fixedHeight(0.5)}px;
@@ -479,6 +481,21 @@ export const StyledUser = styled(motion.main)`
               background-clip: text;
               -webkit-background-clip: text;
               -webkit-text-fill-color: transparent;
+            }
+          }
+        }
+        > .otherIcons {
+          display: flex;
+          align-items: center;
+          justify-self: flex-end;
+          column-gap: ${fixedWidth(0.5)}px;
+          > button {
+            width: ${fixedHeight(5)}px;
+            height: ${fixedHeight(5)}px;
+            border-radius: 50%;
+            background: white;
+            > ion-icon, i {
+              font-size: ${fixedHeight(2.5)}px;
             }
           }
         }
@@ -695,7 +712,7 @@ export const StyledUser = styled(motion.main)`
           border-radius: 7.5px;
           isolation: isolate;
           /* row-gap: 10%; */
-          
+
           > h4 {
             font-size: ${fixedHeight(1.75)}px;
           }
@@ -859,8 +876,12 @@ export const StyledUser = styled(motion.main)`
               justify-content: center;
             }
           }
-          &:nth-child(2){z-index: 5;}
-          &:nth-child(3){z-index: 4;}
+          &:nth-child(2) {
+            z-index: 5;
+          }
+          &:nth-child(3) {
+            z-index: 4;
+          }
         }
         > .times {
           background: #e8d7fa;
@@ -916,21 +937,21 @@ export const StyledUser = styled(motion.main)`
                 height: ${fixedHeight(5)}px;
                 border-radius: 10px;
                 overflow: hidden;
-                >button{
+                > button {
                   width: 100%;
                   height: 100%;
                   background: transparent;
-                  >ion-icon{
+                  > ion-icon {
                     font-size: ${fixedHeight(2.5)}px;
                   }
                 }
-                >form{
+                > form {
                   display: flex;
                   align-items: center;
                   column-gap: ${fixedWidth(0.5)}px;
                   width: 100%;
                   height: 100%;
-                  >input{
+                  > input {
                     width: 80%;
                     height: 100%;
                     background: transparent;
@@ -938,24 +959,24 @@ export const StyledUser = styled(motion.main)`
                     outline: none;
                     border: none;
                   }
-                  >.buttons{
+                  > .buttons {
                     width: 20%;
                     height: 100%;
                     display: flex;
                     align-items: center;
                     justify-content: space-evenly;
-                    >button{
+                    > button {
                       width: ${fixedHeight(2.5)}px;
                       height: ${fixedHeight(2.5)}px;
                       border-radius: 50%;
                       color: white;
-                      >ion-icon{
+                      > ion-icon {
                         font-size: ${fixedHeight(2)}px;
                       }
-                      &:nth-child(1){
+                      &:nth-child(1) {
                         background: limegreen;
                       }
-                      &:nth-child(2){
+                      &:nth-child(2) {
                         background: red;
                       }
                     }
@@ -967,14 +988,14 @@ export const StyledUser = styled(motion.main)`
         }
         > .stat {
           width: 100%;
-          height: 20%;
+          height: 30%;
           padding: 0 1.25%;
           > .line {
             display: flex;
             align-items: center;
             justify-content: space-between;
             border-bottom: 1px solid #9e5dad;
-            height: 50%;
+            height: calc(100%/3);
             > h3 {
               font-size: ${fixedHeight(1.75)}px;
               color: hsl(288.75, 40%, 30%);
@@ -998,7 +1019,7 @@ export const StyledUser = styled(motion.main)`
           );
           justify-self: flex-end;
           color: white;
-          top: 4%;
+          /* top: 4%; */
           font-size: ${fixedHeight(1.75)}px;
         }
       }

@@ -19,27 +19,27 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     if (!username || !password) {
       setError("Please fill in all fields.");
       return;
     }
-
+    
     if (!agree) {
       setError("You must agree to the terms.");
       return;
     }
-
+    
     setError(""); // Clear any previous errors
-    setLoading(true);
-
+    
     try {
       // Check if fields are filled
       if (username === "" || password === "") {
         setError("Please fill in both fields.");
         return;
       }
-
+      
+      setLoading(true);
       // Call Google reCAPTCHA v3
       await grecaptcha.ready(async function () {
         const recaptchaToken = await grecaptcha.execute('6LeG0KEqAAAAAB0ij0gsJi4IFC6RC1dU-UpLFjfQ', { action: 'submit' });
@@ -99,9 +99,9 @@ const Login = () => {
             exit={{ opacity: 0 }}
             className="error"
           >
-            <i class="bx bxs-error bx-tada"></i>
+            <i className="bx bxs-error bx-tada"></i>
             {error}
-            <i class="bx bxs-error bx-tada"></i>
+            <i className="bx bxs-error bx-tada"></i>
           </motion.p>
         )}
       </AnimatePresence>
@@ -144,17 +144,17 @@ const Login = () => {
         <NavLink>Forgotten Password?</NavLink>
       </div>
 
-      <button type="submit" disabled={loading}>
+      <motion.button whileTap={loading && {scale: 0.9}} type="submit" disabled={loading}>
         {loading ? (
           <span>
-            <ion-icon name="reload-outline" class="spin"></ion-icon> Logging in
+            <i className="bx bx-loader bx-spin"></i> Logging in
           </span>
         ) : (
           <span>
-            Log in <ion-icon name="arrow-forward"></ion-icon>
+            Login <ion-icon name="arrow-forward"></ion-icon>
           </span>
         )}
-      </button>
+      </motion.button>
 
       <div className="switch">
         <p>Not a member?</p>
