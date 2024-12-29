@@ -1,6 +1,6 @@
 import { fixedHeight, fixedWidth } from "../../Functions";
 import { useRef, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { StyledLand } from "./SaasStyles";
 import I1 from "../../assets/img/img1.png";
 import I2 from "../../assets/img/img3.jpeg";
@@ -12,6 +12,7 @@ import HomeNav from "../../components/Navbar/HomeNav";
 import Footer from "../../components/Footer/Footer";
 
 const Land = () => {
+  const navigate = useNavigate();
   const sells = [
     {
       icon: <ion-icon name="arrow-down-outline"></ion-icon>,
@@ -112,7 +113,13 @@ const Land = () => {
                   <h4>{sell?.title}</h4>
                   <p>{sell?.text}</p>
                 </div>
-                <button>{sell?.title} crypto</button>
+                <button
+                  onClick={() => {
+                    navigate("/user/buy");
+                  }}
+                >
+                  {sell?.title} crypto
+                </button>
               </div>
             </li>
           ))}
@@ -157,10 +164,16 @@ const Land = () => {
           <div className="text">
             <h1>The future of money, now at your fingertips.</h1>
             <p>
-              PlutusPay works everywhere you need it to. So you can always stay on
-              top of your crypto.
+              PlutusPay works everywhere you need it to. So you can always stay
+              on top of your crypto.
             </p>
-            <button>Get started</button>
+            <button
+              onClick={() => {
+                navigate("/user/buy");
+              }}
+            >
+              Get started
+            </button>
           </div>
         </div>
       </div>

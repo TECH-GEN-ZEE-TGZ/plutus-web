@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { StyledForm } from "../../components/Form/Form";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
+import AuthContext from "../../context/AuthContext";
 
 const Signup = () => {
+  const { authInfo, seAuthInfo } = useContext(AuthContext);
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",

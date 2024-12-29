@@ -1,10 +1,14 @@
 import { NavLink } from "react-router-dom";
 import { StyledForm } from "../../components/Form/Form";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
+import AuthContext from "../../context/AuthContext";
 
 const Login = () => {
+
+  const { authInfo, seAuthInfo } = useContext(AuthContext);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [agree, setAgree] = useState(false);
