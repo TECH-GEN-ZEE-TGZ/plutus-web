@@ -103,8 +103,8 @@ const SaasNav = () => {
         </li>
       </ul>
       <div className="buttons">
-        <NavLink to={"/login"}>Login</NavLink>
-        <NavLink to={"/signup"}>Sign up</NavLink>
+        <NavLink to={"/auth/login"}>Login</NavLink>
+        <NavLink to={"/auth/signup"}>Sign up</NavLink>
       </div>
     </StyledNav>
   );

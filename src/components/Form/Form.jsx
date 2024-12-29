@@ -18,6 +18,10 @@ export const StyledForm = styled(motion.form)`
     font-size: ${fixedHeight(5)}px;
     color: hsl(288.75, 40%, 30%);
   }
+  >.error{
+    font-size: ${fixedHeight(2)}px;
+    color: red;
+  }
   > input,
   select {
     border: 1px solid silver;
