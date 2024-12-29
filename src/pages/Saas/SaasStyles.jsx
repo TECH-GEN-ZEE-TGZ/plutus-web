@@ -915,12 +915,50 @@ export const StyledUser = styled(motion.main)`
                 width: 100%;
                 height: ${fixedHeight(5)}px;
                 border-radius: 10px;
+                overflow: hidden;
                 >button{
                   width: 100%;
                   height: 100%;
                   background: transparent;
                   >ion-icon{
                     font-size: ${fixedHeight(2.5)}px;
+                  }
+                }
+                >form{
+                  display: flex;
+                  align-items: center;
+                  column-gap: ${fixedWidth(0.5)}px;
+                  width: 100%;
+                  height: 100%;
+                  >input{
+                    width: 80%;
+                    height: 100%;
+                    background: transparent;
+                    padding: 0 0 0 2.5%;
+                    outline: none;
+                    border: none;
+                  }
+                  >.buttons{
+                    width: 20%;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-evenly;
+                    >button{
+                      width: ${fixedHeight(2.5)}px;
+                      height: ${fixedHeight(2.5)}px;
+                      border-radius: 50%;
+                      color: white;
+                      >ion-icon{
+                        font-size: ${fixedHeight(2)}px;
+                      }
+                      &:nth-child(1){
+                        background: limegreen;
+                      }
+                      &:nth-child(2){
+                        background: red;
+                      }
+                    }
                   }
                 }
               }

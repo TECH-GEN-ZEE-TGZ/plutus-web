@@ -3,10 +3,11 @@ import CryptoDataTable from "../../components/DaTAble/DaTAble";
 import SaasNav from "../../components/Navbar/SaasNav";
 import { StyledUser } from "./SaasStyles";
 import ContextVariables from "../../context/ContextVariables";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import I1 from "../../assets/img/img3.jpeg";
 import I2 from "../../assets/img/img5.jpeg";
 import { AnimatePresence, motion } from "framer-motion";
+import axios from "axios";
 
 const User = () => {
   return (
@@ -46,7 +47,7 @@ const Dashboard = () => {
               <ion-icon name="wallet-outline"></ion-icon>
             </div>
             <div className="text">
-              <h5>Balance</h5>
+              <h5>Referal Balance</h5>
               <h3>$23,235,649.23</h3>
             </div>
           </div>
@@ -140,30 +141,154 @@ const Dashboard = () => {
 // <ion-icon name="swap-horizontal-outline"></ion-icon>
 
 const Buy = ({ allCoins }) => {
-  const [buying, setBuying] = useState(allCoins[0]);
-  const [selBuy, setSelBuy] = useState(false);
+  const ghsRate = 15.6;
+  const fees = {
+    btc: 10,
+    usdt: 5,
+    ltc: 3,
+    xmr: 3,
+  };
 
-  const [payWith, setPayWith] = useState(allCoins[1]);
-  const [selPay, setSelPay] = useState(false);
+  const myCurrencies = [
+    {
+      symbol: "GHS",
+      name: "Ghana Cedis",
+      image:
+        "https://e7.pngegg.com/pngimages/220/170/png-clipart-flag-of-ghana-gold-coast-flag-of-belgium-sarawati-miscellaneous-flag-thumbnail.png",
+    },
+    {
+      symbol: "USD",
+      name: "United States Dollars",
+      image:
+        "https://e7.pngegg.com/pngimages/649/983/png-clipart-flag-of-the-united-states-national-flag-flag-of-vietnam-usa-flag-flag-of-america-illustration-blue-angle-thumbnail.png",
+    },
+  ];
+
+  const allowedCoins = ["btc", "ltc", "usdt", "xmr"];
 
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredCoins = allCoins.filter(
     (coin) =>
-      coin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())
+      allowedCoins.includes(coin.symbol.toLowerCase()) && // Include only allowed coins
+      (coin.name.toLowerCase().includes(searchTerm.toLowerCase()) || // Match by name
+        coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())) // Match by symbol
   );
 
-  const [buyVal, setBuyVal] = useState(0);
-  const [payVal, setPayVal] = useState(0);
+  const [buying, setBuying] = useState(filteredCoins[0]);
+  const [selBuy, setSelBuy] = useState(false);
+
+  const [payWith, setPayWith] = useState(myCurrencies[0]);
+  const [selPay, setSelPay] = useState(false);
+  const [exPay, setExPay] = useState(false);
+  const [exBuy, setExBuy] = useState(false);
+
+  const [buyFee, setBuyFee] = useState(0);
+  const [buyVal, setBuyVal] = useState(1.0);
+  const [payVal, setPayVal] = useState(1.0);
 
   const [chooseWallet, setChooseWallet] = useState(false);
+  const [addWallet, setAddWallet] = useState(false);
+  const [walletAddress, setWalletAddress] = useState("");
+
+  const [wallets, setWallets] = useState(() => {
+    // Load wallets from localStorage or initialize an empty array
+    const savedWallets = localStorage.getItem("wallets");
+    return savedWallets ? JSON.parse(savedWallets) : [];
+  });
+
+  const handleWalletAdd = (e) => {
+    e.preventDefault();
+
+    if (!walletAddress.trim()) {
+      alert("Please enter a valid wallet address.");
+      return;
+    }
+
+    // Check for duplicates
+    if (wallets.includes(walletAddress)) {
+      alert("Wallet address already exists!");
+      return;
+    }
+
+    // Add the new wallet address to the array
+    const updatedWallets = [...wallets, walletAddress];
+    setWallets(updatedWallets);
+
+    // Save to localStorage
+    localStorage.setItem("wallets", JSON.stringify(updatedWallets));
+
+    // Reset input and close the form
+    setWalletAddress("");
+    setAddWallet(false);
+  };
+
+  
+  const getExchangeRateP = async (coin) => {
+    setExBuy(true);
+    try {
+      if (coin) {
+        const response = await axios.get(
+          `http://localhost:9090/optimus/v1/api/cryptomus/exchange-rate/${coin}?to=USD`
+        );
+        const rate = response?.data?.result[0]?.course;
+        if (rate) {
+          const fee = parseFloat(fees[coin.toLowerCase()] * ghsRate);
+          const ghsAmount = parseFloat(payVal) - fee;
+          setBuyVal(((ghsAmount/ghsRate) / rate).toFixed(8));
+        } else {
+          alert("Response doesn't contain exchange rate!");
+        }
+      }
+    } catch (error) {
+      alert("Error fetching exchange rate!");
+    } finally {
+      setExBuy(false);
+    }
+  };
+  const getExchangeRateB = async (coin) => {
+    setExPay(true);
+    try {
+      if (coin) {
+        const response = await axios.get(
+          `http://localhost:9090/optimus/v1/api/cryptomus/exchange-rate/${coin}?to=USD`
+        );
+        const rate = response?.data?.result[0]?.course;
+        if (rate) {
+          const fee = parseFloat(fees[coin?.toLowerCase()] * ghsRate);
+          const ghsAmount = parseFloat(buyVal * rate * ghsRate).toFixed(2);
+          setPayVal((ghsAmount - fee).toFixed(8));
+        } else {
+          alert("Response doesn't contain exchange rate!");
+        }
+      }
+    } catch (error) {
+      alert("Error fetching exchange rate!");
+    } finally {
+      setExPay(false);
+    }
+  };
+
+  useEffect(() => {
+    setBuying(filteredCoins[0]);
+  }, [allCoins]);
+
+  useEffect(() => {
+    getExchangeRateP(buying?.symbol?.toLowerCase());
+  }, [payVal, buying]);
+  useEffect(() => {
+    getExchangeRateB(buying?.symbol?.toLowerCase());
+  }, [buyVal, buying]);
+
+  useEffect(() => {
+    setBuyFee(fees[buying?.symbol?.toLowerCase()]);
+  }, [buying]);
 
   return (
     <>
       {/* Buy Section */}
       <div className="opt">
-        <h4>Buy</h4>
+        <h4>Coin Type</h4>
         <div className="select">
           <div className="selector center">
             <div
@@ -212,19 +337,23 @@ const Buy = ({ allCoins }) => {
             </AnimatePresence>
           </div>
           <div className="amt">
-            <input
-              type="number"
-              value={buyVal}
-              onChange={(e) => setBuyVal(e.target.value)} // Let the value update as typed
-              onBlur={(e) => setBuyVal(parseFloat(e.target.value).toFixed(2))} // Format when input loses focus
-            />
+            {exBuy ? (
+              <i className="bx bx-loader bx-spin"></i>
+            ) : (
+              <input
+                type="number"
+                value={buyVal}
+                onChange={(e) => setBuyVal(e.target.value)} // Let the value update as typed
+                onBlur={(e) => setBuyVal(parseFloat(e.target.value).toFixed(2))} // Format when input loses focus
+              />
+            )}
           </div>
         </div>
       </div>
 
       {/* Pay With Section */}
       <div className="opt">
-        <h4>Pay With</h4>
+        <h4>You Get</h4>
         <div className="select">
           <div className="selector center">
             <div
@@ -256,7 +385,7 @@ const Buy = ({ allCoins }) => {
                   </form>
 
                   {/* Filtered Coin List */}
-                  {filteredCoins?.map((coin, index) => (
+                  {myCurrencies?.map((coin, index) => (
                     <li
                       key={index}
                       onClick={() => {
@@ -273,12 +402,16 @@ const Buy = ({ allCoins }) => {
             </AnimatePresence>
           </div>
           <div className="amt">
-            <input
-              type="number"
-              value={payVal}
-              onChange={(e) => setPayVal(e.target.value)} // Let the value update as typed
-              onBlur={(e) => setPayVal(parseFloat(e.target.value).toFixed(2))} // Format when input loses focus
-            />
+            {exPay ? (
+              <i className="bx bx-loader bx-spin"></i>
+            ) : (
+              <input
+                type="number"
+                value={payVal}
+                onChange={(e) => setPayVal(e.target.value)} // Let the value update as typed
+                onBlur={(e) => setPayVal(parseFloat(e.target.value).toFixed(2))} // Format when input loses focus
+              />
+            )}
           </div>
         </div>
       </div>
@@ -302,12 +435,42 @@ const Buy = ({ allCoins }) => {
                 exit={{ opacity: 0, y: "0%" }}
                 className="slab"
               >
-                <li></li>
-                <li></li>
+                {wallets?.length > 0 && wallets?.map((wal, index) => (
+                  <li className="center">{wal}</li>
+                ))}
                 <li className="center">
-                  <button>
-                    <ion-icon name="add-circle-outline"></ion-icon>
-                  </button>
+                  {addWallet ? (
+                    <form onSubmit={handleWalletAdd}>
+                      <input
+                        type="text"
+                        placeholder="Enter valid wallet address"
+                        value={walletAddress}
+                        onChange={(e) => {
+                          setWalletAddress(e.target.value);
+                        }}
+                      />
+                      <div className="buttons">
+                        <button>
+                          <ion-icon name="checkmark-outline"></ion-icon>
+                        </button>
+                        <button
+                          onClick={() => {
+                            setAddWallet(false);
+                          }}
+                        >
+                          <ion-icon name="close-outline"></ion-icon>
+                        </button>
+                      </div>
+                    </form>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setAddWallet(true);
+                      }}
+                    >
+                      <ion-icon name="add-circle-outline"></ion-icon>
+                    </button>
+                  )}
                 </li>
               </motion.ul>
             )}
@@ -316,12 +479,12 @@ const Buy = ({ allCoins }) => {
       </div>
       <div className="stat">
         <div className="line">
-          <h3>Shipping Tolerance</h3>
-          <p>34567</p>
+          <h3>Rate</h3>
+          <p>{ghsRate}</p>
         </div>
         <div className="line">
-          <h3>Price</h3>
-          <p>34567</p>
+          <h3>Fee</h3>
+          <p>{buyFee}</p>
         </div>
       </div>
       <button>Top up wallet</button>
