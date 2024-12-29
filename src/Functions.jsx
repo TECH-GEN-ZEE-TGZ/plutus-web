@@ -3,7 +3,8 @@ import { motion } from "framer-motion";
 import { useContext } from "react";
 import styled from "styled-components";
 import AuthContext from "./context/AuthContext";
-const { authInfo, setAuthInfo } = useContext(AuthContext);
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export const fixedHeight = (height) => {
   return (height / 100) * window.innerHeight;
@@ -13,8 +14,8 @@ export const fixedWidth = (width) => {
 };
 
 export const inMobileView = () => {
-  return (window.innerWidth < 768)
-}
+  return window.innerWidth < 768;
+};
 
 export const getFirstWords = (text, wordCount) => {
   return text.split(" ").slice(0, wordCount).join(" ");
@@ -138,38 +139,48 @@ export const motionImgItem3 = {
   },
 };
 
+const navigate = useNavigate();
+
 export const makeapiCall = (username, password, onSucess, onError) => {
-  fetch("http://localhost:9090/optimus/v1/api/users/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-API-KEY": "your-api-key" // Replace
-    },
-    body: JSON.stringify({
-      username: username,
-      password: password
-    }),
-  })
-    .then(response => {
+  axios
+    .post(
+      `http://localhost:9090/optimus/v1/api/users/login`,
+      JSON.stringify({
+        username: username,
+        password: password,
+      })
+    )
+    .then((response) => {
       if (response.ok) {
         return response.json(); // Parse JSON here
       } else {
         onError("Invalid username or password");
       }
     })
-    .then(data => {
-      if (data && data.token) {
-        setAuthInfo((prevAuthInfo) => ({
-          ...prevAuthInfo, // Retain previous fields
-          username: username,
-          token: data.token, // Update the token
-        }));
+    .then((data) => {
+      if (data && data?.token) {
+        localStorage.setItem(
+          "plutusAuth",
+          JSON.stringify({ username: username, token: data?.token })
+        );
         onSucess;
+        navigate("/user/buy");
       }
     })
-    .catch(error => {
+    .catch((error) => {
       onError("An error occured");
-    })
+    });
 };
 
 
+// fetch("http://localhost:9090/optimus/v1/api/users/login", {
+//   method: "POST",
+//   headers: {
+//     "Content-Type": "application/json",
+//     "X-API-KEY": "your-api-key", // Replace
+//   },
+//   body: JSON.stringify({
+//     username: username,
+//     password: password,
+//   }),
+// });

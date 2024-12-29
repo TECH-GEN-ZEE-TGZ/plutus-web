@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import styled from "styled-components";
 import { fixedHeight, fixedWidth } from "../../Functions";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import AuthContext from "../../context/AuthContext";
 
 const StyledNav = styled(motion.nav)`
   /* position: fixed; */
@@ -76,6 +78,7 @@ const StyledNav = styled(motion.nav)`
 `;
 
 const SaasNav = () => {
+  const { authInfo, setAuthInfo } = useContext(AuthContext);
   const navigate = useNavigate()
   return (
     <StyledNav>
@@ -102,10 +105,10 @@ const SaasNav = () => {
           <NavLink>Download</NavLink>
         </li>
       </ul>
-      <div className="buttons">
+      {authInfo?.token ? (<></>) : (<div className="buttons">
         <NavLink to={"/auth/login"}>Login</NavLink>
         <NavLink to={"/auth/signup"}>Sign up</NavLink>
-      </div>
+      </div>)}
     </StyledNav>
   );
 };
