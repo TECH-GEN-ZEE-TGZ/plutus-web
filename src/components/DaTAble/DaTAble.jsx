@@ -476,7 +476,7 @@ const CryptoDataTable = () => {
         >
           {paginatedData?.map((transaction, index) => (
             <TableRow key={index} variants={tableRowVariants}>
-              <TableCell>{transaction?.transactionId}</TableCell>
+              <TableCell>{transaction?.transactionId || "N/A"}</TableCell>
               <TableCell>{transaction?.crypto?.toUpperCase()}</TableCell>
               <TableCell>{transaction?.address?.toUpperCase()}</TableCell>
               <TableCell>
@@ -489,7 +489,7 @@ const CryptoDataTable = () => {
                 {transaction?.rate?.toLocaleString()?.toUpperCase()}
               </TableCell>
               <TableCell>{transaction?.status?.toUpperCase()}</TableCell>
-              <TableCell>{transaction?.createdAt}</TableCell>
+              <TableCell>{transaction?.createdAt || "N/A"}</TableCell>
             </TableRow>
           ))}
         </motion.div>
