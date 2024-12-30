@@ -7,6 +7,7 @@ import ContextVariables from "../../context/ContextVariables";
 import { LineChart, Line, ResponsiveContainer } from "recharts";
 import MiniGraph from "../Other/MiniGraph";
 import AuthContext from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const TableContainer = styled.div`
   display: flex;
@@ -161,26 +162,29 @@ const TableHeader = styled.div`
   padding: 0 ${fixedWidth(0.5)}px;
   font-size: ${fixedHeight(1.75)}px;
   &:nth-child(1) {
-    width: 5%;
+    width: 22.5%;
     justify-content: center;
   }
   &:nth-child(2) {
-    width: 25%;
-  }
-  &:nth-child(3) {
     width: 10%;
   }
+  &:nth-child(3) {
+    width: 25%;
+  }
   &:nth-child(4) {
-    width: 15%;
+    width: 7.5%;
   }
   &:nth-child(5) {
     width: 10%;
   }
   &:nth-child(6) {
-    width: 20%;
+    width: 7.5%;
   }
   &:nth-child(7) {
-    width: 15%;
+    width: 10%;
+  }
+  &:nth-child(8) {
+    width: 12.5%;
   }
 `;
 
@@ -218,26 +222,29 @@ const TableCell = styled.div`
   }
 
   &:nth-child(1) {
-    width: 5%;
+    width: 22.5%;
     justify-content: center;
   }
   &:nth-child(2) {
-    width: 25%;
-  }
-  &:nth-child(3) {
     width: 10%;
   }
+  &:nth-child(3) {
+    width: 25%;
+  }
   &:nth-child(4) {
-    width: 15%;
+    width: 7.5%;
   }
   &:nth-child(5) {
     width: 10%;
   }
   &:nth-child(6) {
-    width: 20%;
+    width: 7.5%;
   }
   &:nth-child(7) {
-    width: 15%;
+    width: 10%;
+  }
+  &:nth-child(8) {
+    width: 12.5%;
   }
   @media (max-width: 768px) {
     display: none; /* Hide specific columns on small screens */
@@ -268,6 +275,7 @@ const CardButton = styled(Button)`
 `;
 
 const CryptoDataTable = () => {
+  const navigate = useNavigate();
   const { authInfo } = useContext(AuthContext);
   const { setAllCoins, allCoins, domain } = useContext(ContextVariables);
 
@@ -284,6 +292,8 @@ const CryptoDataTable = () => {
   const [searchTerm, setSearchTerm] = useState(""); // State for search input
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
+  const [paginatedData, setPaginatedData] = useState([]);
 
   useEffect(() => {
     const fetchCryptoData = async () => {
@@ -307,9 +317,7 @@ const CryptoDataTable = () => {
 
   useEffect(() => {
     const fetchTransactions = async () => {
-      
-
-      console.log(`The email is now ${authInfo?.email} and ${authInfo?.token}`);  
+      console.log(`The email is now ${authInfo?.email} and ${authInfo?.token}`);
 
       const response = await fetch(
         `${domain}/optimus/v1/api/orders/list/${authInfo?.email}`,
@@ -324,9 +332,8 @@ const CryptoDataTable = () => {
 
       if (response.status === 401) {
         console.log(response);
-        // localStorage.removeItem("plutusAuth");
-        fetchTransactions();
-        // window.location.href = "/auth/login";
+        localStorage.removeItem("plutusAuth");
+        window.location.href = "/auth/login";
       }
 
       if (response.ok) {
@@ -335,14 +342,20 @@ const CryptoDataTable = () => {
         console.log(data);
       } else {
         console.log(response);
-        // localStorage.removeItem("plutusAuth");
-        fetchTransactions();
-        // window.location.href = "/auth/login";
+        localStorage.removeItem("plutusAuth");
+        window.location.href = "/auth/login";
       }
     };
 
     fetchTransactions();
-  }, [allTransactions, authInfo]);
+  }, [authInfo, navigate]);
+
+  const getPag = (filteredData, currentPage, itemsPerPage) => {
+    return filteredData.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
+    );
+  };
 
   const sortedData = [...allCoins].sort((a, b) => {
     const { key, direction } = sortConfig;
@@ -354,17 +367,17 @@ const CryptoDataTable = () => {
   });
 
   const filteredData = allTransactions.filter((transaction) => {
-    const meetsAmount = transaction.amountGHS >= filters.minAmount;
-    const matchesSearch = transaction.transactionId
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
+    const meetsAmount = transaction?.amountGHS >= filters?.minAmount;
+    const matchesSearch = transaction?.address
+      ?.toLowerCase()
+      ?.includes(searchTerm?.toLowerCase());
     return meetsAmount && matchesSearch;
   });
 
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  useEffect(() => {
+    setPaginatedData(getPag(filteredData, currentPage, itemsPerPage));
+    console.log("Paginated data:", paginatedData);
+  }, [allTransactions]);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
@@ -461,25 +474,22 @@ const CryptoDataTable = () => {
             visible: { transition: { staggerChildren: 0.1 } },
           }}
         >
-          {paginatedData.map((transaction) => (
-            <TableRow
-              key={transaction.transactionId}
-              variants={tableRowVariants}
-            >
-              <TableCell>{transaction.transactionId}</TableCell>
-              <TableCell>{transaction.crypto.toUpperCase()}</TableCell>
-              <TableCell>{transaction.address.toUpperCase()}</TableCell>
+          {paginatedData?.map((transaction, index) => (
+            <TableRow key={index} variants={tableRowVariants}>
+              <TableCell>{transaction?.transactionId}</TableCell>
+              <TableCell>{transaction?.crypto?.toUpperCase()}</TableCell>
+              <TableCell>{transaction?.address?.toUpperCase()}</TableCell>
               <TableCell>
-                {transaction.amountGHS.toFixed(2).toUpperCase()}
+                {transaction?.amountGHS?.toFixed(2)?.toUpperCase()}
               </TableCell>
               <TableCell>
-                {transaction.cryptoAmount.toLocaleString().toUpperCase()}
+                {transaction?.cryptoAmount?.toLocaleString()?.toUpperCase()}
               </TableCell>
               <TableCell>
-                {transaction.rate.toLocaleString().toUpperCase()}
+                {transaction?.rate?.toLocaleString()?.toUpperCase()}
               </TableCell>
-              <TableCell>{transaction.status.toUpperCase()}</TableCell>
-              <TableCell>{transaction.createdAt}</TableCell>
+              <TableCell>{transaction?.status?.toUpperCase()}</TableCell>
+              <TableCell>{transaction?.createdAt}</TableCell>
             </TableRow>
           ))}
         </motion.div>
