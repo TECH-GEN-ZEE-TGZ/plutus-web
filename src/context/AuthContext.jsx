@@ -6,12 +6,17 @@ export const AuthContextProvider = ({ children }) => {
   const [authInfo, setAuthInfo] = useState({
     username: "",
     token: "",
+    email: "",
   })
   
   useEffect(() => {
-    !authInfo?.token &&
-      setAuthInfo(JSON.parse(localStorage.getItem("plutusAuth")));
-  }, [localStorage]);
+    if (!authInfo?.token) {
+      const storedAuth = localStorage.getItem("plutusAuth");
+      if (storedAuth) {
+        setAuthInfo(JSON.parse(storedAuth));
+      }
+    }
+  }, []);
 
   return (
     <AuthContext.Provider
@@ -26,3 +31,8 @@ export const AuthContextProvider = ({ children }) => {
 };
 
 export default AuthContext;
+window.addEventListener("storage", (event) => {
+  if (event.key === "plutusAuth") {
+    setAuthInfo(JSON.parse(event.newValue));
+  }
+});

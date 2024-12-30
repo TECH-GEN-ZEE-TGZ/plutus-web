@@ -268,7 +268,6 @@ const CardButton = styled(Button)`
 `;
 
 const CryptoDataTable = () => {
-  const {authInfo} = useContext(AuthContext);
   const { setAllCoins, allCoins } = useContext(ContextVariables);
 
   const [sortConfig, setSortConfig] = useState({
@@ -283,36 +282,50 @@ const CryptoDataTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
+  const fetchTransactions = async () => {
+    const storedData = localStorage.getItem("plutusAuth");
+    var token = "";
+    var email = "";
+
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      email = parsedData.email;
+      token = parsedData.token;
+    } else {
+      window.location.href = "/auth/login";
+    }
+
+    console.log(`The email is now ${email}`);
+
+    const response = await fetch(
+      `http://localhost:9090/optimus/v1/api/orders/list/${email}`,
+      {
+        method: "GET",
+        headers: {
+          "X-API-KEY": "your-api-key",
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+
+
+    if (response.status === 401) {
+      console.log(response);
+      window.localStorage.clear();
+      window.location.href = "/auth/login";
+    }
+
+    if (response.ok) {
+      const data = await response.json();
+      setAllCoins(data);
+    } else {
+      console.log(response);
+      window.localStorage.clear();
+      window.location.href = "/auth/login";
+    }
+  };
+
   useEffect(() => {
-    const fetchTransactions = async () => {
-      const username = authInfo?.username;
-      console.log(username);
-
-      const response = await fetch(
-        `http://localhost:9090/optimus/v1/api/orders/list/${username}`,
-        {
-          method: "GET",
-          headers: {
-            "X-API-KEY": "your-api-key",
-            Authorization: "Bearer " + authInfo?.token,
-          },
-        }
-      );
-
-      if (response.status === 401) {
-        // window.localStorage.clear();
-        // window.location.href = "/auth/login";
-      }
-
-      if (response.ok) {
-        const data = await response.json();
-        setAllCoins(data);
-      } else {
-        // window.localStorage.clear();
-        // window.location.href = "/auth/login";
-      }
-    };
-
     fetchTransactions();
   }, [setAllCoins]);
 
