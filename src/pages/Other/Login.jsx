@@ -27,10 +27,10 @@ const Login = () => {
       return;
     }
     
-    if (!agree) {
-      setError("You must agree to the terms.");
-      return;
-    }
+    // if (!agree) {
+    //   setError("You must agree to the terms.");
+    //   return;
+    // }
     
     setError(""); // Clear any previous errors
     
