@@ -5,11 +5,13 @@ import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import AuthContext from "../../context/AuthContext";
 import { makeapiCall } from "../../Functions";
+import ContextVariables from "../../context/ContextVariables";
 
 const Login = () => {
   const navigate = useNavigate();
 
   const { authInfo, seAuthInfo } = useContext(AuthContext);
+  const {domain} = useContext(ContextVariables)
  
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -47,19 +49,23 @@ const Login = () => {
         console.log("CAPTCHA Token:", recaptchaToken);
 
         // Send the token and form data to your backend
-        const response = await fetch("http://localhost:9090/api/verify-captcha", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-API-KEY": "your-api-key" // Replace with your actual API key
-          },
-          body: JSON.stringify({
-            token: recaptchaToken
-          }),
-        });
+        const response = await fetch(
+          `https://t6m1hk47-9090.uks1.devtunnels.ms/api/verify-captcha`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-API-KEY": "your-api-key", // Replace with your actual API key
+            },
+            body: JSON.stringify({
+              token: recaptchaToken,
+            }),
+          }
+        );
 
         if (response.ok) {
           makeapiCall(
+            domain,
             username,
             password,
             setLoading(false),

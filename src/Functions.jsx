@@ -141,10 +141,10 @@ export const motionImgItem3 = {
 
 // const navigate = useNavigate();
 
-export const makeapiCall = (username, password, onSucess, onError, navigate, ) => {
+export const makeapiCall = (domain, username, password, onSucess, onError, navigate, ) => {
   axios
     .post(
-      `http://localhost:9090/optimus/v1/api/users/login`,
+      `${domain}/optimus/v1/api/users/login`,
       {
         username: username,
         password: password,
@@ -152,7 +152,7 @@ export const makeapiCall = (username, password, onSucess, onError, navigate, ) =
       {
         headers: {
           "Content-Type": "application/json",
-          "X-API-KEY": "your-api-key", 
+          "X-API-KEY": "your-api-key",
         },
       }
     )
@@ -167,7 +167,11 @@ export const makeapiCall = (username, password, onSucess, onError, navigate, ) =
       if (data && data?.token) {
         localStorage.setItem(
           "plutusAuth",
-          JSON.stringify({ username: username, token: data?.token, email: data?.email})
+          JSON.stringify({
+            username: username,
+            token: data?.token,
+            email: data?.email,
+          })
         );
         // setAuthInfo()
         onSucess;

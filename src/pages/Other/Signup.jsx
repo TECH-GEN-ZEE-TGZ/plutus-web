@@ -4,9 +4,11 @@ import { NavLink } from "react-router-dom";
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import AuthContext from "../../context/AuthContext";
+import ContextVariables from "../../context/ContextVariables";
 
 const Signup = () => {
   const { authInfo, seAuthInfo } = useContext(AuthContext);
+  const {domain} = useContext(ContextVariables)
 
   const [formData, setFormData] = useState({
     fullName: "",

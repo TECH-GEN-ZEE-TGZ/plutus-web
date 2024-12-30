@@ -3,7 +3,7 @@ import { createContext, useEffect, useState } from "react";
 const ContextVariables = createContext({});
 
 export const ContextVariablesProvider = ({ children }) => {
-  const domain = "http://localhost:2023/api/v1";
+  const domain = "https://t6m1hk47-9090.uks1.devtunnels.ms";
   const [toggleMode, setToggleMode] = useState(false);
   const [hideNav, setHideNav] = useState(false);
   const [hideContact, setHideContact] = useState(false);

@@ -268,7 +268,9 @@ const CardButton = styled(Button)`
 `;
 
 const CryptoDataTable = () => {
-  const { setAllCoins, allCoins } = useContext(ContextVariables);
+  const { setAllCoins, allCoins, domain } = useContext(ContextVariables);
+
+  const [allTransactions, setAllTransactions] = useState([])
 
   const [sortConfig, setSortConfig] = useState({
     key: "transactionId",
@@ -283,14 +285,16 @@ const CryptoDataTable = () => {
   const itemsPerPage = 10;
 
   const fetchTransactions = async () => {
-    const storedData = localStorage.getItem("plutusAuth");
+    const storedData = async () => {
+      return localStorage.getItem("plutusAuth");
+    };
     var token = "";
     var email = "";
 
     if (storedData) {
-      const parsedData = JSON.parse(storedData);
-      email = parsedData.email;
-      token = parsedData.token;
+      const parsedData = await JSON.parse(storedData);
+      email = parsedData?.email;
+      token = parsedData?.token;
     } else {
       window.location.href = "/auth/login";
     }
@@ -298,7 +302,7 @@ const CryptoDataTable = () => {
     console.log(`The email is now ${email}`);
 
     const response = await fetch(
-      `http://localhost:9090/optimus/v1/api/orders/list/${email}`,
+      `${domain}/optimus/v1/api/orders/list/${email}`,
       {
         method: "GET",
         headers: {
@@ -311,23 +315,44 @@ const CryptoDataTable = () => {
 
     if (response.status === 401) {
       console.log(response);
-      window.localStorage.clear();
-      window.location.href = "/auth/login";
+      // window.localStorage.clear();
+      // window.location.href = "/auth/login";
     }
 
     if (response.ok) {
       const data = await response.json();
-      setAllCoins(data);
+      setAllTransactions(data);
     } else {
       console.log(response);
-      window.localStorage.clear();
-      window.location.href = "/auth/login";
+      // window.localStorage.clear();
+      // window.location.href = "/auth/login";
     }
   };
+  
+  useEffect(() => {
+    const fetchCryptoData = async () => {
+      const response = await axios.get(
+        "https://api.coingecko.com/api/v3/coins/markets",
+        {
+          params: {
+            vs_currency: "usd",
+            order: "market_cap_desc",
+            per_page: 250,
+            page: 1,
+            sparkline: true,
+          },
+        }
+      );
+      setAllCoins(response.data);
+    };
+
+    fetchCryptoData();
+  }, [setAllCoins]);
+
 
   useEffect(() => {
     fetchTransactions();
-  }, [setAllCoins]);
+  }, [allTransactions]);
 
   const sortedData = [...allCoins].sort((a, b) => {
     const { key, direction } = sortConfig;
@@ -338,10 +363,12 @@ const CryptoDataTable = () => {
     }
   });
 
-  const filteredData = sortedData.filter((transaction) => {
+  const filteredData = allTransactions.filter((transaction) => {
     const meetsAmount = transaction.amountGHS >= filters.minAmount;
     const matchesSearch =
-      transaction.transactionId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      transaction.transactionId
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
       transaction.crypto.toLowerCase().includes(searchTerm.toLowerCase());
     return meetsAmount && matchesSearch;
   });
