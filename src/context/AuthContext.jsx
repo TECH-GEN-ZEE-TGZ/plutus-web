@@ -11,7 +11,7 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     !authInfo?.token &&
       setAuthInfo(JSON.parse(localStorage.getItem("plutusAuth")));
-  }, [authInfo, localStorage.getItem("plutusAuth")]);
+  }, [localStorage]);
 
   return (
     <AuthContext.Provider

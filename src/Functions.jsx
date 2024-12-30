@@ -169,7 +169,7 @@ export const makeapiCall = (username, password, onSucess, onError, navigate) => 
           "plutusAuth",
           JSON.stringify({ username: username, token: data?.token})
         );
-        setAuthInfo()
+        // setAuthInfo()
         onSucess;
         navigate("/user/buy");
       }
