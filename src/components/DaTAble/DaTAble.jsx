@@ -285,16 +285,14 @@ const CryptoDataTable = () => {
   const itemsPerPage = 10;
 
   const fetchTransactions = async () => {
-    const storedData = async () => {
-      return localStorage.getItem("plutusAuth");
-    };
+    const storedData = localStorage.getItem("plutusAuth");
     var token = "";
     var email = "";
 
     if (storedData) {
       const parsedData = await JSON.parse(storedData);
-      email = parsedData?.email;
-      token = parsedData?.token;
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
     } else {
       window.location.href = "/auth/login";
     }
@@ -327,6 +325,7 @@ const CryptoDataTable = () => {
       // window.localStorage.clear();
       // window.location.href = "/auth/login";
     }
+    };
   };
   
   useEffect(() => {
@@ -448,7 +447,7 @@ const CryptoDataTable = () => {
             <TableHeader onClick={() => handleSort("cryptoAmount")}>Crypto Amount</TableHeader>
             <TableHeader onClick={() => handleSort("rate")}>Rate</TableHeader>
             <TableHeader onClick={() => handleSort("status")}>Status</TableHeader>
-            <TableHeader onClick={() => handleSort("createdAt")}>Created At</TableHeader>
+            <TableHeader onClick={() => handleSort("createdAt")}>Date</TableHeader>
           </div>
         </div>
         <motion.div
