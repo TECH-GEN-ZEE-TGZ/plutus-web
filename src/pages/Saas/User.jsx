@@ -34,7 +34,7 @@ export default User;
 
 const Dashboard = () => {
   const { setAllCoins, allCoins } = useContext(ContextVariables);
-  const {authInfo} = useContext(AuthContext);
+  const { authInfo } = useContext(AuthContext);
 
   const [recentNotifs, setRecentNotifs] = useState([
     { type: "send" },
@@ -220,8 +220,8 @@ const Buy = ({ allCoins }) => {
 
   const [buyFee, setBuyFee] = useState(0);
   const [exRate, setExRate] = useState(0);
-  const [buyVal, setBuyVal] = useState(1.0);
-  const [payVal, setPayVal] = useState(1.0);
+  const [buyVal, setBuyVal] = useState(0);
+  const [payVal, setPayVal] = useState(0);
   const [payWal, setPayWal] = useState("");
 
   const [chooseWallet, setChooseWallet] = useState(false);
@@ -272,7 +272,28 @@ const Buy = ({ allCoins }) => {
   };
 
   const getExchangeRateP = async (coin) => {
+    if (payVal < 1) {
+      return;
+    }
+
+    const feeAmtUSD = coin ? parseFloat(fees[coin.toLowerCase()]) : 0;
+    const feeAmtGhs = feeAmtUSD * ghsRate;
     setExBuy(true);
+
+    if ((payWith.symbol === 'GHS') && (payVal < feeAmtGhs + 100)) {
+      alert(`Minimum ghs amount to buy is ${feeAmtGhs + 100}`);
+      setPayVal(0);
+      setBuyVal(0);
+      setExBuy(false);
+      return;
+    } else if ((payWith.symbol === 'USD') && (payVal < feeAmtUSD + 5)) {
+      alert(`Minimum usd amount to buy is ${feeAmtUSD + 5}`);
+      setPayVal(0);
+      setBuyVal(0);
+      setExBuy(false);
+      return;
+    }
+
     try {
       if (coin) {
         const response = await axios.get(
@@ -284,12 +305,17 @@ const Buy = ({ allCoins }) => {
             },
           }
         );
-        const exchangeRate = response?.data?.result[0]?.course;
+
+        const exchangeRate = parseFloat(response?.data?.result[0]?.course).toFixed(2);
         setExRate(exchangeRate);
         if (exchangeRate) {
-          const feeAmtGhs = parseFloat(fees[coin.toLowerCase()] * ghsRate);
-          const ghsAmount = payVal > 0 && payVal - feeAmtGhs;
-          setBuyVal((ghsAmount / ghsRate / exchangeRate).toFixed(8));
+          if (payWith.symbol === 'GHS') {
+            const ghsAmount = payVal > 0 ? payVal - feeAmtGhs : 0;
+            setBuyVal((ghsAmount / ghsRate / exchangeRate).toFixed(8));
+          } else {
+            const usdAmount = payVal > 0 ? payVal - feeAmtUSD : 0;
+            setBuyVal((usdAmount / exchangeRate).toFixed(8));
+          }
         } else {
           // alert("Response doesn't contain exchange rate!");
           setBuyVal(0);
@@ -305,8 +331,10 @@ const Buy = ({ allCoins }) => {
 
   const getExchangeRateB = async (coin) => {
     setExPay(true);
+
     try {
       if (coin) {
+        // Fetch exchange rate for the specified coin
         const response = await axios.get(
           `${domain}/optimus/v1/api/cryptomus/exchange-rate/${coin}?to=USD`,
           {
@@ -316,21 +344,31 @@ const Buy = ({ allCoins }) => {
             },
           }
         );
-        const exchangeRate = response?.data?.result[0]?.course;
+
+        // Extract and parse the exchange rate
+        const exchangeRate = parseFloat(response?.data?.result[0]?.course).toFixed(2);
         setExRate(exchangeRate);
+
         if (exchangeRate) {
-          const feeAmtGhs = parseFloat(fees[coin?.toLowerCase()] * ghsRate);
-          const ghsAmount = parseFloat(
-            buyVal > 0 && buyVal * exchangeRate * ghsRate
-          ).toFixed(2);
-          setPayVal((ghsAmount - feeAmtGhs).toFixed(8));
+          // Calculate fees and payVal
+          const feeAmtUSD = coin ? parseFloat(fees[coin.toLowerCase()]) : 0;
+          const feeAmtGhs = feeAmtUSD * ghsRate;
+
+          if (payWith.symbol === "GHS") {
+            const ghsAmount = buyVal > 0 && buyVal * exchangeRate * ghsRate.toFixed(2);
+            setPayVal((ghsAmount + feeAmtGhs).toFixed(2));
+          } else if (payWith.symbol === "USD") {
+            const usdAmount = buyVal > 0 && buyVal * exchangeRate.toFixed(2);
+            setPayVal((usdAmount + feeAmtUSD).toFixed(2));
+          }
         } else {
-          // alert("Response doesn't contain exchange rate!");
+          // Handle missing exchange rate
           setPayVal(0);
         }
       }
     } catch (error) {
-      // alert("Error fetching exchange rate!");
+      // Handle fetch errors
+      console.error("Error fetching exchange rate:", error);
       setPayVal(0);
     } finally {
       setExPay(false);

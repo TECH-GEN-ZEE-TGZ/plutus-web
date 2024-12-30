@@ -453,7 +453,7 @@ const CryptoDataTable = () => {
               Status
             </TableHeader>
             <TableHeader onClick={() => handleSort("createdAt")}>
-              Created At
+              Date
             </TableHeader>
           </div>
         </div>
