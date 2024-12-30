@@ -12,12 +12,12 @@ import AuthContext from "../../context/AuthContext";
 // import * as bitcoin from "bitcoinjs-lib";
 
 const User = () => {
-  const { authInfo } = useContext(AuthContext)
+  const { authInfo } = useContext(AuthContext);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
-    !authInfo?.token && navigate("/auth/login")
-  }, [authInfo?.token, navigate])
+    !authInfo?.token && navigate("/auth/login");
+  }, [authInfo?.token, navigate]);
   return (
     <StyledUser scrollable>
       <SaasNav />
@@ -159,8 +159,9 @@ const Dashboard = () => {
 // <i class='bx bx-upload'></i>
 // <ion-icon name="swap-horizontal-outline"></ion-icon>
 
+
 const Buy = ({ allCoins }) => {
-  const {domain} = useContext(ContextVariables)
+  const { domain } = useContext(ContextVariables);
   const ghsRate = 15.6;
   const fees = {
     btc: 10,
@@ -204,6 +205,7 @@ const Buy = ({ allCoins }) => {
   const [exBuy, setExBuy] = useState(false);
 
   const [buyFee, setBuyFee] = useState(0);
+  const [exRate, setExRate] = useState(0);
   const [buyVal, setBuyVal] = useState(1.0);
   const [payVal, setPayVal] = useState(1.0);
   const [payWal, setPayWal] = useState("");
@@ -243,10 +245,11 @@ const Buy = ({ allCoins }) => {
 
     // Add the new wallet address to the array
     const updatedWallets = [...wallets, walletAddress];
-    setWallets(updatedWallets);
+    // setWallets(updatedWallets);
+    setPayWal(walletAddress);
 
     // Save to localStorage
-    localStorage.setItem("wallets", JSON.stringify(updatedWallets));
+    // localStorage.setItem("wallets", JSON.stringify(updatedWallets));
 
     // Reset input and close the form
     setWalletAddress("");
@@ -258,13 +261,20 @@ const Buy = ({ allCoins }) => {
     try {
       if (coin) {
         const response = await axios.get(
-          `${domain}/optimus/v1/api/cryptomus/exchange-rate/${coin}?to=USD`
+          `${domain}/optimus/v1/api/cryptomus/exchange-rate/${coin}?to=USD`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "X-API-KEY": "your-api-key",
+            },
+          }
         );
-        const rate = response?.data?.result[0]?.course;
-        if (rate) {
-          const fee = parseFloat(fees[coin.toLowerCase()] * ghsRate);
-          const ghsAmount = parseFloat(payVal) - fee;
-          setBuyVal((ghsAmount / ghsRate / rate).toFixed(8));
+        const exchangeRate = response?.data?.result[0]?.course;
+        setExRate(exchangeRate);
+        if (exchangeRate) {
+          const feeAmtGhs = parseFloat(fees[coin.toLowerCase()] * ghsRate);
+          const ghsAmount = payVal > 0 && payVal - feeAmtGhs;
+          setBuyVal(((ghsAmount / ghsRate ) / exchangeRate).toFixed(8));
         } else {
           // alert("Response doesn't contain exchange rate!");
           setBuyVal(0);
@@ -277,18 +287,26 @@ const Buy = ({ allCoins }) => {
       setExBuy(false);
     }
   };
+
   const getExchangeRateB = async (coin) => {
     setExPay(true);
     try {
       if (coin) {
         const response = await axios.get(
-          `${domain}/optimus/v1/api/cryptomus/exchange-rate/${coin}?to=USD`
+          `${domain}/optimus/v1/api/cryptomus/exchange-rate/${coin}?to=USD`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "X-API-KEY": "your-api-key",
+            },
+          }
         );
-        const rate = response?.data?.result[0]?.course;
-        if (rate) {
-          const fee = parseFloat(fees[coin?.toLowerCase()] * ghsRate);
-          const ghsAmount = parseFloat(buyVal * rate * ghsRate).toFixed(2);
-          setPayVal((ghsAmount - fee).toFixed(8));
+        const exchangeRate = response?.data?.result[0]?.course;
+        setExRate(exchangeRate);
+        if (exchangeRate) {
+          const feeAmtGhs = parseFloat(fees[coin?.toLowerCase()] * ghsRate);
+          const ghsAmount = parseFloat(buyVal > 0 && buyVal * exchangeRate * ghsRate).toFixed(2);
+          setPayVal((ghsAmount - feeAmtGhs).toFixed(8));
         } else {
           // alert("Response doesn't contain exchange rate!");
           setPayVal(0);
@@ -379,10 +397,8 @@ const Buy = ({ allCoins }) => {
 
   useEffect(() => {
     getExchangeRateP(buying?.symbol?.toLowerCase());
-  }, [payVal, buying]);
-  useEffect(() => {
     getExchangeRateB(buying?.symbol?.toLowerCase());
-  }, [buyVal, buying]);
+  }, [buying]);
 
   useEffect(() => {
     setBuyFee(fees[buying?.symbol?.toLowerCase()]);
@@ -390,74 +406,9 @@ const Buy = ({ allCoins }) => {
 
   return (
     <>
-      {/* Buy Section */}
-      <div className="opt">
-        <h4>Coin Type</h4>
-        <div className="select">
-          <div className="selector center">
-            <div
-              className="val"
-              onClick={() => {
-                setSelBuy(!selBuy);
-              }}
-            >
-              <img src={buying?.image} alt="" />
-              <p>{buying?.symbol?.toUpperCase()}</p>
-              <ion-icon name="chevron-down-outline"></ion-icon>
-            </div>
-            <AnimatePresence>
-              {selBuy && (
-                <motion.ul
-                  initial={{ opacity: 0, y: "-5%" }}
-                  animate={{ opacity: 1, y: "0%" }}
-                  exit={{ opacity: 0, y: "0%" }}
-                  className="options scrollable"
-                >
-                  {/* Search Input */}
-                  <form>
-                    <input
-                      type="search"
-                      placeholder="Search by name or symbol"
-                      value={searchTerm} // Bind input value to state
-                      onChange={(e) => setSearchTerm(e.target.value)} // Update state on change
-                    />
-                  </form>
-
-                  {/* Filtered Coin List */}
-                  {filteredCoins?.map((coin, index) => (
-                    <li
-                      key={index}
-                      onClick={() => {
-                        setBuying(coin);
-                        setSelBuy(false);
-                      }}
-                    >
-                      <img src={coin?.image} alt="" />
-                      <p>{coin?.symbol.toUpperCase()}</p>
-                    </li>
-                  ))}
-                </motion.ul>
-              )}
-            </AnimatePresence>
-          </div>
-          <div className="amt">
-            {exBuy ? (
-              <i className="bx bx-loader bx-spin"></i>
-            ) : (
-              <input
-                type="number"
-                value={buyVal}
-                onChange={(e) => setBuyVal(e.target.value)} // Let the value update as typed
-                onBlur={(e) => setBuyVal(parseFloat(e.target.value).toFixed(2))} // Format when input loses focus
-              />
-            )}
-          </div>
-        </div>
-      </div>
-
       {/* Pay With Section */}
       <div className="opt">
-        <h4>You Get</h4>
+        <h4>You Pay</h4>
         <div className="select">
           <div className="selector center">
             <div
@@ -513,7 +464,78 @@ const Buy = ({ allCoins }) => {
                 type="number"
                 value={payVal}
                 onChange={(e) => setPayVal(e.target.value)} // Let the value update as typed
-                onBlur={(e) => setPayVal(parseFloat(e.target.value).toFixed(2))} // Format when input loses focus
+                onBlur={(e) => {
+                  setPayVal(parseFloat(e.target.value).toFixed(2));
+                  getExchangeRateP(buying?.symbol?.toLowerCase());
+                }} // Format when input loses focus
+              />
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Buy Section */}
+      <div className="opt">
+        <h4>You Get</h4>
+        <div className="select">
+          <div className="selector center">
+            <div
+              className="val"
+              onClick={() => {
+                setSelBuy(!selBuy);
+              }}
+            >
+              <img src={buying?.image} alt="" />
+              <p>{buying?.symbol?.toUpperCase()}</p>
+              <ion-icon name="chevron-down-outline"></ion-icon>
+            </div>
+            <AnimatePresence>
+              {selBuy && (
+                <motion.ul
+                  initial={{ opacity: 0, y: "-5%" }}
+                  animate={{ opacity: 1, y: "0%" }}
+                  exit={{ opacity: 0, y: "0%" }}
+                  className="options scrollable"
+                >
+                  {/* Search Input */}
+                  <form>
+                    <input
+                      type="search"
+                      placeholder="Search by name or symbol"
+                      value={searchTerm} // Bind input value to state
+                      onChange={(e) => setSearchTerm(e.target.value)} // Update state on change
+                    />
+                  </form>
+
+                  {/* Filtered Coin List */}
+                  {filteredCoins?.map((coin, index) => (
+                    <li
+                      key={index}
+                      onClick={() => {
+                        setBuying(coin);
+                        setSelBuy(false);
+                      }}
+                    >
+                      <img src={coin?.image} alt="" />
+                      <p>{coin?.symbol.toUpperCase()}</p>
+                    </li>
+                  ))}
+                </motion.ul>
+              )}
+            </AnimatePresence>
+          </div>
+          <div className="amt">
+            {exBuy ? (
+              <i className="bx bx-loader bx-spin"></i>
+            ) : (
+              <input
+                type="number"
+                value={buyVal}
+                onChange={(e) => setBuyVal(e.target.value)} // Let the value update as typed
+                onBlur={(e) => {
+                  setBuyVal(parseFloat(e.target.value).toFixed(2));
+                  getExchangeRateB(buying?.symbol?.toLowerCase());
+                }} // Format when input loses focus
               />
             )}
           </div>
@@ -522,78 +544,35 @@ const Buy = ({ allCoins }) => {
 
       {/* Other Sections */}
       <div className="times center">
-        <h5>
-          {payWal || "Choose Wallet"}{" "}
+        <h5 onClick={() => setPayWal("")}>
+          {payWal || "Enter Wallet Address"}{" "}
           <ion-icon name="chevron-down-outline"></ion-icon>
         </h5>
-        <div className="wallets">
-          <button
-            onClick={() => {
-              setChooseWallet(!chooseWallet);
-            }}
-          ></button>
-          <AnimatePresence>
-            {chooseWallet && (
-              <motion.ul
-                initial={{ opacity: 0, y: "-5%" }}
-                animate={{ opacity: 1, y: "0%" }}
-                exit={{ opacity: 0, y: "0%" }}
-                className="slab"
-              >
-                {wallets?.length > 0 &&
-                  wallets?.map((wal, index) => (
-                    <li
-                      className="center"
-                      onClick={() => {
-                        setPayWal(wal);
-                      }}
-                    >
-                      {wal}
-                    </li>
-                  ))}
-                <li className="center">
-                  {addWallet ? (
-                    <form onSubmit={handleWalletAdd}>
-                      <input
-                        type="text"
-                        placeholder="Enter valid wallet address"
-                        value={walletAddress}
-                        onChange={(e) => {
-                          setWalletAddress(e.target.value);
-                        }}
-                      />
-                      <div className="buttons">
-                        <button>
-                          <ion-icon name="checkmark-outline"></ion-icon>
-                        </button>
-                        <button
-                          onClick={() => {
-                            setAddWallet(false);
-                          }}
-                        >
-                          <ion-icon name="close-outline"></ion-icon>
-                        </button>
-                      </div>
-                    </form>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        setAddWallet(true);
-                      }}
-                    >
-                      <ion-icon name="add-circle-outline"></ion-icon>
-                    </button>
-                  )}
-                </li>
-              </motion.ul>
-            )}
-          </AnimatePresence>
-        </div>
+        {!payWal && (
+          <div className="wallets">
+            <form onSubmit={handleWalletAdd}>
+              <input
+                type="text"
+                placeholder="Enter valid wallet address"
+                value={walletAddress}
+                onChange={(e) => {
+                  setWalletAddress(e.target.value);
+                }}
+              />
+              <div className="buttons">
+                <button type="submit">
+                  <ion-icon name="checkmark-outline"></ion-icon>
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
       </div>
+
       <div className="stat">
         <div className="line">
-          <h3>Rate</h3>
-          <p>{ghsRate}</p>
+          <h3>1 {buying?.symbol?.toUpperCase()}</h3>
+          <p>{exRate?.toLocaleString()} USD</p>
         </div>
         <div className="line">
           <h3>Rate</h3>
@@ -604,10 +583,12 @@ const Buy = ({ allCoins }) => {
           <p>{buyFee}</p>
         </div>
       </div>
+
       <button onClick={buyCryptoCoin}>Top up wallet</button>
     </>
   );
 };
+
 
 const Hash = ({ allCoins }) => (
   <>
