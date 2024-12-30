@@ -142,16 +142,22 @@ const Login = () => {
         <NavLink>Forgotten Password?</NavLink>
       </div>
 
-      <motion.button whileTap={loading && {scale: 0.9}} type="submit" disabled={loading}>
-        {loading ? (
-          <span>
-            <i className="bx bx-loader bx-spin"></i> Logging in
-          </span>
-        ) : (
-          <span>
-            Login <ion-icon name="arrow-forward"></ion-icon>
-          </span>
-        )}
+      <motion.button
+        whileTap={loading && { scale: 0.9 }}
+        type="submit"
+        disabled={loading}
+      >
+        <span>
+          {loading ? (
+            <>
+              <i className="bx bx-loader bx-spin"></i> Logging in
+            </>
+          ) : (
+            <>
+              Login <ion-icon name="arrow-forward"></ion-icon>
+            </>
+          )}
+        </span>
       </motion.button>
 
       <div className="switch">
