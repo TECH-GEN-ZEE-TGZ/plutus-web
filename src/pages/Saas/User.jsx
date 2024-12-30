@@ -34,6 +34,7 @@ export default User;
 
 const Dashboard = () => {
   const { setAllCoins, allCoins } = useContext(ContextVariables);
+  const {authInfo} = useContext(AuthContext);
 
   const [recentNotifs, setRecentNotifs] = useState([
     { type: "send" },
@@ -55,8 +56,16 @@ const Dashboard = () => {
               <ion-icon name="wallet-outline"></ion-icon>
             </div>
             <div className="text">
-              <h5>Referal Balance</h5>
-              <h3>$23,235,649.23</h3>
+              <h5>Total Referrals</h5>
+              <h3>{authInfo?.totalReferrals}</h3>
+            </div>
+            <div className="text">
+              <h5>Accrued Balance</h5>
+              <h3>${authInfo?.accruedBalance}</h3>
+            </div>
+            <div className="text">
+              <h5>Balance</h5>
+              <h3>${authInfo?.balance}</h3>
             </div>
           </div>
           <div className="otherIcons">
