@@ -10,8 +10,8 @@ import ContextVariables from "../../context/ContextVariables";
 const Login = () => {
   const navigate = useNavigate();
 
-  const { authInfo, seAuthInfo } = useContext(AuthContext);
   const {domain} = useContext(ContextVariables)
+  const { authInfo, setAuthInfo } = useContext(AuthContext);
  
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -27,10 +27,10 @@ const Login = () => {
       return;
     }
     
-    if (!agree) {
-      setError("You must agree to the terms.");
-      return;
-    }
+    // if (!agree) {
+    //   setError("You must agree to the terms.");
+    //   return;
+    // }
     
     setError(""); // Clear any previous errors
     
@@ -70,7 +70,8 @@ const Login = () => {
             password,
             setLoading(false),
             setError,
-            navigate
+            navigate,
+            setAuthInfo,
           );
         } else {
           const errorResult = await response.json();

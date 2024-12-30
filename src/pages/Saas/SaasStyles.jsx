@@ -494,7 +494,8 @@ export const StyledUser = styled(motion.main)`
             height: ${fixedHeight(5)}px;
             border-radius: 50%;
             background: white;
-            > ion-icon, i {
+            > ion-icon,
+            i {
               font-size: ${fixedHeight(2.5)}px;
             }
           }
@@ -887,11 +888,13 @@ export const StyledUser = styled(motion.main)`
           background: #e8d7fa;
           border-radius: 100px;
           width: 100%;
+          max-width: 100%;
           height: 7.5%;
           display: flex;
           align-items: center;
           isolation: isolate;
           z-index: 2;
+          
 
           > h5 {
             z-index: 1;
@@ -899,9 +902,16 @@ export const StyledUser = styled(motion.main)`
             display: flex;
             align-items: center;
             column-gap: ${fixedWidth(0.25)}px;
+            width: 100%;
+            max-width: ${fixedWidth(20)}px;
+            cursor: pointer;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
             > ion-icon {
               font-size: ${fixedHeight(2)}px;
             }
+
           }
           > .wallets {
             z-index: 2;
@@ -984,6 +994,48 @@ export const StyledUser = styled(motion.main)`
                 }
               }
             }
+            > form {
+              display: flex;
+              align-items: center;
+              column-gap: ${fixedWidth(0.5)}px;
+              width: 100%;
+              height: 100%;
+              border-radius: 100px;
+              > input {
+                border-radius: 100px;
+                width: 80%;
+                height: 100%;
+                background: #e8d7fa;
+                padding: 0 0 0 2.5%;
+                outline: none;
+                border: none;
+              }
+              > .buttons {
+                width: 20%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-evenly;
+                > button {
+                  min-width: ${fixedHeight(2.5)}px;
+                  width: auto;
+                  height: ${fixedHeight(2.5)}px;
+                  border-radius: 50px;
+                  padding: 0 5px;
+                  color: white;
+                  font-size: ${fixedHeight(1.5)}px;
+                  > ion-icon {
+                    font-size: ${fixedHeight(2)}px;
+                  }
+                  &:nth-child(1) {
+                    background: limegreen;
+                  }
+                  &:nth-child(2) {
+                    background: red;
+                  }
+                }
+              }
+            }
           }
         }
         > .stat {
@@ -995,7 +1047,7 @@ export const StyledUser = styled(motion.main)`
             align-items: center;
             justify-content: space-between;
             border-bottom: 1px solid #9e5dad;
-            height: calc(100%/3);
+            height: calc(100% / 3);
             > h3 {
               font-size: ${fixedHeight(1.75)}px;
               color: hsl(288.75, 40%, 30%);

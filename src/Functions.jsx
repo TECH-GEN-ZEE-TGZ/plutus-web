@@ -141,7 +141,7 @@ export const motionImgItem3 = {
 
 // const navigate = useNavigate();
 
-export const makeapiCall = (domain, username, password, onSucess, onError, navigate, ) => {
+export const makeapiCall = (domain, username, password, onSucess, onError, navigate, setAuthInfo) => {
   axios
     .post(
       `${domain}/optimus/v1/api/users/login`,
@@ -173,7 +173,12 @@ export const makeapiCall = (domain, username, password, onSucess, onError, navig
             email: data?.email,
           })
         );
-        // setAuthInfo()
+
+        setAuthInfo && setAuthInfo({
+          username: username,
+          token: data?.token,
+          email: data?.email,
+        });
         onSucess;
         navigate("/user/buy");
       }

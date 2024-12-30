@@ -7,6 +7,7 @@ import ContextVariables from "../../context/ContextVariables";
 import { LineChart, Line, ResponsiveContainer } from "recharts";
 import MiniGraph from "../Other/MiniGraph";
 import AuthContext from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const TableContainer = styled.div`
   display: flex;
@@ -161,26 +162,29 @@ const TableHeader = styled.div`
   padding: 0 ${fixedWidth(0.5)}px;
   font-size: ${fixedHeight(1.75)}px;
   &:nth-child(1) {
-    width: 5%;
+    width: 22.5%;
     justify-content: center;
   }
   &:nth-child(2) {
-    width: 25%;
-  }
-  &:nth-child(3) {
     width: 10%;
   }
+  &:nth-child(3) {
+    width: 25%;
+  }
   &:nth-child(4) {
-    width: 15%;
+    width: 7.5%;
   }
   &:nth-child(5) {
     width: 10%;
   }
   &:nth-child(6) {
-    width: 20%;
+    width: 7.5%;
   }
   &:nth-child(7) {
-    width: 15%;
+    width: 10%;
+  }
+  &:nth-child(8) {
+    width: 12.5%;
   }
 `;
 
@@ -218,26 +222,29 @@ const TableCell = styled.div`
   }
 
   &:nth-child(1) {
-    width: 5%;
+    width: 22.5%;
     justify-content: center;
   }
   &:nth-child(2) {
-    width: 25%;
-  }
-  &:nth-child(3) {
     width: 10%;
   }
+  &:nth-child(3) {
+    width: 25%;
+  }
   &:nth-child(4) {
-    width: 15%;
+    width: 7.5%;
   }
   &:nth-child(5) {
     width: 10%;
   }
   &:nth-child(6) {
-    width: 20%;
+    width: 7.5%;
   }
   &:nth-child(7) {
-    width: 15%;
+    width: 10%;
+  }
+  &:nth-child(8) {
+    width: 12.5%;
   }
   @media (max-width: 768px) {
     display: none; /* Hide specific columns on small screens */
@@ -268,9 +275,11 @@ const CardButton = styled(Button)`
 `;
 
 const CryptoDataTable = () => {
+  const navigate = useNavigate();
+  const { authInfo } = useContext(AuthContext);
   const { setAllCoins, allCoins, domain } = useContext(ContextVariables);
 
-  const [allTransactions, setAllTransactions] = useState([])
+  const [allTransactions, setAllTransactions] = useState([]);
 
   const [sortConfig, setSortConfig] = useState({
     key: "transactionId",
@@ -284,50 +293,8 @@ const CryptoDataTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const fetchTransactions = async () => {
-    const storedData = localStorage.getItem("plutusAuth");
-    var token = "";
-    var email = "";
+  const [paginatedData, setPaginatedData] = useState([]);
 
-    if (storedData) {
-      const parsedData = await JSON.parse(storedData);
-    if (storedData) {
-      const parsedData = JSON.parse(storedData);
-    } else {
-      window.location.href = "/auth/login";
-    }
-
-    console.log(`The email is now ${email}`);
-
-    const response = await fetch(
-      `${domain}/optimus/v1/api/orders/list/${email}`,
-      {
-        method: "GET",
-        headers: {
-          "X-API-KEY": "your-api-key",
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
-
-
-    if (response.status === 401) {
-      console.log(response);
-      // window.localStorage.clear();
-      // window.location.href = "/auth/login";
-    }
-
-    if (response.ok) {
-      const data = await response.json();
-      setAllTransactions(data);
-    } else {
-      console.log(response);
-      // window.localStorage.clear();
-      // window.location.href = "/auth/login";
-    }
-    };
-  };
-  
   useEffect(() => {
     const fetchCryptoData = async () => {
       const response = await axios.get(
@@ -348,10 +315,47 @@ const CryptoDataTable = () => {
     fetchCryptoData();
   }, [setAllCoins]);
 
-
   useEffect(() => {
+    const fetchTransactions = async () => {
+      console.log(`The email is now ${authInfo?.email} and ${authInfo?.token}`);
+
+      const response = await fetch(
+        `${domain}/optimus/v1/api/orders/list/${authInfo?.email}`,
+        {
+          method: "GET",
+          headers: {
+            "X-API-KEY": "your-api-key",
+            Authorization: "Bearer " + authInfo?.token,
+          },
+        }
+      );
+
+      if (response.status === 401) {
+        console.log(response);
+        localStorage.removeItem("plutusAuth");
+        window.location.href = "/auth/login";
+      }
+
+      if (response.ok) {
+        const data = await response.json();
+        setAllTransactions(data);
+        console.log(data);
+      } else {
+        console.log(response);
+        localStorage.removeItem("plutusAuth");
+        window.location.href = "/auth/login";
+      }
+    };
+
     fetchTransactions();
-  }, [allTransactions]);
+  }, [authInfo, navigate]);
+
+  const getPag = (filteredData, currentPage, itemsPerPage) => {
+    return filteredData.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
+    );
+  };
 
   const sortedData = [...allCoins].sort((a, b) => {
     const { key, direction } = sortConfig;
@@ -363,19 +367,17 @@ const CryptoDataTable = () => {
   });
 
   const filteredData = allTransactions.filter((transaction) => {
-    const meetsAmount = transaction.amountGHS >= filters.minAmount;
-    const matchesSearch =
-      transaction.transactionId
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      transaction.crypto.toLowerCase().includes(searchTerm.toLowerCase());
+    const meetsAmount = transaction?.amountGHS >= filters?.minAmount;
+    const matchesSearch = transaction?.address
+      ?.toLowerCase()
+      ?.includes(searchTerm?.toLowerCase());
     return meetsAmount && matchesSearch;
   });
 
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  useEffect(() => {
+    setPaginatedData(getPag(filteredData, currentPage, itemsPerPage));
+    console.log("Paginated data:", paginatedData);
+  }, [allTransactions, searchTerm]);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
@@ -409,15 +411,6 @@ const CryptoDataTable = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </label>
-          <label>
-            Min Amount:
-            <input
-              type="number"
-              name="minAmount"
-              value={filters.minAmount}
-              onChange={handleFilterChange}
-            />
-          </label>
         </div>
         <PaginationControls>
           <button
@@ -440,14 +433,28 @@ const CryptoDataTable = () => {
       <CryptoTable>
         <div className="thead">
           <div className="tr">
-            <TableHeader onClick={() => handleSort("transactionId")}>Transaction ID</TableHeader>
-            <TableHeader onClick={() => handleSort("crypto")}>Crypto</TableHeader>
-            <TableHeader onClick={() => handleSort("address")}>Address</TableHeader>
-            <TableHeader onClick={() => handleSort("amountGHS")}>Amount (GHS)</TableHeader>
-            <TableHeader onClick={() => handleSort("cryptoAmount")}>Crypto Amount</TableHeader>
+            <TableHeader onClick={() => handleSort("transactionId")}>
+              Transaction ID
+            </TableHeader>
+            <TableHeader onClick={() => handleSort("crypto")}>
+              Crypto
+            </TableHeader>
+            <TableHeader onClick={() => handleSort("address")}>
+              Address
+            </TableHeader>
+            <TableHeader onClick={() => handleSort("amountGHS")}>
+              Amount (GHS)
+            </TableHeader>
+            <TableHeader onClick={() => handleSort("cryptoAmount")}>
+              Crypto Amount
+            </TableHeader>
             <TableHeader onClick={() => handleSort("rate")}>Rate</TableHeader>
-            <TableHeader onClick={() => handleSort("status")}>Status</TableHeader>
-            <TableHeader onClick={() => handleSort("createdAt")}>Date</TableHeader>
+            <TableHeader onClick={() => handleSort("status")}>
+              Status
+            </TableHeader>
+            <TableHeader onClick={() => handleSort("createdAt")}>
+              Created At
+            </TableHeader>
           </div>
         </div>
         <motion.div
@@ -458,16 +465,22 @@ const CryptoDataTable = () => {
             visible: { transition: { staggerChildren: 0.1 } },
           }}
         >
-          {paginatedData.map((transaction) => (
-            <TableRow key={transaction.transactionId} variants={tableRowVariants}>
-              <TableCell>{transaction.transactionId}</TableCell>
-              <TableCell>{transaction.crypto.toUpperCase()}</TableCell>
-              <TableCell>{transaction.address.toUpperCase()}</TableCell>
-              <TableCell>{transaction.amountGHS.toFixed(2).toUpperCase()}</TableCell>
-              <TableCell>{transaction.cryptoAmount.toLocaleString().toUpperCase()}</TableCell>
-              <TableCell>{transaction.rate.toLocaleString().toUpperCase()}</TableCell>
-              <TableCell>{transaction.status.toUpperCase()}</TableCell>
-              <TableCell>{transaction.createdAt}</TableCell>
+          {paginatedData?.map((transaction, index) => (
+            <TableRow key={index} variants={tableRowVariants}>
+              <TableCell>{transaction?.transactionId || "N/A"}</TableCell>
+              <TableCell>{transaction?.crypto?.toUpperCase()}</TableCell>
+              <TableCell>{transaction?.address?.toUpperCase()}</TableCell>
+              <TableCell>
+                {transaction?.amountGHS?.toFixed(2)?.toUpperCase()}
+              </TableCell>
+              <TableCell>
+                {transaction?.cryptoAmount?.toLocaleString()?.toUpperCase()}
+              </TableCell>
+              <TableCell>
+                {transaction?.rate?.toLocaleString()?.toUpperCase()}
+              </TableCell>
+              <TableCell>{transaction?.status?.toUpperCase()}</TableCell>
+              <TableCell>{transaction?.createdAt || "N/A"}</TableCell>
             </TableRow>
           ))}
         </motion.div>
@@ -475,6 +488,5 @@ const CryptoDataTable = () => {
     </TableContainer>
   );
 };
-
 
 export default CryptoDataTable;
