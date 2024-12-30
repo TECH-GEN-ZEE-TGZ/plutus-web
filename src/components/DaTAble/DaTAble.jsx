@@ -268,9 +268,10 @@ const CardButton = styled(Button)`
 `;
 
 const CryptoDataTable = () => {
+  const { authInfo } = useContext(AuthContext);
   const { setAllCoins, allCoins, domain } = useContext(ContextVariables);
 
-  const [allTransactions, setAllTransactions] = useState([])
+  const [allTransactions, setAllTransactions] = useState([]);
 
   const [sortConfig, setSortConfig] = useState({
     key: "transactionId",
@@ -284,51 +285,6 @@ const CryptoDataTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const fetchTransactions = async () => {
-    const storedData = async () => {
-      return localStorage.getItem("plutusAuth");
-    };
-    var token = "";
-    var email = "";
-
-    if (storedData) {
-      const parsedData = await JSON.parse(storedData);
-      email = parsedData?.email;
-      token = parsedData?.token;
-    } else {
-      window.location.href = "/auth/login";
-    }
-
-    console.log(`The email is now ${email}`);
-
-    const response = await fetch(
-      `${domain}/optimus/v1/api/orders/list/${email}`,
-      {
-        method: "GET",
-        headers: {
-          "X-API-KEY": "your-api-key",
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
-
-
-    if (response.status === 401) {
-      console.log(response);
-      localStorage.removeItem("plutusAuth");
-      window.location.href = "/auth/login";
-    }
-
-    if (response.ok) {
-      const data = await response.json();
-      setAllTransactions(data);
-    } else {
-      console.log(response);
-      localStorage.removeItem("plutusAuth");
-      window.location.href = "/auth/login";
-    }
-  };
-  
   useEffect(() => {
     const fetchCryptoData = async () => {
       const response = await axios.get(
@@ -349,10 +305,44 @@ const CryptoDataTable = () => {
     fetchCryptoData();
   }, [setAllCoins]);
 
-
   useEffect(() => {
+    const fetchTransactions = async () => {
+      
+
+      console.log(`The email is now ${authInfo?.email} and ${authInfo?.token}`);  
+
+      const response = await fetch(
+        `${domain}/optimus/v1/api/orders/list/${authInfo?.email}`,
+        {
+          method: "GET",
+          headers: {
+            "X-API-KEY": "your-api-key",
+            Authorization: "Bearer " + authInfo?.token,
+          },
+        }
+      );
+
+      if (response.status === 401) {
+        console.log(response);
+        // localStorage.removeItem("plutusAuth");
+        fetchTransactions();
+        // window.location.href = "/auth/login";
+      }
+
+      if (response.ok) {
+        const data = await response.json();
+        setAllTransactions(data);
+        console.log(data);
+      } else {
+        console.log(response);
+        // localStorage.removeItem("plutusAuth");
+        fetchTransactions();
+        // window.location.href = "/auth/login";
+      }
+    };
+
     fetchTransactions();
-  }, [allTransactions]);
+  }, [allTransactions, authInfo]);
 
   const sortedData = [...allCoins].sort((a, b) => {
     const { key, direction } = sortConfig;
@@ -365,11 +355,9 @@ const CryptoDataTable = () => {
 
   const filteredData = allTransactions.filter((transaction) => {
     const meetsAmount = transaction.amountGHS >= filters.minAmount;
-    const matchesSearch =
-      transaction.transactionId
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      transaction.crypto.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = transaction.transactionId
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
     return meetsAmount && matchesSearch;
   });
 
@@ -441,14 +429,28 @@ const CryptoDataTable = () => {
       <CryptoTable>
         <div className="thead">
           <div className="tr">
-            <TableHeader onClick={() => handleSort("transactionId")}>Transaction ID</TableHeader>
-            <TableHeader onClick={() => handleSort("crypto")}>Crypto</TableHeader>
-            <TableHeader onClick={() => handleSort("address")}>Address</TableHeader>
-            <TableHeader onClick={() => handleSort("amountGHS")}>Amount (GHS)</TableHeader>
-            <TableHeader onClick={() => handleSort("cryptoAmount")}>Crypto Amount</TableHeader>
+            <TableHeader onClick={() => handleSort("transactionId")}>
+              Transaction ID
+            </TableHeader>
+            <TableHeader onClick={() => handleSort("crypto")}>
+              Crypto
+            </TableHeader>
+            <TableHeader onClick={() => handleSort("address")}>
+              Address
+            </TableHeader>
+            <TableHeader onClick={() => handleSort("amountGHS")}>
+              Amount (GHS)
+            </TableHeader>
+            <TableHeader onClick={() => handleSort("cryptoAmount")}>
+              Crypto Amount
+            </TableHeader>
             <TableHeader onClick={() => handleSort("rate")}>Rate</TableHeader>
-            <TableHeader onClick={() => handleSort("status")}>Status</TableHeader>
-            <TableHeader onClick={() => handleSort("createdAt")}>Created At</TableHeader>
+            <TableHeader onClick={() => handleSort("status")}>
+              Status
+            </TableHeader>
+            <TableHeader onClick={() => handleSort("createdAt")}>
+              Created At
+            </TableHeader>
           </div>
         </div>
         <motion.div
@@ -460,13 +462,22 @@ const CryptoDataTable = () => {
           }}
         >
           {paginatedData.map((transaction) => (
-            <TableRow key={transaction.transactionId} variants={tableRowVariants}>
+            <TableRow
+              key={transaction.transactionId}
+              variants={tableRowVariants}
+            >
               <TableCell>{transaction.transactionId}</TableCell>
               <TableCell>{transaction.crypto.toUpperCase()}</TableCell>
               <TableCell>{transaction.address.toUpperCase()}</TableCell>
-              <TableCell>{transaction.amountGHS.toFixed(2).toUpperCase()}</TableCell>
-              <TableCell>{transaction.cryptoAmount.toLocaleString().toUpperCase()}</TableCell>
-              <TableCell>{transaction.rate.toLocaleString().toUpperCase()}</TableCell>
+              <TableCell>
+                {transaction.amountGHS.toFixed(2).toUpperCase()}
+              </TableCell>
+              <TableCell>
+                {transaction.cryptoAmount.toLocaleString().toUpperCase()}
+              </TableCell>
+              <TableCell>
+                {transaction.rate.toLocaleString().toUpperCase()}
+              </TableCell>
               <TableCell>{transaction.status.toUpperCase()}</TableCell>
               <TableCell>{transaction.createdAt}</TableCell>
             </TableRow>
@@ -476,6 +487,5 @@ const CryptoDataTable = () => {
     </TableContainer>
   );
 };
-
 
 export default CryptoDataTable;
