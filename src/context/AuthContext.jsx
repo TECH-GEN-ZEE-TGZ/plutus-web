@@ -3,11 +3,9 @@ import { createContext, useEffect, useState } from "react";
 const AuthContext = createContext({});
 
 export const AuthContextProvider = ({ children }) => {
-  const [authInfo, setAuthInfo] = useState({
-    username: "",
-    token: "",
-    email: "",
-  })
+  const [authInfo, setAuthInfo] = useState(
+    JSON.parse(localStorage.getItem("plutusAuth"))
+  );
   
   useEffect(() => {
     if (!authInfo?.token) {

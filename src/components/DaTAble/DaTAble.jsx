@@ -315,8 +315,8 @@ const CryptoDataTable = () => {
 
     if (response.status === 401) {
       console.log(response);
-      // window.localStorage.clear();
-      // window.location.href = "/auth/login";
+      localStorage.removeItem("plutusAuth");
+      window.location.href = "/auth/login";
     }
 
     if (response.ok) {
@@ -324,8 +324,8 @@ const CryptoDataTable = () => {
       setAllTransactions(data);
     } else {
       console.log(response);
-      // window.localStorage.clear();
-      // window.location.href = "/auth/login";
+      localStorage.removeItem("plutusAuth");
+      window.location.href = "/auth/login";
     }
   };
   

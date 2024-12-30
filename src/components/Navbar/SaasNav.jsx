@@ -120,7 +120,7 @@ const StyledNav = styled(motion.nav)`
 
 const SaasNav = () => {
   const { authInfo, setAuthInfo } = useContext(AuthContext);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <StyledNav>
       <div className="logo">
@@ -149,13 +149,20 @@ const SaasNav = () => {
       {authInfo?.token ? (
         <div className="account">
           <div className="text">
-            <p>Account</p>
-            <h4>Account Name</h4>
+            <p>{authInfo?.username || "username"}</p>
+            <h4>{authInfo?.email || "email address"}</h4>
           </div>
           <div className="img center">
             {authInfo?.image ? <img src="" alt="" /> : <h1>AN</h1>}
           </div>
-          <motion.button whileTap={{ scale: 0.9 }} onClick={() => { localStorage.removeItem("plutusAuth");  setAuthInfo({username:"", token: ""})}} className="logout center">
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            onClick={() => {
+              localStorage.removeItem("plutusAuth");
+              setAuthInfo({ username: "", token: "", email: "" });
+            }}
+            className="logout center"
+          >
             <ion-icon name="log-out"></ion-icon>
           </motion.button>
         </div>

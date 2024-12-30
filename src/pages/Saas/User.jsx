@@ -1,4 +1,4 @@
-import { NavLink, Route, Routes } from "react-router-dom";
+import { NavLink, Route, Routes, useNavigate } from "react-router-dom";
 import CryptoDataTable from "../../components/DaTAble/DaTAble";
 import SaasNav from "../../components/Navbar/SaasNav";
 import { StyledUser } from "./SaasStyles";
@@ -8,9 +8,16 @@ import I1 from "../../assets/img/img3.jpeg";
 import I2 from "../../assets/img/img5.jpeg";
 import { AnimatePresence, motion } from "framer-motion";
 import axios from "axios";
+import AuthContext from "../../context/AuthContext";
 // import * as bitcoin from "bitcoinjs-lib";
 
 const User = () => {
+  const { authInfo } = useContext(AuthContext)
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    !authInfo?.token && navigate("/auth/login")
+  }, [authInfo?.token, navigate])
   return (
     <StyledUser scrollable>
       <SaasNav />
@@ -153,6 +160,7 @@ const Dashboard = () => {
 // <ion-icon name="swap-horizontal-outline"></ion-icon>
 
 const Buy = ({ allCoins }) => {
+  const {domain} = useContext(ContextVariables)
   const ghsRate = 15.6;
   const fees = {
     btc: 10,
@@ -250,7 +258,7 @@ const Buy = ({ allCoins }) => {
     try {
       if (coin) {
         const response = await axios.get(
-          `http://localhost:9090/optimus/v1/api/cryptomus/exchange-rate/${coin}?to=USD`
+          `${domain}/optimus/v1/api/cryptomus/exchange-rate/${coin}?to=USD`
         );
         const rate = response?.data?.result[0]?.course;
         if (rate) {
@@ -274,7 +282,7 @@ const Buy = ({ allCoins }) => {
     try {
       if (coin) {
         const response = await axios.get(
-          `http://localhost:9090/optimus/v1/api/cryptomus/exchange-rate/${coin}?to=USD`
+          `${domain}/optimus/v1/api/cryptomus/exchange-rate/${coin}?to=USD`
         );
         const rate = response?.data?.result[0]?.course;
         if (rate) {
