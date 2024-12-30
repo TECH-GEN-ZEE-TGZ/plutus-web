@@ -53,19 +53,25 @@ const Dashboard = () => {
         <div className="slab">
           <div className="balance">
             <div className="icon center">
-              <ion-icon name="wallet-outline"></ion-icon>
+              <ion-icon name="people-outline"></ion-icon>
             </div>
             <div className="text">
               <h5>Total Referrals</h5>
-              <h3>{authInfo?.totalReferrals}</h3>
+              <h3>{authInfo?.totalReferrals | 0}</h3>
+            </div>
+            <div className="icon center">
+              <ion-icon name="cash-outline"></ion-icon>
             </div>
             <div className="text">
               <h5>Accrued Balance</h5>
-              <h3>${authInfo?.accruedBalance}</h3>
+              <h3>${authInfo?.accruedBalance | 0.0}</h3>
+            </div>
+            <div className="icon center">
+              <ion-icon name="wallet-outline"></ion-icon>
             </div>
             <div className="text">
               <h5>Balance</h5>
-              <h3>${authInfo?.balance}</h3>
+              <h3>${authInfo?.balance | 0.0}</h3>
             </div>
           </div>
           <div className="otherIcons">

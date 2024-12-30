@@ -377,7 +377,7 @@ const CryptoDataTable = () => {
   useEffect(() => {
     setPaginatedData(getPag(filteredData, currentPage, itemsPerPage));
     console.log("Paginated data:", paginatedData);
-  }, [allTransactions]);
+  }, [allTransactions, searchTerm]);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
@@ -409,15 +409,6 @@ const CryptoDataTable = () => {
               value={searchTerm}
               placeholder="Search transaction"
               onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </label>
-          <label>
-            Min Amount:
-            <input
-              type="number"
-              name="minAmount"
-              value={filters.minAmount}
-              onChange={handleFilterChange}
             />
           </label>
         </div>
