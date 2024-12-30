@@ -5,7 +5,7 @@ const AuthContext = createContext({});
 export const AuthContextProvider = ({ children }) => {
   const [authInfo, setAuthInfo] = useState({
     username: "",
-    token: "45678",
+    token: "",
   })
   
   useEffect(() => {

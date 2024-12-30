@@ -54,9 +54,7 @@ const Login = () => {
             "X-API-KEY": "your-api-key" // Replace with your actual API key
           },
           body: JSON.stringify({
-            token: recaptchaToken, // CAPTCHA token
-            username: username,    // Include username
-            password: password     // Include password
+            token: recaptchaToken
           }),
         });
 

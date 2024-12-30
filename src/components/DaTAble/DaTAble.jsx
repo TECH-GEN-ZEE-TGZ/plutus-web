@@ -6,6 +6,7 @@ import { fixedHeight, fixedWidth } from "../../Functions";
 import ContextVariables from "../../context/ContextVariables";
 import { LineChart, Line, ResponsiveContainer } from "recharts";
 import MiniGraph from "../Other/MiniGraph";
+import AuthContext from "../../context/AuthContext";
 
 const TableContainer = styled.div`
   display: flex;
@@ -267,14 +268,15 @@ const CardButton = styled(Button)`
 `;
 
 const CryptoDataTable = () => {
+  const {authInfo} = useContext(AuthContext);
   const { setAllCoins, allCoins } = useContext(ContextVariables);
 
   const [sortConfig, setSortConfig] = useState({
-    key: "name",
+    key: "transactionId",
     direction: "asc",
   });
   const [filters, setFilters] = useState({
-    minPrice: 0,
+    minAmount: 0,
     positiveChange: false,
   });
   const [searchTerm, setSearchTerm] = useState(""); // State for search input
@@ -282,23 +284,36 @@ const CryptoDataTable = () => {
   const itemsPerPage = 10;
 
   useEffect(() => {
-    const fetchCryptoData = async () => {
-      const response = await axios.get(
-        "https://api.coingecko.com/api/v3/coins/markets",
+    const fetchTransactions = async () => {
+      const username = authInfo?.username;
+      console.log(username);
+
+      const response = await fetch(
+        `http://localhost:9090/optimus/v1/api/orders/list/${username}`,
         {
-          params: {
-            vs_currency: "usd",
-            order: "market_cap_desc",
-            per_page: 250,
-            page: 1,
-            sparkline: true,
+          method: "GET",
+          headers: {
+            "X-API-KEY": "your-api-key",
+            Authorization: "Bearer " + authInfo?.token,
           },
         }
       );
-      setAllCoins(response.data);
+
+      if (response.status === 401) {
+        window.localStorage.clear();
+        window.location.href = "/auth/login";
+      }
+
+      if (response.ok) {
+        const data = await response.json();
+        setAllCoins(data);
+      } else {
+        window.localStorage.clear();
+        window.location.href = "/auth/login";
+      }
     };
 
-    fetchCryptoData();
+    fetchTransactions();
   }, [setAllCoins]);
 
   const sortedData = [...allCoins].sort((a, b) => {
@@ -310,14 +325,12 @@ const CryptoDataTable = () => {
     }
   });
 
-  const filteredData = sortedData.filter((coin) => {
-    const meetsPrice = coin.current_price >= filters.minPrice;
-    const meetsChange =
-      !filters.positiveChange || coin.price_change_percentage_24h > 0;
+  const filteredData = sortedData.filter((transaction) => {
+    const meetsAmount = transaction.amountGHS >= filters.minAmount;
     const matchesSearch =
-      coin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      coin.symbol.toLowerCase().includes(searchTerm.toLowerCase());
-    return meetsPrice && meetsChange && matchesSearch;
+      transaction.transactionId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      transaction.crypto.toLowerCase().includes(searchTerm.toLowerCase());
+    return meetsAmount && matchesSearch;
   });
 
   const paginatedData = filteredData.slice(
@@ -348,36 +361,22 @@ const CryptoDataTable = () => {
       <div className="up">
         <div className="labels">
           <label>
-            Find coin:
+            Find transaction:
             <input
               type="search"
               name="searchTerm"
               value={searchTerm}
-              placeholder="Search coin"
+              placeholder="Search transaction"
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </label>
           <label>
-            Min Price:
+            Min Amount:
             <input
               type="number"
-              name="minPrice"
-              value={filters.minPrice}
+              name="minAmount"
+              value={filters.minAmount}
               onChange={handleFilterChange}
-            />
-          </label>
-          <label>
-            Positive Change:
-            <input
-              type="checkbox"
-              name="positiveChange"
-              checked={filters.positiveChange}
-              onChange={() =>
-                setFilters((prev) => ({
-                  ...prev,
-                  positiveChange: !prev.positiveChange,
-                }))
-              }
             />
           </label>
         </div>
@@ -402,13 +401,14 @@ const CryptoDataTable = () => {
       <CryptoTable>
         <div className="thead">
           <div className="tr">
-            <TableHeader>Img</TableHeader>
-            <TableHeader>Name</TableHeader>
-            <TableHeader>Symbol</TableHeader>
-            <TableHeader>Price (USD)</TableHeader>
-            <TableHeader>24h% Change</TableHeader>
-            <TableHeader>Market Cap</TableHeader>
-            <TableHeader>7d Trend</TableHeader>
+            <TableHeader onClick={() => handleSort("transactionId")}>Transaction ID</TableHeader>
+            <TableHeader onClick={() => handleSort("crypto")}>Crypto</TableHeader>
+            <TableHeader onClick={() => handleSort("address")}>Address</TableHeader>
+            <TableHeader onClick={() => handleSort("amountGHS")}>Amount (GHS)</TableHeader>
+            <TableHeader onClick={() => handleSort("cryptoAmount")}>Crypto Amount</TableHeader>
+            <TableHeader onClick={() => handleSort("rate")}>Rate</TableHeader>
+            <TableHeader onClick={() => handleSort("status")}>Status</TableHeader>
+            <TableHeader onClick={() => handleSort("createdAt")}>Created At</TableHeader>
           </div>
         </div>
         <motion.div
@@ -419,25 +419,16 @@ const CryptoDataTable = () => {
             visible: { transition: { staggerChildren: 0.1 } },
           }}
         >
-          {paginatedData.map((coin) => (
-            <TableRow key={coin.id} variants={tableRowVariants}>
-              <TableCell>
-                <img src={coin?.image} alt="" />
-              </TableCell>
-              <TableCell>{coin.name}</TableCell>
-              <TableCell>{coin.symbol.toUpperCase()}</TableCell>
-              <TableCell>${coin.current_price.toLocaleString()}</TableCell>
-              <TableCell
-                style={{
-                  color: coin.price_change_percentage_24h > 0 ? "green" : "red",
-                }}
-              >
-                {coin.price_change_percentage_24h.toFixed(2)}%
-              </TableCell>
-              <TableCell>${coin.market_cap.toLocaleString()}</TableCell>
-              <TableCell>
-                <MiniGraph data={coin?.sparkline_in_7d?.price} />
-              </TableCell>
+          {paginatedData.map((transaction) => (
+            <TableRow key={transaction.transactionId} variants={tableRowVariants}>
+              <TableCell>{transaction.transactionId}</TableCell>
+              <TableCell>{transaction.crypto.toUpperCase()}</TableCell>
+              <TableCell>{transaction.address.toUpperCase()}</TableCell>
+              <TableCell>{transaction.amountGHS.toFixed(2).toUpperCase()}</TableCell>
+              <TableCell>{transaction.cryptoAmount.toLocaleString().toUpperCase()}</TableCell>
+              <TableCell>{transaction.rate.toLocaleString().toUpperCase()}</TableCell>
+              <TableCell>{transaction.status.toUpperCase()}</TableCell>
+              <TableCell>{transaction.createdAt}</TableCell>
             </TableRow>
           ))}
         </motion.div>

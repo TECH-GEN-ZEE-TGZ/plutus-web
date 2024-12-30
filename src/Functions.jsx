@@ -145,14 +145,20 @@ export const makeapiCall = (username, password, onSucess, onError, navigate) => 
   axios
     .post(
       `http://localhost:9090/optimus/v1/api/users/login`,
-      JSON.stringify({
+      {
         username: username,
         password: password,
-      })
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": "your-api-key", 
+        },
+      }
     )
     .then((response) => {
-      if (response.ok) {
-        return response.json(); // Parse JSON here
+      if (response.status === 200) {
+        return response.data; // Parse JSON here
       } else {
         onError("Invalid username or password");
       }
@@ -161,8 +167,9 @@ export const makeapiCall = (username, password, onSucess, onError, navigate) => 
       if (data && data?.token) {
         localStorage.setItem(
           "plutusAuth",
-          JSON.stringify({ username: username, token: data?.token })
+          JSON.stringify({ username: username, token: data?.token})
         );
+        setAuthInfo()
         onSucess;
         navigate("/user/buy");
       }
@@ -171,16 +178,3 @@ export const makeapiCall = (username, password, onSucess, onError, navigate) => 
       onError("An error occured");
     });
 };
-
-
-// fetch("http://localhost:9090/optimus/v1/api/users/login", {
-//   method: "POST",
-//   headers: {
-//     "Content-Type": "application/json",
-//     "X-API-KEY": "your-api-key", // Replace
-//   },
-//   body: JSON.stringify({
-//     username: username,
-//     password: password,
-//   }),
-// });
