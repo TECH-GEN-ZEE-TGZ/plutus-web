@@ -300,16 +300,16 @@ const CryptoDataTable = () => {
       );
 
       if (response.status === 401) {
-        window.localStorage.clear();
-        window.location.href = "/auth/login";
+        // window.localStorage.clear();
+        // window.location.href = "/auth/login";
       }
 
       if (response.ok) {
         const data = await response.json();
         setAllCoins(data);
       } else {
-        window.localStorage.clear();
-        window.location.href = "/auth/login";
+        // window.localStorage.clear();
+        // window.location.href = "/auth/login";
       }
     };
 
