@@ -132,7 +132,7 @@ const SaasNav = () => {
           The Plutus Home
         </p>
       </div>
-      <ul className="links">
+      {!authInfo?.token && <ul className="links">
         <li>
           <NavLink>Buy Crypto</NavLink>
         </li>
@@ -145,7 +145,7 @@ const SaasNav = () => {
         <li>
           <NavLink>Download</NavLink>
         </li>
-      </ul>
+      </ul>}
       {authInfo?.token ? (
         <div className="account">
           <div className="text">
