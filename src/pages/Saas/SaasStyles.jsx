@@ -888,6 +888,7 @@ export const StyledUser = styled(motion.main)`
           background: #e8d7fa;
           border-radius: 100px;
           width: 100%;
+          max-width: 100%;
           height: 7.5%;
           display: flex;
           align-items: center;
@@ -901,7 +902,12 @@ export const StyledUser = styled(motion.main)`
             display: flex;
             align-items: center;
             column-gap: ${fixedWidth(0.25)}px;
+            width: 100%;
+            max-width: ${fixedWidth(20)}px;
             cursor: pointer;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
             > ion-icon {
               font-size: ${fixedHeight(2)}px;
             }
@@ -1011,10 +1017,13 @@ export const StyledUser = styled(motion.main)`
                 align-items: center;
                 justify-content: space-evenly;
                 > button {
-                  width: ${fixedHeight(2.5)}px;
+                  min-width: ${fixedHeight(2.5)}px;
+                  width: auto;
                   height: ${fixedHeight(2.5)}px;
-                  border-radius: 50%;
+                  border-radius: 50px;
+                  padding: 0 5px;
                   color: white;
+                  font-size: ${fixedHeight(1.5)}px;
                   > ion-icon {
                     font-size: ${fixedHeight(2)}px;
                   }

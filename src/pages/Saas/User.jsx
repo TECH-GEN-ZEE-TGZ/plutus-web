@@ -135,16 +135,16 @@ const Dashboard = () => {
             <div className="bar">
               <NavLink to={"./buy"}>Buy</NavLink>
               <NavLink to={"./hash"}>Hash</NavLink>
-              <NavLink to={"./calculate"}>Calculate</NavLink>
+              {/* <NavLink to={"./calculate"}>Calculate</NavLink> */}
             </div>
           </div>
           <Routes>
             <Route path="/buy" element={<Buy allCoins={allCoins} />} />
             <Route path="/hash" element={<Hash allCoins={allCoins} />} />
-            <Route
+            {/* <Route
               path="/calculate"
               element={<Calculate allCoins={allCoins} />}
-            />
+            /> */}
           </Routes>
         </div>
       </div>
@@ -158,7 +158,6 @@ const Dashboard = () => {
 // <i class='bx bx-download' ></i>
 // <i class='bx bx-upload'></i>
 // <ion-icon name="swap-horizontal-outline"></ion-icon>
-
 
 const Buy = ({ allCoins }) => {
   const { domain } = useContext(ContextVariables);
@@ -247,6 +246,7 @@ const Buy = ({ allCoins }) => {
     const updatedWallets = [...wallets, walletAddress];
     // setWallets(updatedWallets);
     setPayWal(walletAddress);
+    alert("Wallet address successfully verified!");
 
     // Save to localStorage
     // localStorage.setItem("wallets", JSON.stringify(updatedWallets));
@@ -274,7 +274,7 @@ const Buy = ({ allCoins }) => {
         if (exchangeRate) {
           const feeAmtGhs = parseFloat(fees[coin.toLowerCase()] * ghsRate);
           const ghsAmount = payVal > 0 && payVal - feeAmtGhs;
-          setBuyVal(((ghsAmount / ghsRate ) / exchangeRate).toFixed(8));
+          setBuyVal((ghsAmount / ghsRate / exchangeRate).toFixed(8));
         } else {
           // alert("Response doesn't contain exchange rate!");
           setBuyVal(0);
@@ -305,7 +305,9 @@ const Buy = ({ allCoins }) => {
         setExRate(exchangeRate);
         if (exchangeRate) {
           const feeAmtGhs = parseFloat(fees[coin?.toLowerCase()] * ghsRate);
-          const ghsAmount = parseFloat(buyVal > 0 && buyVal * exchangeRate * ghsRate).toFixed(2);
+          const ghsAmount = parseFloat(
+            buyVal > 0 && buyVal * exchangeRate * ghsRate
+          ).toFixed(2);
           setPayVal((ghsAmount - feeAmtGhs).toFixed(8));
         } else {
           // alert("Response doesn't contain exchange rate!");
@@ -381,7 +383,12 @@ const Buy = ({ allCoins }) => {
 
   const buyCryptoCoin = async () => {
     try {
-      if (!buying?.symbol?.toLowerCase() && !payVal && !payWal && !buyVal) {
+      if (
+        !buying?.symbol?.toLowerCase() &&
+        payVal === 0 &&
+        payWal?.length === 0 &&
+        buyVal === 0
+      ) {
         alert("Invalid Form inputs");
       } else {
         alert(`${buying?.symbol?.toLowerCase()} ${payVal} ${payWal} ${buyVal}`);
@@ -561,7 +568,7 @@ const Buy = ({ allCoins }) => {
               />
               <div className="buttons">
                 <button type="submit">
-                  <ion-icon name="checkmark-outline"></ion-icon>
+                  {/* <ion-icon name="checkmark-outline"></ion-icon> */}verify
                 </button>
               </div>
             </form>
@@ -589,25 +596,72 @@ const Buy = ({ allCoins }) => {
   );
 };
 
+const Hash = ({ allCoins }) => {
+  const { domain } = useContext(ContextVariables);
+  const allowedCoins = ["btc", "ltc", "usdt", "xmr"];
 
-const Hash = ({ allCoins }) => (
-  <>
-    <div className="opt">
-      <h4>Select Cryptocurrency</h4>
-      <select name="" id="">
-        <option value="">Choose Cryptocurrency</option>
-      </select>
-    </div>
-    <div className="opt">
-      <h4>Enter Transaction Hash</h4>
-      <form className="input">
-        <input type="text" placeholder="Enter hash" />
-        {/* <button type="submit">Verify</button> */}
-      </form>
-    </div>
-    <button>#Verify</button>
-  </>
-);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const [filteredCoins, setFilteredCoins] = useState([]);
+
+  const getCoins = () => {
+    setFilteredCoins(
+      allCoins.filter(
+        (coin) =>
+          allowedCoins.includes(coin.symbol.toLowerCase()) && // Include only allowed coins
+          (coin.name.toLowerCase().includes(searchTerm.toLowerCase()) || // Match by name
+            coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())) // Match by symbol
+      )
+    );
+  };
+  useEffect(() => {
+    getCoins();
+  }, [allCoins]);
+
+  const [hashNum, setHashNum] = useState("");
+
+  const handleVerifyHash = async (e) => {
+    e.preventDefault();
+    if (!hashNum) {
+      alert("Please enter a valid hash number!");
+      return;
+    }
+
+    // Verify hash number
+    axios.post(`${domain}`, {}, {})
+      .then((response) => {
+        alert("Hash number verified successfully!");
+      })
+      .catch((error) => {
+        alert("An error occured while verifying hash number!")
+          ;
+      })
+  }
+
+  return (
+    <>
+      <div className="opt">
+        <h4>Select Cryptocurrency</h4>
+        <select name="" id="">
+          <option value="">Choose Cryptocurrency</option>
+          {filteredCoins?.map((coin, index) => (
+            <option key={index} value={coin?.symbol?.toUpperCase()}>
+              {coin?.symbol?.toUpperCase()}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="opt">
+        <h4>Enter Transaction Hash</h4>
+        <form onSubmit={handleVerifyHash} className="input">
+          <input type="text" placeholder="Enter hash" />
+          {/* <button type="submit">Verify</button> */}
+        </form>
+      </div>
+      <button onClick={handleVerifyHash}>#Verify</button>
+    </>
+  );
+};
 
 const Calculate = ({ allCoins }) => (
   <>
