@@ -143,15 +143,46 @@ const PaginationControls = styled.div`
       font-size: ${fixedHeight(2)}px;
     }
   }
+
+  @media only screen and (max-width: 768px) {
+    & {
+      display: none;
+    }
+  }
 `;
 
 const CryptoCardContainer = styled.div`
   display: none;
+  list-style-type: none;
+  width: 100%;
 
   @media (max-width: 768px) {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    height: ${fixedHeight(50)}px;
+    row-gap: ${fixedHeight(1.5)}px;
+    /* gap: 16px; */
+
+    > li {
+      overflow: hidden;
+      width: 100%;
+      min-height: ${fixedHeight(25)}px;
+      padding: ${fixedHeight(1)}px;
+      height: auto;
+      /* border: 3px solid red; */
+      border-radius: 15px;
+      display: flex;
+      flex-direction: column;
+      row-gap: ${fixedHeight(0.75)}px;
+      background: #e8d7fa;
+      > h3 {
+        font-size: ${fixedHeight(1.5)}px;
+        font-weight: 400;
+        > span {
+          font-weight: 800;
+        }
+      }
+    }
   }
 `;
 
@@ -490,6 +521,39 @@ const CryptoDataTable = () => {
           ))}
         </motion.div>
       </CryptoTable>
+      <CryptoCardContainer className="scrollable">
+        {paginatedData?.map((transaction, index) => (
+          <li key={index}>
+            <h3>
+              <span>ID:</span> {transaction?.transactionId || "N/A"}
+            </h3>
+            <h3>
+              <span>Crypto:</span> {transaction?.crypto?.toUpperCase()}
+            </h3>
+            <h3>
+              <span>Address:</span> {transaction?.address?.toUpperCase()}
+            </h3>
+            <h3>
+              <span>Amount (GHS):</span>{" "}
+              {transaction?.amountGHS?.toFixed(2)?.toUpperCase()}
+            </h3>
+            <h3>
+              <span>Crypto Amount:</span>{" "}
+              {transaction?.cryptoAmount?.toLocaleString()?.toUpperCase()}
+            </h3>
+            <h3>
+              <span>Rate:</span>{" "}
+              {transaction?.rate?.toLocaleString()?.toUpperCase()}
+            </h3>
+            <h3>
+              <span>Status:</span> {transaction?.status?.toUpperCase()}
+            </h3>
+            <h3>
+              <span>Date:</span> {transaction?.createdAt || "N/A"}
+            </h3>
+          </li>
+        ))}
+      </CryptoCardContainer>
     </TableContainer>
   );
 };
