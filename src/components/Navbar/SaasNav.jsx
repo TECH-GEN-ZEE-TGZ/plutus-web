@@ -4,6 +4,7 @@ import { fixedHeight, fixedWidth } from "../../Functions";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import AuthContext from "../../context/AuthContext";
+import Logo from "../../assets/img/plutus.jpg"
 
 const StyledNav = styled(motion.nav)`
   /* position: fixed; */
@@ -17,11 +18,17 @@ const StyledNav = styled(motion.nav)`
   justify-content: space-between;
   z-index: 20;
   > .logo {
-    width: 25%;
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    cursor: pointer;
+    border-radius: 50%;
+    overflow: hidden;
+    width: ${fixedHeight(6)}px;
+    height: ${fixedHeight(6)}px;
+
     > p {
+      display: none;
       color: black;
       font-size: ${fixedHeight(2.5)}px;
       font-weight: 900;
@@ -123,29 +130,31 @@ const SaasNav = () => {
   const navigate = useNavigate();
   return (
     <StyledNav>
-      <div className="logo">
-        <p
-          onClick={() => {
-            navigate("/");
-          }}
-        >
-          The Plutus Home
-        </p>
+      <div
+        className="logo"
+        onClick={() => {
+          navigate("/");
+        }}
+      >
+        <p>The Plutus Home</p>
+        <img src={Logo} alt="" />
       </div>
-      {!authInfo?.token && <ul className="links">
-        <li>
-          <NavLink>Buy Crypto</NavLink>
-        </li>
-        <li>
-          <NavLink>Sell Crypto</NavLink>
-        </li>
-        <li>
-          <NavLink>About</NavLink>
-        </li>
-        <li>
-          <NavLink>Download</NavLink>
-        </li>
-      </ul>}
+      {!authInfo?.token && (
+        <ul className="links">
+          <li>
+            <NavLink>Buy Crypto</NavLink>
+          </li>
+          <li>
+            <NavLink>Sell Crypto</NavLink>
+          </li>
+          <li>
+            <NavLink>About</NavLink>
+          </li>
+          <li>
+            <NavLink>Download</NavLink>
+          </li>
+        </ul>
+      )}
       {authInfo?.token ? (
         <div className="account">
           <div className="text">

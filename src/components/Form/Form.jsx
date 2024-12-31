@@ -271,4 +271,10 @@ export const StyledFormS = styled(motion.form)`
       font-size: ${fixedHeight(1.75)}px;
     }
   }
+
+  @media only screen and (max-width: 768px) {
+    & {
+      padding: ${fixedWidth(2.5)}px;
+    }
+  }
 `;

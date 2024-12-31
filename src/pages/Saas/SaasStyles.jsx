@@ -521,6 +521,9 @@ export const StyledUser = styled(motion.main)`
             border-radius: 15px;
           }
         }
+        .switchBar{
+          display: none;
+        }
       }
     }
     > .top {
@@ -1130,6 +1133,67 @@ export const StyledUser = styled(motion.main)`
     & {
       #dashboard {
         overflow: hidden;
+        > .trades {
+          > .slab {
+            > .otherIcons {
+              position: absolute;
+              right: 2.5%;
+              column-gap: ${fixedWidth(1.5)}px;
+              z-index: 2;
+              &.on {
+                display: flex;
+              }
+              &.off {
+                display: none;
+              }
+            }
+            > .balance {
+              position: absolute;
+              width: 100%;
+              /* top: 0;/ */
+              padding: 2.5%;
+              background: #9e5dad;
+              border-radius: ${fixedHeight(50)}px;
+              justify-content: center;
+              z-index: 1;
+              > .icon {
+                width: ${fixedHeight(4)}px;
+                height: ${fixedHeight(4)}px;
+              }
+              > .text {
+                width: 20%;
+                > h5 {
+                  font-size: ${fixedHeight(1.25)}px;
+                }
+                > h3 {
+                  font-size: ${fixedHeight(1.75)}px;
+              
+                }
+              }
+              &.on {
+                display: none;
+              }
+              &.off {
+                display: flex;
+              }
+            }
+            > .tabs {
+              width: 100%;
+              padding: ${fixedWidth(1.25)}px;
+            }
+            > .switchBar {
+              display: flex;
+              width: ${fixedHeight(5)}px;
+              height: ${fixedHeight(5)}px;
+              border-radius: 50%;
+              background: white;
+              left: 2.5%;
+              > ion-icon {
+                font-size: ${fixedHeight(2.5)}px;
+              }
+            }
+          }
+        }
         > .top {
           display: none;
         }
@@ -1166,7 +1230,6 @@ export const StyledUser = styled(motion.main)`
                 width: 100%;
                 height: 7.5%;
                 padding-top: ${fixedWidth(2.5)}px;
-                
 
                 > h3 {
                   padding: 0 2.5%;

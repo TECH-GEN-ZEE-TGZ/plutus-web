@@ -20,6 +20,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination } from "swiper/modules";
+import { inMobileView } from "../../Functions";
 
 const User = () => {
   const { authInfo, fetchUserRest } = useContext(AuthContext);
@@ -69,6 +70,8 @@ const Dashboard = () => {
 
   const [onTab, setOnTab] = useState("");
 
+  const [switchBar, setSwitchBar] = useState(false);
+
   const [searchTerm, setSearchTerm] = useState("");
   const allowedCoins = ["btc", "ltc", "usdt", "xmr"];
 
@@ -79,11 +82,19 @@ const Dashboard = () => {
         coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())) // Match by symbol
   );
 
+  useEffect(() => {
+    switchBar && setTimeout(() => {
+      setSwitchBar(false)
+    }, 2500);
+  }, [switchBar])
+
   return (
     <section id="dashboard">
       <div className="trades">
         <div className="slab">
-          <div className="balance">
+          <div
+            className={`balance ${inMobileView() && !switchBar ? "on" : "off"}`}
+          >
             <div className="icon center">
               <ion-icon name="people-outline"></ion-icon>
             </div>
@@ -106,7 +117,11 @@ const Dashboard = () => {
               <h3>${authInfo?.balance | 0.0}</h3>
             </div>
           </div>
-          <div className="otherIcons">
+          <div
+            className={`otherIcons ${
+              inMobileView() && !switchBar ? "on" : "off"
+            }`}
+          >
             <button
               onClick={() => setOnTab(onTab === "redeem" ? "" : "redeem")}
               className="redeem"
@@ -126,6 +141,9 @@ const Dashboard = () => {
               <ion-icon name="cog"></ion-icon>
             </button>
           </div>
+          <button onClick={()=>{setSwitchBar(!switchBar)}} className="switchBar">
+            <ion-icon name="swap-vertical-outline"></ion-icon>
+          </button>
           <AnimatePresence>
             {onTab && (
               <motion.div
