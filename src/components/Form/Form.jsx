@@ -20,10 +20,10 @@ export const StyledForm = styled(motion.form)`
   }
   > p {
     font-size: ${fixedHeight(1.75)}px;
-    >span{
-    font-size: ${fixedHeight(2)}px;
+    > span {
+      font-size: ${fixedHeight(2)}px;
       font-weight: 600;
-  }  
+    }
   }
   > .error {
     font-size: ${fixedHeight(2)}px;
@@ -120,11 +120,21 @@ export const StyledForm = styled(motion.form)`
       font-size: ${fixedHeight(1.75)}px;
       color: grey;
     }
-    > a, button {
+    > a,
+    button {
       background: transparent;
       color: black;
       text-decoration: underline;
       font-size: ${fixedHeight(1.75)}px;
+    }
+  }
+
+  @media only screen and (max-width: 768px) {
+    & {
+      width: 100%;
+      > h3 {
+        text-align: center;
+      }
     }
   }
 `;
