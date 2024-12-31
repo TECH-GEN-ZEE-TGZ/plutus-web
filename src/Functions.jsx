@@ -36,10 +36,9 @@ export const motionContainer = {
   },
 };
 export const motionContainerL = {
-  hidden: { opacity: 1, y: "0%" },
+  hidden: { opacity: 1 },
   visible: {
     opacity: 1,
-    y: 0,
     transition: {
       type: "tween",
       delayChildren: 0.3,
@@ -82,9 +81,9 @@ export const motIt3 = {
 };
 
 export const motionItem = {
-  hidden: { y: "-100", opacity: 1 },
+  hidden: { y: "-10%", opacity: 1 },
   visible: {
-    y: 0,
+    y: "0%",
     opacity: 1,
   },
   transition: { duration: 0.75, type: "tween" },
@@ -193,8 +192,12 @@ export const makeapiCall = (
         onSucess();
         navigate("/user/buy");
       }
+      else {
+        addNotification("Error", "Invalid username or password");
+      }
     })
     .catch((error) => {
-      onError("An error occured");
+      onError("An error occurr  ed");
+      addNotification("Error", "An error occurred");
     });
 };

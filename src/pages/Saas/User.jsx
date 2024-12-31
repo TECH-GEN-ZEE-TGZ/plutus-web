@@ -18,6 +18,7 @@ import Notifs from "../../components/Other/Notifs";
 
 const User = () => {
   const { authInfo, fetchUserRest } = useContext(AuthContext);
+  const { allNotifs } = useContext(ContextVariables);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,7 +28,8 @@ const User = () => {
   return (
     <StyledUser scrollable>
       <SaasNav />
-      <Notifs />
+      <AnimatePresence>{allNotifs?.length > 0 && <Notifs />}</AnimatePresence>
+
       <div className="routes scrollable">
         <Routes>
           <Route path="/*" element={<Dashboard />} />
@@ -242,7 +244,7 @@ const Dashboard = () => {
 // <ion-icon name="swap-horizontal-outline"></ion-icon>
 
 const Buy = ({ allCoins }) => {
-  const { domain } = useContext(ContextVariables);
+  const { domain, addNotification } = useContext(ContextVariables);
   const ghsRate = 15.6;
   const fees = {
     btc: 10,
@@ -287,7 +289,7 @@ const Buy = ({ allCoins }) => {
 
   const [buyFee, setBuyFee] = useState(0);
   const [exRate, setExRate] = useState(0);
-  const [buyVal, setBuyVal] = useState(1)
+  const [buyVal, setBuyVal] = useState(1);
   const [payVal, setPayVal] = useState(0);
   const [payWal, setPayWal] = useState("");
 
@@ -309,27 +311,31 @@ const Buy = ({ allCoins }) => {
         walletAddress
       ))
     ) {
-      alert(`Invalid wallet address!`);
+      // alert(`Invalid wallet address!`);
+      addNotification("Error", `Invalid wallet address!`);
       return;
     }
-
+    
     if (!walletAddress.trim()) {
-      alert("Please enter a valid wallet address.");
+      // alert("Please enter a valid wallet address.");
+      addNotification("Error", `Please enter a valid wallet address.`);
       return;
     }
-
+    
     // Check for duplicates
     if (wallets.includes(walletAddress)) {
-      alert("Wallet address already exists!");
+      // alert("Wallet address already exists!");
+      addNotification("Error", `Wallet address already exists!`);
       return;
     }
-
+    
     // Add the new wallet address to the array
     const updatedWallets = [...wallets, walletAddress];
     // setWallets(updatedWallets);
     setPayWal(walletAddress);
-    alert("Wallet address successfully verified!");
-
+    // alert("Wallet address successfully verified!");
+    addNotification("Success", `Wallet address successfully verified!`);
+    
     // Save to localStorage
     // localStorage.setItem("wallets", JSON.stringify(updatedWallets));
 
@@ -347,15 +353,23 @@ const Buy = ({ allCoins }) => {
     const feeAmtGhs = feeAmtUSD * ghsRate;
     setExBuy(true);
 
-    if (payWith.symbol === "GHS" && payVal < feeAmtGhs + 100) {
-      alert(`Minimum ghs amount to buy is ${feeAmtGhs + 100}`);
-      setPayVal(0);
+    if (payWith?.symbol?.toUpperCase() === "GHS" && payVal < feeAmtGhs + 100) {
+      // alert(`Minimum ghs amount to buy is ${feeAmtGhs + 100}`);
+      addNotification(
+        "Error",
+        `Minimum ghs amount to buy is ${feeAmtGhs + 100}`
+      );
+      setPayVal(feeAmtGhs + 100);
       setBuyVal(0);
       setExBuy(false);
       return;
-    } else if (payWith.symbol === "USD" && payVal < feeAmtUSD + 5) {
-      alert(`Minimum usd amount to buy is ${feeAmtUSD + 5}`);
-      setPayVal(0);
+    } else if (
+      payWith?.symbol?.toUpperCase() === "USD" &&
+      payVal < feeAmtUSD + 5
+    ) {
+      // alert(`Minimum usd amount to buy is ${feeAmtUSD + 5}`);
+      addNotification("Error", `Minimum usd amount to buy is ${feeAmtUSD + 5}`);
+      setPayVal(feeAmtUSD + 5);
       setBuyVal(0);
       setExBuy(false);
       return;
@@ -392,6 +406,7 @@ const Buy = ({ allCoins }) => {
       }
     } catch (error) {
       // alert("Error fetching exchange rate!");
+      addNotification("Error", "Error fetching exchange rate!");
       setBuyVal(0);
     } finally {
       setExBuy(false);
@@ -430,7 +445,7 @@ const Buy = ({ allCoins }) => {
               buyVal > 0 && buyVal * exchangeRate * ghsRate.toFixed(2);
             setPayVal((ghsAmount + feeAmtGhs).toFixed(2));
           } else if (payWith.symbol === "USD") {
-            const usdAmount = buyVal > 0 && buyVal * exchangeRate.toFixed(2);
+            const usdAmount = buyVal > 0 && buyVal * exchangeRate.toFixed(8);
             setPayVal((usdAmount + feeAmtUSD).toFixed(2));
           }
         } else {
@@ -440,7 +455,8 @@ const Buy = ({ allCoins }) => {
       }
     } catch (error) {
       // Handle fetch errors
-      console.error("Error fetching exchange rate:", error);
+      // console.error("Error fetching exchange rate:", error);
+      addNotification("Error", "Error fetching exchange rate!");
       setPayVal(0);
     } finally {
       setExPay(false);
@@ -743,7 +759,7 @@ const Hash = ({ allCoins }) => {
   useEffect(() => {
     getCoins();
   }, [allCoins]);
-const [cryptoType, setCryptoType] = useState("");
+  const [cryptoType, setCryptoType] = useState("");
   const [hash, setHash] = useState("");
 
   const handleVerifyHash = async (e) => {
@@ -763,20 +779,19 @@ const [cryptoType, setCryptoType] = useState("");
     console.log(searchTerm);
     axios
       .get(`${domain}`, {}, {})
-      .then(response => {
+      .then((response) => {
         console.log(response);
         if (response.ok) {
           return response.json();
         }
         throw new Error("Network response was not ok.");
       })
-      .then(data => {
+      .then((data) => {
         if (data.code === 1) {
           displayResults(data);
         }
-      }
-      )
-      .catch(error => {
+      })
+      .catch((error) => {
         console.error("An error occurred:", error);
         alert("An error occurred. Please try again.");
       });
@@ -802,9 +817,7 @@ const [cryptoType, setCryptoType] = useState("");
 
     // Show Results
     document.getElementById("results").hidden = false;
-}
-
-  
+  }
 
   return (
     <>

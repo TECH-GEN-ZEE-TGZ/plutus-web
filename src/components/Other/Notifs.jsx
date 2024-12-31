@@ -1,11 +1,16 @@
 import { motion } from "framer-motion";
 import styled from "styled-components";
-import { fixedHeight, fixedWidth } from "../../Functions";
+import {
+  fixedHeight,
+  fixedWidth,
+  motionContainer,
+  motionContainerL,
+  motionItem,
+} from "../../Functions";
 import ContextVariables from "../../context/ContextVariables";
 import { useContext } from "react";
 
 const StyledNotifs = styled(motion.aside)`
-  /* display: none; */
   z-index: 50;
   position: absolute;
   top: 0;
@@ -25,12 +30,25 @@ const StyledNotifs = styled(motion.aside)`
     row-gap: ${fixedHeight(1)}px;
     > li {
       width: 100%;
-      min-height: ${fixedHeight(5)}px;
-      height: auto;
+      min-height: ${fixedHeight(7.5)}px;
       background: #9e5dad;
       color: white;
       border-radius: 15px;
       font-size: ${fixedHeight(1.75)}px;
+      padding: ${fixedWidth(1)}px;
+      display: flex;
+      flex-direction: column;
+      row-gap: ${fixedHeight(1)}px;
+      > .top {
+        justify-content: space-between;
+        width: 100%;
+        > p {
+          font-size: ${fixedHeight(1.5)}px;
+        }
+      }
+      > p {
+        font-size: ${fixedHeight(1.75)}px;
+      }
     }
   }
 `;
@@ -38,38 +56,53 @@ const StyledNotifs = styled(motion.aside)`
 const Notifs = () => {
   const { allNotifs, setAllNotifs } = useContext(ContextVariables);
 
-  // const notif1 = {
-  //   type: "Success",
-  //   message: "You have a new message from KingPlutus",
-  //   date: Date.now(),
-  // }
-  // const notif2 = {
-  //   type: "Error",
-  //   message: "You have a new message from KingPlutus",
-  //   date: Date.now(),
-  // }
-
   return (
     <StyledNotifs>
-      <ul>
+      <motion.ul
+        layout
+        variants={motionContainerL}
+        initial="hidden"
+        animate="visible"
+      >
         {allNotifs.map((notif, index) => (
           <Notif notif={notif} index={index} />
         ))}
-      </ul>
+      </motion.ul>
     </StyledNotifs>
   );
 };
 
 export default Notifs;
 
-
 const Notif = ({ notif, index }) => {
-    
   return (
-    <li key={index} className="center">
-      <p>{notif?.type}</p>
+    <motion.li
+      style={{
+        background:
+          notif?.type?.toLowerCase() === "success"
+            ? "limegreen"
+            : notif?.type?.toLowerCase() === "error"
+            ? "red"
+            : "",
+      }}
+      variants={motionItem}
+      key={index}
+      className=""
+    >
+      <div className="top al-c">
+        <p>
+          {notif?.type?.toLowerCase() === "success" ? (
+            <i className="bx bxs-check-circle bx-tada"></i>
+          ) : notif?.type?.toLowerCase() === "error" ? (
+            <i className="bx bxs-error bx-tada"></i>
+          ) : (
+            <></>
+          )}
+          {notif?.type}
+        </p>
+        <p>{new Date(notif?.date).toLocaleString()}</p>
+      </div>
       <p>{notif?.message}</p>
-      <p>{new Date(notif?.date).toLocaleString()}</p>
-    </li>
+    </motion.li>
   );
-}
+};

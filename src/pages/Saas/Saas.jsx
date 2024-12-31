@@ -9,6 +9,7 @@ import AuthPage from "../Other/AuthPage";
 import User from "./User";
 import { useContext, useEffect } from "react";
 import AuthContext from "../../context/AuthContext";
+import Payment from "../Other/Payment";
 
 const StyledSaas = styled(motion.nav)`
   width: 100%;
@@ -28,18 +29,18 @@ const Saas = () => {
     <StyledSaas className="center">
       <Routes>
         <Route
-          path="/auth/*"
-          element={
-            <AnimatePresence>
-              <AuthPage />
-            </AnimatePresence>
-          }
-        />
-        <Route
           path="/"
           element={
             <AnimatePresence>
               <Land />
+            </AnimatePresence>
+          }
+        />
+        <Route
+          path="/auth/*"
+          element={
+            <AnimatePresence>
+              <AuthPage />
             </AnimatePresence>
           }
         />
@@ -49,6 +50,15 @@ const Saas = () => {
             <AnimatePresence>
               {authInfo?.token ? <User /> : <></>}
               {/* <User /> */}
+            </AnimatePresence>
+          }
+        />
+        <Route
+          path="/payment/*"
+          element={
+            <AnimatePresence>
+              {/* {authInfo?.token ? <Payment /> : <></>} */}
+              <Payment />
             </AnimatePresence>
           }
         />

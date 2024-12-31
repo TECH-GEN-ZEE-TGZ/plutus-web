@@ -34,6 +34,7 @@ const Login = () => {
       // Check if fields are filled
       if (!username || !password) {
         setError("Please fill in both fields.");
+        addNotification("Error", "Please fill in both fields.");
         setLoading(false);
         return;
       }
@@ -81,7 +82,7 @@ const Login = () => {
           grecaptcha.reset(); // Reset the CAPTCHA if needed
         }
       });
-    } catch (error) {
+    } catch (error) { 
       console.error("An error occurred:", error);
       setError("An error occurred. Please try again.");
       setLoading(false);
