@@ -12,6 +12,7 @@ import AuthContext from "../../context/AuthContext";
 import Settings from "../Other/Settings";
 import Redeem from "../Other/Redeem";
 import Support from "../Other/Support";
+import MiniGraph from "../../components/Other/MiniGraph";
 // import * as bitcoin from "bitcoinjs-lib";
 
 const User = () => {
@@ -52,6 +53,16 @@ const Dashboard = () => {
 
   const [onTab, setOnTab] = useState("");
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const allowedCoins = ["btc", "ltc", "usdt", "xmr"];
+
+  const filteredCoins = allCoins.filter(
+    (coin) =>
+      allowedCoins.includes(coin.symbol.toLowerCase()) && // Include only allowed coins
+      (coin.name.toLowerCase().includes(searchTerm.toLowerCase()) || // Match by name
+        coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())) // Match by symbol
+  );
+
   return (
     <section id="dashboard">
       <div className="trades">
@@ -75,7 +86,7 @@ const Dashboard = () => {
               <ion-icon name="wallet-outline"></ion-icon>
             </div>
             <div className="text">
-              <h5>Balance</h5>
+              <h5>Available Balance</h5>
               <h3>${authInfo?.balance | 0.0}</h3>
             </div>
           </div>
@@ -117,8 +128,6 @@ const Dashboard = () => {
                   ) : (
                     <></>
                   )}
-                  {/* <Settings /> */}
-                  {/* <Redeem /> */}
                 </div>
               </motion.div>
             )}
@@ -128,20 +137,37 @@ const Dashboard = () => {
       <div className="top">
         <div className="left">
           <div className="title al-c">
-            <h3>Recent Transaction</h3>
+            <h3>Coin Updates</h3>
           </div>
           <ul className="scrollable">
-            {recentNotifs?.map((notif, index) => (
+            {filteredCoins?.map((coin, index) => (
               <li>
                 <div className="icon center">
-                  <i className="bx bx-download"></i>
+                  {/* <i className="bx bx-download"></i> */}
+                  <img src={coin?.image} alt="" />
                 </div>
                 <div className="info">
-                  <h3>Receive BTC</h3>
+                  <h3>{coin?.name}</h3>
                   <h5>
-                    <span>Completed</span> | March 20, 2024
+                    Market Cap:{" "}
+                    <span>${coin?.market_cap?.toLocaleString()}</span>
                   </h5>
-                  <p>3456789876454 BTC</p>
+                  <h5>
+                    Price: <span>${coin?.current_price?.toLocaleString()}</span>
+                  </h5>
+                  <motion.h5
+                    style={{
+                      color:
+                        coin?.price_change_percentage_24h > 0 ? "green" : "red",
+                    }}
+                  >
+                    24h% Change:{" "}
+                    <span>
+                      {coin?.price_change_percentage_24h?.toFixed(2)}%
+                    </span>
+                  </motion.h5>
+                  <p>7 DAYS TREND:</p>
+                  <MiniGraph data={coin?.sparkline_in_7d?.price} />
                 </div>
               </li>
             ))}

@@ -52,11 +52,6 @@ const Settings = () => {
       }
 
       if (response.ok) {
-        // openCustomModal(
-        //   "Success",
-        //   "Password changed successfully!",
-        //   "/p/login"
-        // );
         alert("Password changed successfully!");
       } else {
         const data = await response.json();

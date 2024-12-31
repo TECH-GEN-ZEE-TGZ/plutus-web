@@ -8,7 +8,7 @@ import AuthContext from "../../context/AuthContext";
 const Redeem = () => {
     const { domain } = useContext(ContextVariables);
     const {authInfo} = useContext(AuthContext);
-    const [accruedBalance, setAccruedBalance] = useState("");
+    const [accruedBalance, setAccruedBalance] = useState(authInfo?.accruedBalance);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -57,49 +57,55 @@ const Redeem = () => {
     };
 
     return (
-        <StyledFormS
-            initial={{ opacity: 0, scale: 0.75 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.75 }}
-            onSubmit={handleRedeem}
-        >
-            <h3>Redeem Points</h3>
-            <AnimatePresence>
-                {error && (
-                    <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="error"
-                    >
-                        <i className="bx bxs-error bx-tada"></i>
-                        {error}
-                        <i className="bx bxs-error bx-tada"></i>
-                    </motion.p>
-                )}
-            </AnimatePresence>
+      <StyledFormS
+        initial={{ opacity: 0, scale: 0.75 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.75 }}
+        onSubmit={handleRedeem}
+      >
+        <h3>Redeem Balance</h3>
+        <AnimatePresence>
+          {error && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="error"
+            >
+              <i className="bx bxs-error bx-tada"></i>
+              {error}
+              <i className="bx bxs-error bx-tada"></i>
+            </motion.p>
+          )}
+        </AnimatePresence>
 
-            <input
+        {/* <input
                 type="number"
                 placeholder="Accrued Balance"
                 value={accruedBalance}
                 onChange={(e) => setAccruedBalance(e.target.value)}
-            />
+            /> */}
+            <p>Accrued Balance</p>
+        <h1>${accruedBalance || parseFloat(0.00)}</h1>
 
-            <motion.button whileTap={{ scale: 0.9 }} type="submit" disabled={loading}>
-                <span>
-                    {loading ? (
-                        <>
-                            <i className="bx bx-loader bx-spin"></i> Redeeming Points
-                        </>
-                    ) : (
-                        <>
-                            Redeem Points <ion-icon name="arrow-forward"></ion-icon>
-                        </>
-                    )}
-                </span>
-            </motion.button>
-        </StyledFormS>
+        <motion.button
+          whileTap={{ scale: 0.9 }}
+          type="submit"
+          disabled={loading}
+        >
+          <span>
+            {loading ? (
+              <>
+                <i className="bx bx-loader bx-spin"></i> Redeeming Points
+              </>
+            ) : (
+              <>
+                Redeem Points <ion-icon name="arrow-forward"></ion-icon>
+              </>
+            )}
+          </span>
+        </motion.button>
+      </StyledFormS>
     );
 };
 

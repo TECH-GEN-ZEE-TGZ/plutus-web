@@ -10,9 +10,9 @@ import ContextVariables from "../../context/ContextVariables";
 const Login = () => {
   const navigate = useNavigate();
 
-  const {domain} = useContext(ContextVariables)
+  const { domain } = useContext(ContextVariables);
   const { authInfo, setAuthInfo } = useContext(AuthContext);
- 
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [agree, setAgree] = useState(false);
@@ -20,48 +20,50 @@ const Login = () => {
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
-    
+
     if (!username || !password) {
       setError("Please fill in all fields.");
+      setLoading(false);
       return;
     }
     
     // if (!agree) {
-    //   setError("You must agree to the terms.");
-    //   return;
+      //   setError("You must agree to the terms.");
+      //   return;
     // }
-    
+
     setError(""); // Clear any previous errors
     
     try {
       // Check if fields are filled
       if (username === "" || password === "") {
         setError("Please fill in both fields.");
+        setLoading(false);
         return;
       }
-      
-      setLoading(true);
+
       // Call Google reCAPTCHA v3
       await grecaptcha.ready(async function () {
-        const recaptchaToken = await grecaptcha.execute('6LeG0KEqAAAAAB0ij0gsJi4IFC6RC1dU-UpLFjfQ', { action: 'submit' });
+        const recaptchaToken = await grecaptcha.execute(
+          "6LeG0KEqAAAAAB0ij0gsJi4IFC6RC1dU-UpLFjfQ",
+          { action: "submit" }
+        );
 
         console.log("CAPTCHA Token:", recaptchaToken);
 
         // Send the token and form data to your backend
-        const response = await fetch(
-          `${domain}/api/verify-captcha`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "X-API-KEY": "your-api-key", // Replace with your actual API key
-            },
-            body: JSON.stringify({
-              token: recaptchaToken,
-            }),
-          }
-        );
+        const response = await fetch(`${domain}/api/verify-captcha`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-API-KEY": "your-api-key", // Replace with your actual API key
+          },
+          body: JSON.stringify({
+            token: recaptchaToken,
+          }),
+        });
 
         if (response.ok) {
           makeapiCall(
@@ -75,7 +77,11 @@ const Login = () => {
           );
         } else {
           const errorResult = await response.json();
-          setError(`CAPTCHA verification failed: ${errorResult.message || "Unknown error"}`);
+          setError(
+            `CAPTCHA verification failed: ${
+              errorResult.message || "Unknown error"
+            }`
+          );
           grecaptcha.reset(); // Reset the CAPTCHA if needed
         }
       });
@@ -87,7 +93,6 @@ const Login = () => {
     }
   };
 
-  
   return (
     <StyledForm
       initial={{ opacity: 0, scale: 0.75 }}
@@ -149,23 +154,27 @@ const Login = () => {
         <NavLink>Forgotten Password?</NavLink>
       </div>
 
-      <motion.button
-        whileTap={loading && { scale: 0.9 }}
-        type="submit"
-        disabled={loading}
-      >
-        <span>
-          {loading ? (
-            <>
-              <i className="bx bx-loader bx-spin"></i> Logging in
-            </>
-          ) : (
-            <>
-              Login <ion-icon name="arrow-forward"></ion-icon>
-            </>
-          )}
-        </span>
-      </motion.button>
+      {loading ? 
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          type="submit"
+          disabled={loading}
+        >
+          <span>
+            <i className="bx bx-loader bx-spin"></i>
+          </span>
+        </motion.button>
+       : 
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          type="submit"
+          disabled={loading}
+        >
+          <span>
+            Login <ion-icon name="arrow-forward"></ion-icon>
+          </span>
+        </motion.button>
+      }
 
       <div className="switch">
         <p>Not a member?</p>

@@ -607,11 +607,12 @@ export const StyledUser = styled(motion.main)`
               width: ${fixedHeight(5)}px;
               height: ${fixedHeight(5)}px;
               border-radius: 50%;
-              background: linear-gradient(
+              /* background: linear-gradient(
                 135deg,
                 hsl(41, 90%, 75%),
                 hsl(40.7, 90.6%, 49.8%)
-              );
+              ); */
+              background: transparent;
               color: white;
               > i,
               ion-icon {

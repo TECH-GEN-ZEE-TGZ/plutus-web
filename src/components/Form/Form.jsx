@@ -18,7 +18,7 @@ export const StyledForm = styled(motion.form)`
     font-size: ${fixedHeight(5)}px;
     color: hsl(288.75, 40%, 30%);
   }
-  >.error{
+  > .error {
     font-size: ${fixedHeight(2)}px;
     color: red;
   }
@@ -136,7 +136,23 @@ export const StyledFormS = styled(motion.form)`
     font-size: ${fixedHeight(2)}px;
     color: hsl(288.75, 40%, 30%);
   }
-  >.error{
+  > h1 {
+    font-size: ${fixedHeight(2)}px;
+    background: linear-gradient(
+      90deg,
+      hsl(40.69565217391305, 90.5511811023622%, 49.80392156862745%),
+      hsl(289.0909090909091, 45.833333333333336%, 81.17647058823529%),
+      hsl(289.0909090909091, 45.833333333333336%, 81.17647058823529%)
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  > p {
+    font-size: ${fixedHeight(1.5)}px;
+    color: hsl(288.75, 40%, 30%);
+  }
+  > .error {
     font-size: ${fixedHeight(1.5)}px;
     color: red;
   }
