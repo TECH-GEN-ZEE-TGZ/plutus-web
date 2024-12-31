@@ -24,7 +24,8 @@ const User = () => {
   useEffect(() => {
     !authInfo?.token && navigate("/auth/login");
     authInfo?.token && fetchUserRest();
-  }, [authInfo?.token, navigate]);
+  }, [authInfo?.token]);
+
   return (
     <StyledUser scrollable>
       <SaasNav />
@@ -315,27 +316,27 @@ const Buy = ({ allCoins }) => {
       addNotification("Error", `Invalid wallet address!`);
       return;
     }
-    
+
     if (!walletAddress.trim()) {
       // alert("Please enter a valid wallet address.");
       addNotification("Error", `Please enter a valid wallet address.`);
       return;
     }
-    
+
     // Check for duplicates
     if (wallets.includes(walletAddress)) {
       // alert("Wallet address already exists!");
       addNotification("Error", `Wallet address already exists!`);
       return;
     }
-    
+
     // Add the new wallet address to the array
     const updatedWallets = [...wallets, walletAddress];
     // setWallets(updatedWallets);
     setPayWal(walletAddress);
     // alert("Wallet address successfully verified!");
     addNotification("Success", `Wallet address successfully verified!`);
-    
+
     // Save to localStorage
     // localStorage.setItem("wallets", JSON.stringify(updatedWallets));
 
@@ -738,13 +739,22 @@ const Buy = ({ allCoins }) => {
 };
 
 const Hash = ({ allCoins }) => {
+  const { addNotification } = useContext(ContextVariables);
   var domain = "";
   const apikey = "lsZGSdo9TopH5nikdSyz";
   const allowedCoins = ["btc", "ltc", "usdt", "xmr"];
 
-  const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
+  const [searchTerm, setSearchTerm] = useState("");
   const [filteredCoins, setFilteredCoins] = useState([]);
+  const [cryptoType, setCryptoType] = useState("");
+  const [hash, setHash] = useState("");
+  const [transactionHash, setTransactionHash] = useState("");
+  const [status, setStatus] = useState("");
+  const [blockHeight, setBlockHeight] = useState("");
+  const [fee, setFee] = useState("");
+  const [transactionDate, setTransactionDate] = useState("");
 
   const getCoins = () => {
     setFilteredCoins(
@@ -756,16 +766,22 @@ const Hash = ({ allCoins }) => {
       )
     );
   };
+
   useEffect(() => {
     getCoins();
   }, [allCoins]);
-  const [cryptoType, setCryptoType] = useState("");
-  const [hash, setHash] = useState("");
 
   const handleVerifyHash = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    if (!cryptoType) {
+      addNotification("Error", "Please select a cryto type!");
+      setIsLoading(false);
+      return;
+    }
     if (!hash) {
-      alert("Please enter a valid hash!");
+      addNotification("Error", "Please enter a valid hash!");
+      setIsLoading(false);
       return;
     }
 
@@ -776,47 +792,38 @@ const Hash = ({ allCoins }) => {
     }
 
     // Verify hash
-    console.log(searchTerm);
     axios
       .get(`${domain}`, {}, {})
       .then((response) => {
-        console.log(response);
-        if (response.ok) {
-          return response.json();
+        if (response.status === 200) {
+          return response.data;
         }
         throw new Error("Network response was not ok.");
+        addNotification("Error", "Network response was not ok.");
       })
       .then((data) => {
+        addNotification("Success", "Hash ID Verified!.");
+        setIsLoading(false);
         if (data.code === 1) {
           displayResults(data);
         }
       })
       .catch((error) => {
+        setIsLoading(false);
         console.error("An error occurred:", error);
-        alert("An error occurred. Please try again.");
+        // alert("An error occurred. Please try again.");
+        addNotification("Error", "An error occurred. Please try again.");
       });
   };
 
   //Create use this results
   function displayResults(response) {
     const data = response.data;
-    const transactionHash = data.txid;
-    const status = data.confirmations > 0 ? "Confirmed" : "Pending";
-    const blockHeight = data.block_no;
-    const fee = `${data.fee} LTC`;
-
-    // Convert Unix Timestamp to Date
-    const transactionDate = new Date(data.time * 1000).toLocaleString();
-
-    // Populate Results
-    document.getElementById("resultHash").textContent = transactionHash;
-    document.getElementById("resultStatus").textContent = status;
-    document.getElementById("resultBlocks").textContent = blockHeight;
-    document.getElementById("resultFee").textContent = fee;
-    document.getElementById("resultDate").textContent = transactionDate;
-
-    // Show Results
-    document.getElementById("results").hidden = false;
+    setTransactionHash(data.txid);
+    setStatus(data.confirmations > 0 ? "Confirmed" : "Pending");
+    setBlockHeight(data.block_no);
+    setFee(`${data.fee} LTC`);
+    setTransactionDate(new Date(data.time * 1000).toLocaleString());
   }
 
   return (
@@ -848,7 +855,37 @@ const Hash = ({ allCoins }) => {
           />
         </form>
       </div>
-      <button onClick={handleVerifyHash}>#Verify</button>
+      <div className="stats">
+        <div className="line">
+          <h3>Trans. hash</h3>
+          <p>{transactionHash || "N/A"}</p>
+        </div>
+        <div className="line">
+          <h3>Status</h3>
+          <p>{status || "N/A"}</p>
+        </div>
+        <div className="line">
+          <h3>Block Height</h3>
+          <p>{blockHeight || "N/A"}</p>
+        </div>
+        <div className="line">
+          <h3>Fee</h3>
+          <p>{fee || "N/A"}</p>
+        </div>
+        <div className="line">
+          <h3>Date</h3>
+          <p>{transactionDate || "N/A"}</p>
+        </div>
+      </div>
+      <button onClick={handleVerifyHash}>
+        {isLoading ? (
+          <>
+            <i className="bx bx-loader bx-spin"></i>#Verifying...
+          </>
+        ) : (
+          <>#Verify</>
+        )}
+      </button>
     </>
   );
 };

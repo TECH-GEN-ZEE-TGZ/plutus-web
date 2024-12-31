@@ -1080,6 +1080,26 @@ export const StyledUser = styled(motion.main)`
             }
           }
         }
+        > .stats {
+          width: 100%;
+          height: 40%;
+          padding: 0 1.25%;
+          > .line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #9e5dad;
+            height: calc(100% / 4);
+            > h3 {
+              font-size: ${fixedHeight(1.75)}px;
+              color: hsl(288.75, 40%, 30%);
+            }
+            > p {
+              font-size: ${fixedHeight(1.75)}px;
+              color: #e8d7fa;
+            }
+          }
+        }
         > button {
           width: 100%;
           height: 10%;
