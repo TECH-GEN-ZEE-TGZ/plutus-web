@@ -61,7 +61,21 @@ const Signup = () => {
 
     setLoading(true);
     try {
-      setVerifyEmail(true);
+      await axios
+        .post(
+          `${domain}/optimus/v1/api/users/signUp`,
+          { username, email, password, referralCode },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "X-API-KEY": "your-api-key",
+            },
+          }
+        )
+        .then(() => {
+          setVerifyEmail(true);
+        })
+        .catch(() => {});
     } catch (err) {
       // Handle error
       setError(
@@ -88,8 +102,9 @@ const Signup = () => {
     try {
       await axios
         .post(
-          `${domain}/optimus/v1/api/users/signUp`,
-          { username, email, password, referralCode },
+          `${domain}/optimus/v1/api/users/verifyOtp`,
+          { email, otpCode: verification },
+          // { username, email, password, referralCode, verification },
           {
             headers: {
               "Content-Type": "application/json",
@@ -97,21 +112,7 @@ const Signup = () => {
             },
           }
         )
-        .then(() => {})
-        .then(() => {
-          axios.post(
-            `${domain}/optimus/v1/api/users/verifyOtp`,
-            { email, otpCode: verification },
-            // { username, email, password, referralCode, verification },
-            {
-              headers: {
-                "Content-Type": "application/json",
-                "X-API-KEY": "your-api-key",
-              },
-            }
-          );
-        })
-        .catch(() => {});
+        .then(() => {});
     } catch (err) {
       // Handle error
       setError(
