@@ -48,6 +48,12 @@ const TableContainer = styled.div`
             border-radius: 100px;
             padding: 0 2.5%;
             font-size: ${fixedHeight(1.5)}px;
+
+            @media only screen and (max-width: 768px) {
+              &{
+                width: ${fixedWidth(60)}px;
+              }
+            }
           }
         }
         &:nth-child(3) {
