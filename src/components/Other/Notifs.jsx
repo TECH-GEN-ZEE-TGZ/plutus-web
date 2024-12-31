@@ -14,7 +14,7 @@ const StyledNotifs = styled(motion.aside)`
   margin: 0 35%;
   min-height: ${fixedHeight(7.5)}px;
   height: auto;
-  background: blue;
+  background: #fff0;
   > ul {
     list-style-type: none;
     width: 100%;
@@ -27,8 +27,10 @@ const StyledNotifs = styled(motion.aside)`
       width: 100%;
       min-height: ${fixedHeight(5)}px;
       height: auto;
-      background: gold;
+      background: #9e5dad;
+      color: white;
       border-radius: 15px;
+      font-size: ${fixedHeight(1.75)}px;
     }
   }
 `;
@@ -64,7 +66,7 @@ export default Notifs;
 const Notif = ({ notif, index }) => {
     
   return (
-    <li key={index}>
+    <li key={index} className="center">
       <p>{notif?.type}</p>
       <p>{notif?.message}</p>
       <p>{new Date(notif?.date).toLocaleString()}</p>
