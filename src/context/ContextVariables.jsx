@@ -18,14 +18,6 @@ export const ContextVariablesProvider = ({ children }) => {
     }, 5000);
   };
 
-    // const interval = setInterval(() => {
-    //   addNotification("Success", "Message Received" );
-    // }, 7000);
-
-    // return () => clearInterval(interval);
-  // useEffect(() => {
-  // }, []);
-
   return (
     <ContextVariables.Provider
       value={{

@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import styled from "styled-components";
 import {
   fixedHeight,
@@ -59,14 +59,16 @@ const Notifs = () => {
   return (
     <StyledNotifs>
       <motion.ul
-        layout
+        // layout
         variants={motionContainerL}
         initial="hidden"
         animate="visible"
       >
-        {allNotifs.map((notif, index) => (
-          <Notif notif={notif} index={index} />
-        ))}
+        <AnimatePresence>
+          {allNotifs.map((notif, index) => (
+            <Notif notif={notif} index={index} />
+          ))}
+        </AnimatePresence>
       </motion.ul>
     </StyledNotifs>
   );

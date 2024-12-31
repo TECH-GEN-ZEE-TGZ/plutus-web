@@ -86,6 +86,7 @@ export const motionItem = {
     y: "0%",
     opacity: 1,
   },
+  exit: { y: "-10%", opacity: 1 },
   transition: { duration: 0.75, type: "tween" },
 };
 export const motionImgContainer = {
