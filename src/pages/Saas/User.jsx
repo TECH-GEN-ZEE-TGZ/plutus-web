@@ -75,7 +75,7 @@ const Dashboard = () => {
               <ion-icon name="wallet-outline"></ion-icon>
             </div>
             <div className="text">
-              <h5>Balance</h5>
+              <h5>Available Balance</h5>
               <h3>${authInfo?.balance | 0.0}</h3>
             </div>
           </div>
