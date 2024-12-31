@@ -370,7 +370,7 @@ const Buy = ({ allCoins }) => {
 
   const [buyFee, setBuyFee] = useState(0);
   const [exRate, setExRate] = useState(0);
-  const [buyVal, setBuyVal] = useState(1);
+  const [buyVal, setBuyVal] = useState(0);
   const [payVal, setPayVal] = useState(0);
   const [payWal, setPayWal] = useState("");
 
