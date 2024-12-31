@@ -14,13 +14,12 @@ export const AuthContextProvider = ({ children }) => {
   // Fetch user data
   const fetchUserRest = async () => {
     try {
-      const response = await axios.post(
+      const response = await axios.get(
         `${domain}/optimus/v1/api/users/getUser/${authInfo?.username}`,
-        {},
         {
           headers: {
             "X-API-KEY": "your-api-key",
-            Authorization: `Bearer ${authInfo?.token}`,
+            "Authorization": `Bearer ${authInfo?.token}`,
           },
         }
       );
@@ -39,6 +38,7 @@ export const AuthContextProvider = ({ children }) => {
         handleLogout();
       }
     } catch (error) {
+      console.log(error)
       alert("An error occurred. Could not fetch user info!");
     }
   };
