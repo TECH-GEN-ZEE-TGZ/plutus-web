@@ -179,7 +179,7 @@ export const makeapiCall = (domain, username, password, onSucess, onError, navig
           token: data?.token,
           email: data?.email,
         });
-        onSucess;
+        onSucess();
         navigate("/user/buy");
       }
     })

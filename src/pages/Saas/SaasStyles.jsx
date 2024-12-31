@@ -500,6 +500,27 @@ export const StyledUser = styled(motion.main)`
             }
           }
         }
+        .tabs{
+          display: none;
+          z-index: 50;
+          position: absolute;
+          right: 0;
+          top: 100%;
+          width: ${fixedWidth(17.5)}px;
+          /* height: ${fixedHeight(40)}px; */
+          height: auto;
+          background: #0001;
+          backdrop-filter: blur(25px);
+          border-radius: 25px;
+          padding: ${fixedWidth(0.5)}px;
+          overflow: hidden;
+          >.tab{
+            width: 100%;
+            height: ${fixedHeight(40)}px;
+            background-color: white;
+            border-radius: 15px;
+          }
+        }
       }
     }
     > .top {

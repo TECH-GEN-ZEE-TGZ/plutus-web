@@ -76,7 +76,7 @@ const Dashboard = () => {
           </div>
           <div className="otherIcons">
             <button>
-              <ion-icon name="notifications"></ion-icon>
+              <ion-icon name="ticket"></ion-icon>
             </button>
             <button>
               <i className="bx bx-support bx-tada"></i>
@@ -84,6 +84,11 @@ const Dashboard = () => {
             <button>
               <ion-icon name="cog"></ion-icon>
             </button>
+          </div>
+          <div className="tabs">
+            <div className="tab">
+
+            </div>
           </div>
         </div>
       </div>

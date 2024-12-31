@@ -50,7 +50,7 @@ const Login = () => {
 
         // Send the token and form data to your backend
         const response = await fetch(
-          `https://t6m1hk47-9090.uks1.devtunnels.ms/api/verify-captcha`,
+          `${domain}/api/verify-captcha`,
           {
             method: "POST",
             headers: {
@@ -68,10 +68,10 @@ const Login = () => {
             domain,
             username,
             password,
-            setLoading(false),
+            () => setLoading(false),
             setError,
             navigate,
-            setAuthInfo,
+            setAuthInfo
           );
         } else {
           const errorResult = await response.json();
