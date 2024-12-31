@@ -806,8 +806,8 @@ const Hash = ({ allCoins }) => {
         if (response.status === 200) {
           return response.data;
         }
-        throw new Error("Network response was not ok.");
         addNotification("Error", "Network response was not ok.");
+        throw new Error("Network response was not ok.");
       })
       .then((data) => {
         addNotification("Success", "Hash ID Verified!.");
