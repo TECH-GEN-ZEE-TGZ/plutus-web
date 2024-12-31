@@ -1129,10 +1129,12 @@ export const StyledUser = styled(motion.main)`
   @media only screen and (max-width: 768px) {
     & {
       #dashboard {
+        overflow: hidden;
         > .top {
           display: none;
         }
         > .swiperContainer {
+          /* overflow: hidden; */
           display: flex;
           /* border: 2px solid red; */
           width: 100%;
