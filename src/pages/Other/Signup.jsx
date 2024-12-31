@@ -8,15 +8,16 @@ import ContextVariables from "../../context/ContextVariables";
 
 const Signup = () => {
   const { authInfo, seAuthInfo } = useContext(AuthContext);
-  const { domain } = useContext(ContextVariables)
+  const { domain } = useContext(ContextVariables);
+
+  const [verifyEmail, setVerifyEmail] = useState(false);
 
   const [formData, setFormData] = useState({
-    fullName: "",
     email: "",
     password: "",
     confirmPassword: "",
     referralCode: "",
-    country: "",
+    verification: "",
   });
   const [agree, setAgree] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -28,15 +29,25 @@ const Signup = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleEmailValidation = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    const { fullName, email, password, confirmPassword, country } = formData;
+    const { email, password, confirmPassword, referralCode } = formData;
+    const username = email.split("@")[0];
 
     // Input validation
-    if (!fullName || !email || !password || !confirmPassword || !country) {
+    if (!email || !password || !confirmPassword || !referralCode) {
       setError("Please fill in all the fields.");
+      return;
+    }
+    if (!handleEmailValidation(email)) {
+      setError("Please enter a valid email address.");
       return;
     }
     if (password !== confirmPassword) {
@@ -50,14 +61,59 @@ const Signup = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post("", formData);
-      // Handle success (e.g., redirect or display a success message)
+      // const response = await axios.post(
+      //   `${domain}/`,
+      //   { username, email, password, referralCode },
+      //   {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       "X-API-KEY": "your-api-key",
+      //     },
+      //   }
+      // );
+      // alert("Signup successful!");
+      // console.log(response.data);
+      setVerifyEmail(true);
+    } catch (err) {
+      // Handle error
+      setError(
+        err?.response?.data?.message || "An error occurred. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyEmail = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    const { email, password, referralCode, verification } = formData;
+    const username = email?.split("@")[0];
+
+    if (!email || !username || !password || !referralCode || !verification) {
+      setError("Please fill in all the fields.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        `${domain}/`,
+        { username, email, password, referralCode, verification },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-API-KEY": "your-api-key",
+          },
+        }
+      );
       alert("Signup successful!");
       console.log(response.data);
     } catch (err) {
       // Handle error
       setError(
-        err.response?.data?.message || "An error occurred. Please try again."
+        err?.response?.data?.message || "An error occurred. Please try again."
       );
     } finally {
       setLoading(false);
@@ -69,8 +125,43 @@ const Signup = () => {
       initial={{ opacity: 0, scale: 0.75 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.75 }}
-      onSubmit={handleSubmit}
+      onSubmit={verifyEmail ? handleVerifyEmail : handleSubmit}
     >
+      {verifyEmail ? (
+        <EmailV
+          error={error}
+          formData={formData}
+          handleChange={handleChange}
+          loading={loading}
+          setAgree={setAgree}
+          agree={agree}
+        />
+      ) : (
+        <EmailNV
+          error={error}
+          formData={formData}
+          handleChange={handleChange}
+          loading={loading}
+          setAgree={setAgree}
+          agree={agree}
+        />
+      )}
+    </StyledForm>
+  );
+};
+
+export default Signup;
+
+const EmailNV = ({
+  error,
+  formData,
+  handleChange,
+  loading,
+  setAgree,
+  agree,
+}) => {
+  return (
+    <>
       <h3>Create an account.</h3>
       <AnimatePresence>
         {error && (
@@ -86,49 +177,36 @@ const Signup = () => {
           </motion.p>
         )}
       </AnimatePresence>
-      <input
-        type="text"
-        name="fullName"
-        placeholder="Full Name"
-        value={formData.fullName}
-        onChange={handleChange}
-      />
+
       <input
         type="email"
         name="email"
         placeholder="Email Address"
-        value={formData.email}
+        value={formData?.email}
         onChange={handleChange}
       />
       <input
         type="password"
         name="password"
         placeholder="Password"
-        value={formData.password}
+        value={formData?.password}
         onChange={handleChange}
       />
       <input
         type="password"
         name="confirmPassword"
         placeholder="Confirm Password"
-        value={formData.confirmPassword}
+        value={formData?.confirmPassword}
         onChange={handleChange}
       />
       <input
         type="text"
         name="referralCode"
         placeholder="Enter Referral Code"
-        value={formData.referralCode}
+        value={formData?.referralCode}
         onChange={handleChange}
       />
-      <select name="country" value={formData.country} onChange={handleChange}>
-        <option value="">Select Country</option>
-        {countries.map((country, index) => (
-          <option key={index} value={country}>
-            {country}
-          </option>
-        ))}
-      </select>
+
       <button type="submit" disabled={loading}>
         {loading ? (
           <i className="bx bx-loader bx-spin"></i>
@@ -158,13 +236,58 @@ const Signup = () => {
         <p>Already a member?</p>
         <NavLink to={"/auth/login"}>Login</NavLink>
       </div>
-    </StyledForm>
+    </>
   );
 };
-
-export default Signup;
-
-
+const EmailV = ({
+  error,
+  formData,
+  handleChange,
+  loading,
+  setAgree,
+  agree,
+}) => {
+  return (
+    <>
+      <h3>Verify your email.</h3>
+      <p>
+        Email has been sent to <span>{formData?.email}</span>
+      </p>
+      <AnimatePresence>
+        {error && (
+          <motion.p
+            initial={{ opacity: 0, x: "10%" }}
+            animate={{ opacity: 1, x: "0%" }}
+            exit={{ opacity: 0, y: "-10%" }}
+            className="error"
+          >
+            <i class="bx bxs-error bx-tada"></i>
+            {error}
+            <i class="bx bxs-error bx-tada"></i>
+          </motion.p>
+        )}
+      </AnimatePresence>
+      <input
+        type="text"
+        name="verification"
+        placeholder="Enter Code Sent To Your Email"
+        value={formData?.veirfication}
+        onChange={handleChange}
+      />
+      <button type="submit" disabled={loading}>
+        {loading ? (
+          <>
+            <i className="bx bx-loader bx-spin"></i> Verifying...
+          </>
+        ) : (
+          <>
+            Verify <ion-icon name="arrow-forward"></ion-icon>
+          </>
+        )}
+      </button>
+    </>
+  );
+};
 
 const countries = [
   "Afghanistan",
@@ -362,3 +485,24 @@ const countries = [
   "Zambia",
   "Zimbabwe",
 ];
+
+{
+  /* <select name="country" value={formData.country} onChange={handleChange}>
+        <option value="">Select Country</option>
+        {countries.map((country, index) => (
+          <option key={index} value={country}>
+            {country}
+          </option>
+        ))}
+      </select> */
+}
+
+{
+  /* <input
+        type="text"
+        name="fullName"
+        placeholder="Full Name"
+        value={formData.fullName}
+        onChange={handleChange}
+      /> */
+}

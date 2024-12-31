@@ -18,6 +18,13 @@ export const StyledForm = styled(motion.form)`
     font-size: ${fixedHeight(5)}px;
     color: hsl(288.75, 40%, 30%);
   }
+  > p {
+    font-size: ${fixedHeight(1.75)}px;
+    >span{
+    font-size: ${fixedHeight(2)}px;
+      font-weight: 600;
+  }  
+  }
   > .error {
     font-size: ${fixedHeight(2)}px;
     color: red;
