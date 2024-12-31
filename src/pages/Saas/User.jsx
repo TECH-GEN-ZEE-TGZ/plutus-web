@@ -722,7 +722,8 @@ const Buy = ({ allCoins }) => {
 };
 
 const Hash = ({ allCoins }) => {
-  const { domain } = useContext(ContextVariables);
+  var domain = "";
+  const apikey = "lsZGSdo9TopH5nikdSyz";
   const allowedCoins = ["btc", "ltc", "usdt", "xmr"];
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -743,23 +744,41 @@ const Hash = ({ allCoins }) => {
     getCoins();
   }, [allCoins]);
 
-  const [hashNum, setHashNum] = useState("");
+  const [hash, setHash] = useState("");
 
   const handleVerifyHash = async (e) => {
     e.preventDefault();
-    if (!hashNum) {
-      alert("Please enter a valid hash number!");
+    if (!hash) {
+      alert("Please enter a valid hash!");
       return;
     }
 
-    // Verify hash number
+    if (searchTerm === "usdt") {
+      domain = `https://services.tokenview.io/vipapi/usdt/txdetail/${hash}?apikey=${apikey}`;
+    } else {
+      domain = `https://services.tokenview.io/vipapi/tx/${cryptoType}/${hash}?apikey=${apikey}`;
+    }
+
+    // Verify hash
+    console.log(searchTerm);
     axios
-      .post(`${domain}`, {}, {})
-      .then((response) => {
-        alert("Hash number verified successfully!");
+      .get(`${domain}`, {}, {})
+      .then(response => {
+        console.log(response);
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Network response was not ok.");
       })
-      .catch((error) => {
-        alert("An error occured while verifying hash number!");
+      .then(data => {
+        if (data.code === 1) {
+          displayResults(data);
+        }
+      }
+      )
+      .catch(error => {
+        console.error("An error occurred:", error);
+        alert("An error occurred. Please try again.");
       });
   };
 
