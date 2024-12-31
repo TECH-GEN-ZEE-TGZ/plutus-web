@@ -72,10 +72,18 @@ const Signup = () => {
             },
           }
         )
-        .then(() => {
-          setVerifyEmail(true);
+        .then((response) => {
+          if (response.status === 201) {
+            setVerifyEmail(true);
+          } else if (response.status === 400) {
+            setError(response.data.message || "Error creating account");
+          }
         })
-        .catch(() => {});
+        .catch((err) => {
+          setError(
+            err?.response?.data?.message || "An error occurred. Please try again."
+          );
+        });
     } catch (err) {
       // Handle error
       setError(
@@ -112,7 +120,7 @@ const Signup = () => {
             },
           }
         )
-        .then(() => {});
+        .then(() => { });
     } catch (err) {
       // Handle error
       setError(
