@@ -170,6 +170,7 @@ export const makeapiCall = (
         return response.data; // Parse JSON here
       } else {
         onError("Invalid username or password");
+        onSucess()
         addNotification("Error", "Invalid username or password");
       }
     })
@@ -198,7 +199,8 @@ export const makeapiCall = (
       }
     })
     .catch((error) => {
-      onError("An error occurr  ed");
+      onError("An error occurred");
+      onSucess();
       addNotification("Error", "An error occurred");
     });
 };
