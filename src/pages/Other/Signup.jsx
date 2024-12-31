@@ -8,7 +8,7 @@ import ContextVariables from "../../context/ContextVariables";
 
 const Signup = () => {
   const { authInfo, seAuthInfo } = useContext(AuthContext);
-  const {domain} = useContext(ContextVariables)
+  const { domain } = useContext(ContextVariables)
 
   const [formData, setFormData] = useState({
     fullName: "",

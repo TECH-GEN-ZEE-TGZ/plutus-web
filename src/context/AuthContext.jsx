@@ -13,6 +13,7 @@ export const AuthContextProvider = ({ children }) => {
 
   // Fetch user data
   const fetchUserRest = async () => {
+    console.log(`The domain is ${domain}`);
     try {
       const response = await axios.get(
         `${domain}/optimus/v1/api/users/getUser/${authInfo?.username}`,
@@ -25,6 +26,7 @@ export const AuthContextProvider = ({ children }) => {
       );
 
       if (response.status === 200) {
+        console.log(response);
         const data = response.data;
         setAuthInfo((prev) => ({
           ...prev,
@@ -34,6 +36,7 @@ export const AuthContextProvider = ({ children }) => {
           referralCode: data?.referralCode,
           accruedBalance: data?.accruedBalance,
         }));
+        console.log("User Data:", data);
       } else if (response.status === 401) {
         handleLogout();
       }
