@@ -13,7 +13,6 @@ export const AuthContextProvider = ({ children }) => {
 
   // Fetch user data
   const fetchUserRest = async () => {
-    console.log(`The domain is ${domain}`);
     try {
       const response = await axios.get(
         `${domain}/optimus/v1/api/users/getUser/${authInfo?.username}`,
@@ -26,7 +25,6 @@ export const AuthContextProvider = ({ children }) => {
       );
 
       if (response.status === 200) {
-        console.log(response);
         const data = response.data;
         setAuthInfo((prev) => ({
           ...prev,
@@ -37,12 +35,10 @@ export const AuthContextProvider = ({ children }) => {
           accruedBalance: data?.accruedBalance,
         }));
         addNotification("Success", "Successfully fetched user info!");
-        console.log("User Data:", data);
       } else if (response.status === 401) {
         handleLogout();
       }
     } catch (error) {
-      console.log(error)
       addNotification("Error", "An error occurred. Could not fetch user info!");
     }
   };
@@ -78,11 +74,11 @@ export const AuthContextProvider = ({ children }) => {
     };
   }, []);
 
-  useEffect(() => {
-    if (authInfo?.token) {
-      fetchUserRest();
-    }
-  }, [authInfo?.token]);
+  // useEffect(() => {
+  //   if (authInfo?.token) {
+  //     fetchUserRest();
+  //   }
+  // }, [authInfo?.token]);
 
   return (
     <AuthContext.Provider

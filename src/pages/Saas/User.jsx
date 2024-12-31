@@ -23,13 +23,13 @@ const User = () => {
 
   useEffect(() => {
     !authInfo?.token && navigate("/auth/login");
-    
+
+    return;
   }, [authInfo?.token]);
   useEffect(() => {
     authInfo?.token && fetchUserRest();
+     return ;
   }, []);
-
-  
 
   return (
     <StyledUser scrollable>
