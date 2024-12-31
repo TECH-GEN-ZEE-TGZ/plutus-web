@@ -6,10 +6,48 @@ const AuthContext = createContext({});
 
 export const AuthContextProvider = ({ children }) => {
   const [authInfo, setAuthInfo] = useState(
-    JSON.parse(localStorage.getItem("plutusAuth"))
+    JSON.parse(localStorage.getItem("plutusAuth")) || null
   );
 
   const { domain } = useContext(ContextVariables);
+
+  // Fetch user data
+  const fetchUserRest = async () => {
+    try {
+      const response = await axios.post(
+        `${domain}/optimus/v1/api/users/getUser/${authInfo?.username}`,
+        {},
+        {
+          headers: {
+            "X-API-KEY": "your-api-key",
+            Authorization: `Bearer ${authInfo?.token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        const data = response.data;
+        setAuthInfo((prev) => ({
+          ...prev,
+          username: data?.username,
+          balance: data?.balance,
+          totalReferrals: data?.totalReferrals,
+          referralCode: data?.referralCode,
+          accruedBalance: data?.accruedBalance,
+        }));
+      } else if (response.status === 401) {
+        handleLogout();
+      }
+    } catch (error) {
+      alert("An error occurred. Could not fetch user info!");
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("plutusAuth");
+    setAuthInfo(null);
+    window.location.href = "/auth/login";
+  };
 
   useEffect(() => {
     if (!authInfo?.token) {
@@ -18,44 +56,29 @@ export const AuthContextProvider = ({ children }) => {
         setAuthInfo(JSON.parse(storedAuth));
       }
     }
+  }, [authInfo?.token]);
+
+  // Listen for localStorage changes
+  useEffect(() => {
+    const handleStorageChange = (event) => {
+      if (event.key === "plutusAuth") {
+        const newAuth = JSON.parse(event.newValue);
+        setAuthInfo(newAuth);
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
   }, []);
 
-  const fetchUserRest = async () => {
-    await axios
-      .post(`${domain}/optimus/v1/api/users/getUser/${authInfo?.username}`, {
-        headers: {
-          "X-API-KEY": "your-api-key",
-          Authorization: "Bearer " + authInfo?.token,
-        },
-      })
-      .then((response) => {
-        if (response.status === 401) {
-          localStorage.removeItem("plutusAuth");
-          window.location.href = "/auth/login";
-        }
-        if (response.ok) {
-          return response.json(); // Parse the JSON data
-        } else {
-          localStorage.removeItem("plutusAuth");
-          window.location.href = "/auth/login";
-        }
-      })
-      .then(data => {
-        setAuthInfo({
-          ...authInfo,
-          username: data?.username,
-          balance: data?.balance,
-          totalReferrals: data?.totalReferrals,
-          referralCode: data?.referralCode,
-          accruedBalance: data?.accruedBalance,
-        });
-      })
-      .catch(error => {
-        alert("An error has ovvured. Could not fetch user info!");
-      });
-  };
-
-  useEffect(() => {}, [authInfo?.token]);
+  useEffect(() => {
+    if (authInfo?.token) {
+      fetchUserRest();
+    }
+  }, [authInfo?.token]);
 
   return (
     <AuthContext.Provider
@@ -70,8 +93,3 @@ export const AuthContextProvider = ({ children }) => {
 };
 
 export default AuthContext;
-window.addEventListener("storage", (event) => {
-  if (event.key === "plutusAuth") {
-    setAuthInfo(JSON.parse(event.newValue));
-  }
-});

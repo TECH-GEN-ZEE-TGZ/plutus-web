@@ -337,9 +337,14 @@ const CryptoDataTable = () => {
       }
 
       if (response.ok) {
-        const data = await response.json();
-        setAllTransactions(data);
-        console.log(data);
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const data = await response.json();
+          setAllTransactions(data);
+          console.log(data);
+        } else {
+          console.log("Response is empty");
+        }
       } else {
         console.log(response);
         localStorage.removeItem("plutusAuth");
