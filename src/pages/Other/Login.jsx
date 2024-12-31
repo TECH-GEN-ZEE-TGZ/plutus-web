@@ -72,6 +72,7 @@ const Login = () => {
             setAuthInfo
           );
         } else {
+          setLoading(false);
           const errorResult = await response.json();
           setError(
             `CAPTCHA verification failed: ${
@@ -86,6 +87,7 @@ const Login = () => {
       setError("An error occurred. Please try again.");
       setLoading(false);
     } finally {
+      // setLoading(false);
     }
   };
 
