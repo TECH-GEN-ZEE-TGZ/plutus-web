@@ -22,14 +22,14 @@ const User = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    !authInfo?.token && navigate("/auth/login");
+    if (!authInfo?.token) {
+      navigate("/auth/login");
+    } else {
+      fetchUserRest();
+    }
 
     return;
   }, [authInfo?.token]);
-  useEffect(() => {
-    authInfo?.token && fetchUserRest();
-     return ;
-  }, []);
 
   return (
     <StyledUser scrollable>
