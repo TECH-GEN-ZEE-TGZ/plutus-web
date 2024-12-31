@@ -36,6 +36,17 @@ export const AuthContextProvider = ({ children }) => {
           referralCode: data?.referralCode,
           accruedBalance: data?.accruedBalance,
         }));
+        localStorage.setItem(
+          "plutusAuth",
+          JSON.stringify({
+            ...authInfo,
+            username: data?.username,
+            balance: data?.balance,
+            totalReferrals: data?.totalReferrals,
+            referralCode: data?.referralCode,
+            accruedBalance: data?.accruedBalance,
+          })
+        );
         console.log("User Data:", data);
       } else if (response.status === 401) {
         handleLogout();
@@ -48,7 +59,7 @@ export const AuthContextProvider = ({ children }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("plutusAuth");
-    setAuthInfo(null);
+    setAuthInfo({});
     window.location.href = "/auth/login";
   };
 
@@ -61,51 +72,51 @@ export const AuthContextProvider = ({ children }) => {
     }
   }, []);
 
-  const fetchUserRest = async () => {
-    await axios
-      .get(`${domain}/optimus/v1/api/users/getUser/${authInfo?.username}`, {
-        headers: {
-          "X-API-KEY": "your-api-key",
-          "Authorization": "Bearer " + authInfo?.token,
-        },
-      })
-      .then((response) => {
-        if (response.status === 401) {
-          localStorage.removeItem("plutusAuth");
-          window.location.href = "/auth/login";
-        }
-        if (response.ok) {
-          return response.json(); // Parse the JSON data
-        } else {
-          localStorage.removeItem("plutusAuth");
-          window.location.href = "/auth/login";
-        }
-      })
-      .then(data => {
-        setAuthInfo({
-          ...authInfo,
-          username: data?.username,
-          balance: data?.balance,
-          totalReferrals: data?.totalReferrals,
-          referralCode: data?.referralCode,
-          accruedBalance: data?.accruedBalance,
-        });
-        localStorage.setItem(
-          "plutusAuth",
-          JSON.stringify({
-            ...authInfo,
-            username: data?.username,
-            balance: data?.balance,
-            totalReferrals: data?.totalReferrals,
-            referralCode: data?.referralCode,
-            accruedBalance: data?.accruedBalance,
-          })
-        );
-      })
-      .catch(error => {
-        alert("An error has occured. Could not fetch user info!");
-      });
-  };
+  // const fetchUserRest = async () => {
+  //   await axios
+  //     .get(`${domain}/optimus/v1/api/users/getUser/${authInfo?.username}`, {
+  //       headers: {
+  //         "X-API-KEY": "your-api-key",
+  //         "Authorization": "Bearer " + authInfo?.token,
+  //       },
+  //     })
+  //     .then((response) => {
+  //       if (response.status === 401) {
+  //         localStorage.removeItem("plutusAuth");
+  //         window.location.href = "/auth/login";
+  //       }
+  //       if (response.ok) {
+  //         return response.json(); // Parse the JSON data
+  //       } else {
+  //         localStorage.removeItem("plutusAuth");
+  //         window.location.href = "/auth/login";
+  //       }
+  //     })
+  //     .then(data => {
+  //       setAuthInfo({
+  //         ...authInfo,
+  //         username: data?.username,
+  //         balance: data?.balance,
+  //         totalReferrals: data?.totalReferrals,
+  //         referralCode: data?.referralCode,
+  //         accruedBalance: data?.accruedBalance,
+  //       });
+  //       localStorage.setItem(
+  //         "plutusAuth",
+  //         JSON.stringify({
+  //           ...authInfo,
+  //           username: data?.username,
+  //           balance: data?.balance,
+  //           totalReferrals: data?.totalReferrals,
+  //           referralCode: data?.referralCode,
+  //           accruedBalance: data?.accruedBalance,
+  //         })
+  //       );
+  //     })
+  //     .catch(error => {
+  //       alert("An error has occured. Could not fetch user info!");
+  //     });
+  // };
 
   // useEffect(() => {fetchUserRest()}, [authInfo?.token]);
 
