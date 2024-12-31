@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { StyledForm } from "../../components/Form/Form";
 import { useContext, useState } from "react";
 import axios from "axios";
@@ -22,8 +22,6 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
-    
 
     // if (!agree) {
     //   setError("You must agree to the terms.");
@@ -176,7 +174,14 @@ const Login = () => {
 
       <div className="switch">
         <p>Not a member?</p>
-        <NavLink to={"/auth/signup"}>Create an account</NavLink>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            navigate("/auth/signup");
+          }}
+        >
+          Create an account
+        </button>
       </div>
     </StyledForm>
   );

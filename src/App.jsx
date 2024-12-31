@@ -7,10 +7,6 @@ import Saas from "./pages/Saas/Saas";
 import SaasNav from "./components/Navbar/SaasNav";
 import Footer from "./components/Footer/Footer";
 
-
-// import "bootstrap/dist/css/bootstrap.min.css";
-// import "bootstrap/dist/js/bootstrap.bundle.min.js";
-
 function App() {
   const { hideContact } = useContext(ContextVariables);
   const [width, setWidth] = useState(window.innerWidth);
@@ -32,12 +28,10 @@ function App() {
         className="scrollable"
         style={{ width: width, height: height }}
       >
-        {/* <SaasNav /> */}
         <Routes>
           <Route path={"/*"} element={<Saas />} />
           
         </Routes>
-        {/* <Footer /> */}
       </main>
     </BrowserRouter>
   );

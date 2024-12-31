@@ -50,7 +50,7 @@ const Signup = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post("/api/auth/signup", formData);
+      const response = await axios.post("", formData);
       // Handle success (e.g., redirect or display a success message)
       alert("Signup successful!");
       console.log(response.data);

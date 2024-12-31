@@ -23,7 +23,7 @@ const Saas = () => {
 
   useEffect(() => {
     !authInfo?.token && navigate("/auth/login");
-  }, [authInfo?.token, navigate]);
+  }, [authInfo?.token]);
   return (
     <StyledSaas className="center">
       <Routes>

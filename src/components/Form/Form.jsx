@@ -113,7 +113,8 @@ export const StyledForm = styled(motion.form)`
       font-size: ${fixedHeight(1.75)}px;
       color: grey;
     }
-    > a {
+    > a, button {
+      background: transparent;
       color: black;
       text-decoration: underline;
       font-size: ${fixedHeight(1.75)}px;

@@ -45,7 +45,7 @@ const AuthPage = () => {
       <div className="right center">
         <Routes>
           <Route
-            path="/login"
+            path="/login/*"
             element={
               <AnimatePresence>
                 <Login />
@@ -53,7 +53,7 @@ const AuthPage = () => {
             }
           />
           <Route
-            path="/signup"
+            path="/signup/*"
             element={
               <AnimatePresence>
                 <Signup />
