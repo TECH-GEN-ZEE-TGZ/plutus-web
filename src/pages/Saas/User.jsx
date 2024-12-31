@@ -793,7 +793,15 @@ const Hash = ({ allCoins }) => {
 
     // Verify hash
     axios
-      .get(`${domain}`, {}, {})
+      .get(
+        `${domain}`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
       .then((response) => {
         if (response.status === 200) {
           return response.data;
