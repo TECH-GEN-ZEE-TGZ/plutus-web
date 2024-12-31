@@ -17,11 +17,12 @@ import Notifs from "../../components/Other/Notifs";
 // import * as bitcoin from "bitcoinjs-lib";
 
 const User = () => {
-  const { authInfo } = useContext(AuthContext);
+  const { authInfo, fetchUserRest } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     !authInfo?.token && navigate("/auth/login");
+    authInfo?.token && fetchUserRest();
   }, [authInfo?.token, navigate]);
   return (
     <StyledUser scrollable>
