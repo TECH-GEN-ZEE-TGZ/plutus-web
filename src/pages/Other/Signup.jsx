@@ -59,20 +59,8 @@ const Signup = () => {
       return;
     }
 
+    setLoading(true);
     try {
-      setLoading(true);
-      // const response = await axios.post(
-      //   `${domain}/`,
-      //   { username, email, password, referralCode },
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       "X-API-KEY": "your-api-key",
-      //     },
-      //   }
-      // );
-      // alert("Signup successful!");
-      // console.log(response.data);
       setVerifyEmail(true);
     } catch (err) {
       // Handle error
@@ -96,20 +84,34 @@ const Signup = () => {
       return;
     }
 
+    setLoading(true);
     try {
-      setLoading(true);
-      const response = await axios.post(
-        `${domain}/`,
-        { username, email, password, referralCode, verification },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-API-KEY": "your-api-key",
-          },
-        }
-      );
-      alert("Signup successful!");
-      console.log(response.data);
+      await axios
+        .post(
+          `${domain}/optimus/v1/api/users/signUp`,
+          { username, email, password, referralCode },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "X-API-KEY": "your-api-key",
+            },
+          }
+        )
+        .then(() => {})
+        .then(() => {
+          axios.post(
+            `${domain}/optimus/v1/api/users/verifyOtp`,
+            { email, otpCode: verification },
+            // { username, email, password, referralCode, verification },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "X-API-KEY": "your-api-key",
+              },
+            }
+          );
+        })
+        .catch(() => {});
     } catch (err) {
       // Handle error
       setError(
