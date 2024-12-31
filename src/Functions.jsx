@@ -179,7 +179,7 @@ export const makeapiCall = (
         localStorage.setItem(
           "plutusAuth",
           JSON.stringify({
-            username: username,
+            username: data?.username,
             token: data?.token,
             email: data?.email,
           })
