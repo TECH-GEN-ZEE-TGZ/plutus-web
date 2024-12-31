@@ -1,11 +1,14 @@
 import React, { useContext, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { NavLink } from "react-router-dom";
-import StyledForm from "./StyledForm"; // Assuming you have a StyledForm component
+// import StyledForm from "./StyledForm"; // Assuming you have a StyledForm component
 import ContextVariables from "../../context/ContextVariables";
+import { StyledForm, StyledFormS } from "../../components/Form/Form";
+import AuthContext from "../../context/AuthContext";
 
 const Settings = () => {
     const { domain } = useContext(ContextVariables);
+    const {authInfo} = useContext(AuthContext);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -30,20 +33,20 @@ const Settings = () => {
       {
         method: "PUT",
         headers: {
-        "Content-Type": "application/json",
-        "X-API-KEY": "your-api-key",
-        Authorization: "Bearer " + window.localStorage.getItem("token"),
+          "Content-Type": "application/json",
+          "X-API-KEY": "your-api-key",
+          Authorization: "Bearer " + authInfo?.token,
         },
         body: JSON.stringify({
-        username: localStorage.getItem("username"),
-        oldPassword: oldPassword,
-        newPassword: newPassword,
+          username: authInfo?.username,
+          oldPassword: oldPassword,
+          newPassword: newPassword,
         }),
       }
     );
 
       if (response.status === 401) {
-        window.localStorage.clear();
+        window.localStorage.removeItem("plutusAuth");
         window.location.href = "/auth/login";
         return;
       }
@@ -67,7 +70,7 @@ const Settings = () => {
   };
 
   return (
-    <StyledForm
+    <StyledFormS
       initial={{ opacity: 0, scale: 0.75 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.75 }}
@@ -121,7 +124,7 @@ const Settings = () => {
           )}
         </span>
       </motion.button>
-    </StyledForm>
+    </StyledFormS>
   );
 };
 

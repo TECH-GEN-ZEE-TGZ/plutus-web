@@ -9,6 +9,9 @@ import I2 from "../../assets/img/img5.jpeg";
 import { AnimatePresence, motion } from "framer-motion";
 import axios from "axios";
 import AuthContext from "../../context/AuthContext";
+import Settings from "../Other/Settings";
+import Redeem from "../Other/Redeem";
+import Support from "../Other/Support";
 // import * as bitcoin from "bitcoinjs-lib";
 
 const User = () => {
@@ -47,6 +50,8 @@ const Dashboard = () => {
     { type: "send" },
   ]);
 
+  const [onTab, setOnTab] = useState("");
+
   return (
     <section id="dashboard">
       <div className="trades">
@@ -75,21 +80,49 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="otherIcons">
-            <button>
+            <button
+              onClick={() => setOnTab(onTab === "redeem" ? "" : "redeem")}
+              className="redeem"
+            >
               <ion-icon name="ticket"></ion-icon>
             </button>
-            <button>
+            <button
+              onClick={() => setOnTab(onTab === "support" ? "" : "support")}
+              className="support"
+            >
               <i className="bx bx-support bx-tada"></i>
             </button>
-            <button>
+            <button
+              onClick={() => setOnTab(onTab === "settings" ? "" : "settings")}
+              className="settings"
+            >
               <ion-icon name="cog"></ion-icon>
             </button>
           </div>
-          <div className="tabs">
-            <div className="tab">
-
-            </div>
-          </div>
+          <AnimatePresence>
+            {onTab && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="tabs"
+              >
+                <div className="tab">
+                  {onTab === "settings" ? (
+                    <Settings />
+                  ) : onTab === "redeem" ? (
+                    <Redeem />
+                  ) : onTab === "support" ? (
+                    <Support />
+                  ) : (
+                    <></>
+                  )}
+                  {/* <Settings /> */}
+                  {/* <Redeem /> */}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
       <div className="top">
@@ -285,13 +318,13 @@ const Buy = ({ allCoins }) => {
     const feeAmtGhs = feeAmtUSD * ghsRate;
     setExBuy(true);
 
-    if ((payWith.symbol === 'GHS') && (payVal < feeAmtGhs + 100)) {
+    if (payWith.symbol === "GHS" && payVal < feeAmtGhs + 100) {
       alert(`Minimum ghs amount to buy is ${feeAmtGhs + 100}`);
       setPayVal(0);
       setBuyVal(0);
       setExBuy(false);
       return;
-    } else if ((payWith.symbol === 'USD') && (payVal < feeAmtUSD + 5)) {
+    } else if (payWith.symbol === "USD" && payVal < feeAmtUSD + 5) {
       alert(`Minimum usd amount to buy is ${feeAmtUSD + 5}`);
       setPayVal(0);
       setBuyVal(0);
@@ -311,10 +344,12 @@ const Buy = ({ allCoins }) => {
           }
         );
 
-        const exchangeRate = parseFloat(response?.data?.result[0]?.course).toFixed(2);
+        const exchangeRate = parseFloat(
+          response?.data?.result[0]?.course
+        ).toFixed(2);
         setExRate(exchangeRate);
         if (exchangeRate) {
-          if (payWith.symbol === 'GHS') {
+          if (payWith.symbol === "GHS") {
             const ghsAmount = payVal > 0 ? payVal - feeAmtGhs : 0;
             setBuyVal((ghsAmount / ghsRate / exchangeRate).toFixed(8));
           } else {
@@ -351,7 +386,9 @@ const Buy = ({ allCoins }) => {
         );
 
         // Extract and parse the exchange rate
-        const exchangeRate = parseFloat(response?.data?.result[0]?.course).toFixed(2);
+        const exchangeRate = parseFloat(
+          response?.data?.result[0]?.course
+        ).toFixed(2);
         setExRate(exchangeRate);
 
         if (exchangeRate) {
@@ -360,7 +397,8 @@ const Buy = ({ allCoins }) => {
           const feeAmtGhs = feeAmtUSD * ghsRate;
 
           if (payWith.symbol === "GHS") {
-            const ghsAmount = buyVal > 0 && buyVal * exchangeRate * ghsRate.toFixed(2);
+            const ghsAmount =
+              buyVal > 0 && buyVal * exchangeRate * ghsRate.toFixed(2);
             setPayVal((ghsAmount + feeAmtGhs).toFixed(2));
           } else if (payWith.symbol === "USD") {
             const usdAmount = buyVal > 0 && buyVal * exchangeRate.toFixed(2);
@@ -686,15 +724,15 @@ const Hash = ({ allCoins }) => {
     }
 
     // Verify hash number
-    axios.post(`${domain}`, {}, {})
+    axios
+      .post(`${domain}`, {}, {})
       .then((response) => {
         alert("Hash number verified successfully!");
       })
       .catch((error) => {
-        alert("An error occured while verifying hash number!")
-          ;
-      })
-  }
+        alert("An error occured while verifying hash number!");
+      });
+  };
 
   return (
     <>

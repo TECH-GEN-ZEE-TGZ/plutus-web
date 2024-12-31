@@ -501,7 +501,7 @@ export const StyledUser = styled(motion.main)`
           }
         }
         .tabs{
-          display: none;
+          /* display: none; */
           z-index: 50;
           position: absolute;
           right: 0;
@@ -516,7 +516,7 @@ export const StyledUser = styled(motion.main)`
           overflow: hidden;
           >.tab{
             width: 100%;
-            height: ${fixedHeight(40)}px;
+            height: auto;
             background-color: white;
             border-radius: 15px;
           }
