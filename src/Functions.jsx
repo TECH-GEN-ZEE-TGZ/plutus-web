@@ -187,7 +187,7 @@ export const makeapiCall = (
 
         setAuthInfo &&
           setAuthInfo({
-            username: username,
+            username: data?.username,
             token: data?.token,
             email: data?.email,
           });
@@ -199,7 +199,7 @@ export const makeapiCall = (
       }
     })
     .catch((error) => {
-      onError("An error occurred");
+      onError(error.message);
       onSucess();
       addNotification("Error", "An error occurred");
     });

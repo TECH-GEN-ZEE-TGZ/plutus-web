@@ -112,7 +112,6 @@ const Signup = () => {
         .post(
           `${domain}/optimus/v1/api/users/verifyOtp`,
           { email, otpCode: verification },
-          // { username, email, password, referralCode, verification },
           {
             headers: {
               "Content-Type": "application/json",
@@ -120,7 +119,19 @@ const Signup = () => {
             },
           }
         )
-        .then(() => { });
+        .then((response) => {
+          if (response.status === 200) {
+            setVerifyEmail(false);
+            window.location.href = "/auth/login";
+          } else {
+            setError(response.data.message || "Error verifying OTP");
+          }
+        })
+        .catch((err) => {
+          setError(
+            err?.response?.data?.message || "An error occurred. Please try again."
+          );
+        });
     } catch (err) {
       // Handle error
       setError(
