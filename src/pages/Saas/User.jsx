@@ -782,6 +782,28 @@ const Hash = ({ allCoins }) => {
       });
   };
 
+  //Create use this results
+  function displayResults(response) {
+    const data = response.data;
+    const transactionHash = data.txid;
+    const status = data.confirmations > 0 ? "Confirmed" : "Pending";
+    const blockHeight = data.block_no;
+    const fee = `${data.fee} LTC`;
+
+    // Convert Unix Timestamp to Date
+    const transactionDate = new Date(data.time * 1000).toLocaleString();
+
+    // Populate Results
+    document.getElementById("resultHash").textContent = transactionHash;
+    document.getElementById("resultStatus").textContent = status;
+    document.getElementById("resultBlocks").textContent = blockHeight;
+    document.getElementById("resultFee").textContent = fee;
+    document.getElementById("resultDate").textContent = transactionDate;
+
+    // Show Results
+    document.getElementById("results").hidden = false;
+}
+
   return (
     <>
       <div className="opt">
