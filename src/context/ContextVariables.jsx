@@ -7,8 +7,8 @@ export const ContextVariablesProvider = ({ children }) => {
   const [toggleMode, setToggleMode] = useState(false);
   const [hideNav, setHideNav] = useState(false);
   const [hideContact, setHideContact] = useState(false);
-  const [allCoins, setAllCoins] = useState([])
-  const [allNotifs, setAllNotifs] = useState([])
+  const [allCoins, setAllCoins] = useState([]);
+  const [allNotifs, setAllNotifs] = useState([]);
 
   return (
     <ContextVariables.Provider

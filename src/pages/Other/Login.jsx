@@ -20,25 +20,21 @@ const Login = () => {
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
-    setLoading(true);
     e.preventDefault();
+    setLoading(true);
 
-    if (!username || !password) {
-      setError("Please fill in all fields.");
-      setLoading(false);
-      return;
-    }
     
+
     // if (!agree) {
-      //   setError("You must agree to the terms.");
-      //   return;
+    //   setError("You must agree to the terms.");
+    //   return;
     // }
 
     setError(""); // Clear any previous errors
-    
+
     try {
       // Check if fields are filled
-      if (username === "" || password === "") {
+      if (!username || !password) {
         setError("Please fill in both fields.");
         setLoading(false);
         return;
@@ -88,8 +84,8 @@ const Login = () => {
     } catch (error) {
       console.error("An error occurred:", error);
       setError("An error occurred. Please try again.");
-    } finally {
       setLoading(false);
+    } finally {
     }
   };
 
@@ -154,17 +150,17 @@ const Login = () => {
         <NavLink>Forgotten Password?</NavLink>
       </div>
 
-      {loading ? 
+      {loading ? (
         <motion.button
           whileTap={{ scale: 0.95 }}
           type="submit"
           disabled={loading}
         >
           <span>
-            <i className="bx bx-loader bx-spin"></i>
+            <i className="bx bx-loader bx-spin"></i> Logging in
           </span>
         </motion.button>
-       : 
+      ) : (
         <motion.button
           whileTap={{ scale: 0.95 }}
           type="submit"
@@ -174,7 +170,7 @@ const Login = () => {
             Login <ion-icon name="arrow-forward"></ion-icon>
           </span>
         </motion.button>
-      }
+      )}
 
       <div className="switch">
         <p>Not a member?</p>

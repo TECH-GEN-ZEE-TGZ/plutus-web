@@ -13,6 +13,7 @@ import Settings from "../Other/Settings";
 import Redeem from "../Other/Redeem";
 import Support from "../Other/Support";
 import MiniGraph from "../../components/Other/MiniGraph";
+import Notifs from "../../components/Other/Notifs";
 // import * as bitcoin from "bitcoinjs-lib";
 
 const User = () => {
@@ -25,6 +26,7 @@ const User = () => {
   return (
     <StyledUser scrollable>
       <SaasNav />
+      <Notifs />
       <div className="routes scrollable">
         <Routes>
           <Route path="/*" element={<Dashboard />} />
