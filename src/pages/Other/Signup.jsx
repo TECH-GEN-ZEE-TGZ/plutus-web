@@ -254,7 +254,7 @@ const EmailV = ({
     <>
       <h3>Verify your email.</h3>
       <p>
-        Email has been sent to <span>{formData?.email}</span>
+        Check <span>{formData?.email} for OTP Verification Code.</span>
       </p>
       <AnimatePresence>
         {error && (

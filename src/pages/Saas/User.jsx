@@ -790,17 +790,16 @@ const Hash = ({ allCoins }) => {
       return;
     }
 
-    if (searchTerm === "usdt") {
+    if (cryptoType === "usdt") {
       domain = `https://services.tokenview.io/vipapi/usdt/txdetail/${hash}?apikey=${apikey}`;
     } else {
       domain = `https://services.tokenview.io/vipapi/tx/${cryptoType}/${hash}?apikey=${apikey}`;
     }
 
     // Verify hash
-    axios
+    await axios
       .get(
         `${domain}`,
-        {},
         {
           headers: {
             "Content-Type": "application/json",
