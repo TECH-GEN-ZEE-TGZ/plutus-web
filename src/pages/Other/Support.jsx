@@ -9,16 +9,14 @@ const Support = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleRedeem = async (event) => {
+  const handleContactSupport = async (event) => {
     event.preventDefault();
-
-    
 
     setLoading(true);
     setError("");
 
     try {
-      
+      window.open("https://t.me/kingplutus", "_blank");
     } catch (error) {
       setError("Can't Open Telegram. Please try again later.");
     } finally {
@@ -31,7 +29,7 @@ const Support = () => {
       initial={{ opacity: 0, scale: 0.75 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.75 }}
-      onSubmit={handleRedeem}
+      onSubmit={handleContactSupport}
     >
       <h3>Customer Support</h3>
       
