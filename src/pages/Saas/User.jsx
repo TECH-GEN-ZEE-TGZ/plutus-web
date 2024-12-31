@@ -451,7 +451,7 @@ const Buy = ({ allCoins }) => {
               buyVal > 0 && buyVal * exchangeRate * ghsRate.toFixed(2);
             setPayVal((ghsAmount + feeAmtGhs).toFixed(2));
           } else if (payWith.symbol === "USD") {
-            const usdAmount = buyVal > 0 && buyVal * exchangeRate.toFixed(8);
+            const usdAmount = buyVal > 0 ? parseFloat((buyVal * exchangeRate).toFixed(8)) : 0;
             setPayVal((usdAmount + feeAmtUSD).toFixed(2));
           }
         } else {
@@ -461,8 +461,8 @@ const Buy = ({ allCoins }) => {
       }
     } catch (error) {
       // Handle fetch errors
-      // console.error("Error fetching exchange rate:", error);
-      addNotification("Error", "Error fetching exchange rate!");
+      console.log(error);
+      addNotification("Error", error.message);
       setPayVal(0);
     } finally {
       setExPay(false);
