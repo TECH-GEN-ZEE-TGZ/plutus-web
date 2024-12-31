@@ -9,7 +9,48 @@ export const AuthContextProvider = ({ children }) => {
     JSON.parse(localStorage.getItem("plutusAuth"))
   );
 
-  const domain = "https://4cxk0ffs-9090.uks1.devtunnels.ms";
+  const { domain } = useContext(ContextVariables);
+
+  // Fetch user data
+  const fetchUserRest = async () => {
+    console.log(`The domain is ${domain}`);
+    try {
+      const response = await axios.get(
+        `${domain}/optimus/v1/api/users/getUser/${authInfo?.username}`,
+        {
+          headers: {
+            "X-API-KEY": "your-api-key",
+            "Authorization": `Bearer ${authInfo?.token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log(response);
+        const data = response.data;
+        setAuthInfo((prev) => ({
+          ...prev,
+          username: data?.username,
+          balance: data?.balance,
+          totalReferrals: data?.totalReferrals,
+          referralCode: data?.referralCode,
+          accruedBalance: data?.accruedBalance,
+        }));
+        console.log("User Data:", data);
+      } else if (response.status === 401) {
+        handleLogout();
+      }
+    } catch (error) {
+      console.log(error)
+      alert("An error occurred. Could not fetch user info!");
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("plutusAuth");
+    setAuthInfo(null);
+    window.location.href = "/auth/login";
+  };
 
   useEffect(() => {
     if (!authInfo?.token) {

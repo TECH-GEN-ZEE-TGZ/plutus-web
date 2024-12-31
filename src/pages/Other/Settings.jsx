@@ -7,8 +7,8 @@ import { StyledForm, StyledFormS } from "../../components/Form/Form";
 import AuthContext from "../../context/AuthContext";
 
 const Settings = () => {
-    const { domain } = useContext(ContextVariables);
-    const {authInfo} = useContext(AuthContext);
+  const { domain } = useContext(ContextVariables);
+  const { authInfo } = useContext(AuthContext);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -28,22 +28,22 @@ const Settings = () => {
 
     try {
 
-    const response = await fetch(
-      `${domain}/optimus/v1/api/users/resetPassword`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "X-API-KEY": "your-api-key",
-          Authorization: "Bearer " + authInfo?.token,
-        },
-        body: JSON.stringify({
-          username: authInfo?.username,
-          oldPassword: oldPassword,
-          newPassword: newPassword,
-        }),
-      }
-    );
+      const response = await fetch(
+        `${domain}/optimus/v1/api/users/resetPassword`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "X-API-KEY": "your-api-key",
+            Authorization: "Bearer " + authInfo?.token,
+          },
+          body: JSON.stringify({
+            username: authInfo?.username,
+            oldPassword: oldPassword,
+            newPassword: newPassword,
+          }),
+        }
+      );
 
       if (response.status === 401) {
         window.localStorage.removeItem("plutusAuth");
