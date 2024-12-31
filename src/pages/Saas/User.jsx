@@ -722,7 +722,8 @@ const Buy = ({ allCoins }) => {
 };
 
 const Hash = ({ allCoins }) => {
-  const { domain } = useContext(ContextVariables);
+  var domain = "";
+  const apikey = "lsZGSdo9TopH5nikdSyz";
   const allowedCoins = ["btc", "ltc", "usdt", "xmr"];
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -743,25 +744,65 @@ const Hash = ({ allCoins }) => {
     getCoins();
   }, [allCoins]);
 
-  const [hashNum, setHashNum] = useState("");
+  const [hash, setHash] = useState("");
 
   const handleVerifyHash = async (e) => {
     e.preventDefault();
-    if (!hashNum) {
-      alert("Please enter a valid hash number!");
+    if (!hash) {
+      alert("Please enter a valid hash!");
       return;
     }
 
-    // Verify hash number
+    if (searchTerm === "usdt") {
+      domain = `https://services.tokenview.io/vipapi/usdt/txdetail/${hash}?apikey=${apikey}`;
+    } else {
+      domain = `https://services.tokenview.io/vipapi/tx/${cryptoType}/${hash}?apikey=${apikey}`;
+    }
+
+    // Verify hash
+    console.log(searchTerm);
     axios
-      .post(`${domain}`, {}, {})
-      .then((response) => {
-        alert("Hash number verified successfully!");
+      .get(`${domain}`, {}, {})
+      .then(response => {
+        console.log(response);
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Network response was not ok.");
       })
-      .catch((error) => {
-        alert("An error occured while verifying hash number!");
+      .then(data => {
+        if (data.code === 1) {
+          displayResults(data);
+        }
+      }
+      )
+      .catch(error => {
+        console.error("An error occurred:", error);
+        alert("An error occurred. Please try again.");
       });
   };
+
+  //Create use this results
+  function displayResults(response) {
+    const data = response.data;
+    const transactionHash = data.txid;
+    const status = data.confirmations > 0 ? "Confirmed" : "Pending";
+    const blockHeight = data.block_no;
+    const fee = `${data.fee} LTC`;
+
+    // Convert Unix Timestamp to Date
+    const transactionDate = new Date(data.time * 1000).toLocaleString();
+
+    // Populate Results
+    document.getElementById("resultHash").textContent = transactionHash;
+    document.getElementById("resultStatus").textContent = status;
+    document.getElementById("resultBlocks").textContent = blockHeight;
+    document.getElementById("resultFee").textContent = fee;
+    document.getElementById("resultDate").textContent = transactionDate;
+
+    // Show Results
+    document.getElementById("results").hidden = false;
+}
 
   return (
     <>

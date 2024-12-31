@@ -36,17 +36,6 @@ export const AuthContextProvider = ({ children }) => {
           referralCode: data?.referralCode,
           accruedBalance: data?.accruedBalance,
         }));
-        localStorage.setItem(
-          "plutusAuth",
-          JSON.stringify({
-            ...authInfo,
-            username: data?.username,
-            balance: data?.balance,
-            totalReferrals: data?.totalReferrals,
-            referralCode: data?.referralCode,
-            accruedBalance: data?.accruedBalance,
-          })
-        );
         console.log("User Data:", data);
       } else if (response.status === 401) {
         handleLogout();
@@ -59,7 +48,7 @@ export const AuthContextProvider = ({ children }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("plutusAuth");
-    setAuthInfo({});
+    setAuthInfo(null);
     window.location.href = "/auth/login";
   };
 
@@ -70,62 +59,35 @@ export const AuthContextProvider = ({ children }) => {
         setAuthInfo(JSON.parse(storedAuth));
       }
     }
+  }, [authInfo?.token]);
+
+  // Listen for localStorage changes
+  useEffect(() => {
+    const handleStorageChange = (event) => {
+      if (event.key === "plutusAuth") {
+        const newAuth = JSON.parse(event.newValue);
+        setAuthInfo(newAuth);
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
   }, []);
 
-  // const fetchUserRest = async () => {
-  //   await axios
-  //     .get(`${domain}/optimus/v1/api/users/getUser/${authInfo?.username}`, {
-  //       headers: {
-  //         "X-API-KEY": "your-api-key",
-  //         "Authorization": "Bearer " + authInfo?.token,
-  //       },
-  //     })
-  //     .then((response) => {
-  //       if (response.status === 401) {
-  //         localStorage.removeItem("plutusAuth");
-  //         window.location.href = "/auth/login";
-  //       }
-  //       if (response.ok) {
-  //         return response.json(); // Parse the JSON data
-  //       } else {
-  //         localStorage.removeItem("plutusAuth");
-  //         window.location.href = "/auth/login";
-  //       }
-  //     })
-  //     .then(data => {
-  //       setAuthInfo({
-  //         ...authInfo,
-  //         username: data?.username,
-  //         balance: data?.balance,
-  //         totalReferrals: data?.totalReferrals,
-  //         referralCode: data?.referralCode,
-  //         accruedBalance: data?.accruedBalance,
-  //       });
-  //       localStorage.setItem(
-  //         "plutusAuth",
-  //         JSON.stringify({
-  //           ...authInfo,
-  //           username: data?.username,
-  //           balance: data?.balance,
-  //           totalReferrals: data?.totalReferrals,
-  //           referralCode: data?.referralCode,
-  //           accruedBalance: data?.accruedBalance,
-  //         })
-  //       );
-  //     })
-  //     .catch(error => {
-  //       alert("An error has occured. Could not fetch user info!");
-  //     });
-  // };
-
-  // useEffect(() => {fetchUserRest()}, [authInfo?.token]);
+  useEffect(() => {
+    if (authInfo?.token) {
+      fetchUserRest();
+    }
+  }, [authInfo?.token]);
 
   return (
     <AuthContext.Provider
       value={{
         authInfo,
         setAuthInfo,
-        fetchUserRest,
       }}
     >
       {children}
@@ -134,8 +96,3 @@ export const AuthContextProvider = ({ children }) => {
 };
 
 export default AuthContext;
-window.addEventListener("storage", (event) => {
-  if (event.key === "plutusAuth") {
-    setAuthInfo(JSON.parse(event.newValue));
-  }
-});
