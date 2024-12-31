@@ -33,6 +33,21 @@ export const StyledAuth = styled(motion.section)`
     width: 40%;
     height: 100%;
   }
+
+  @media only screen and (max-width: 768px) {
+    &{
+      min-height: ${fixedHeight(100)}px;
+      height: auto;
+      flex-direction: column-reverse;
+      >.left{
+        width: 100%;
+      }
+      >.right{
+        height: ${fixedHeight(100)}px;
+        width: 100%;
+      }
+    }
+  }
 `;
 
 const AuthPage = () => {

@@ -15,6 +15,11 @@ import Support from "../Other/Support";
 import MiniGraph from "../../components/Other/MiniGraph";
 import Notifs from "../../components/Other/Notifs";
 // import * as bitcoin from "bitcoinjs-lib";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import { Navigation, Pagination } from "swiper/modules";
 
 const User = () => {
   const { authInfo, fetchUserRest } = useContext(AuthContext);
@@ -238,6 +243,76 @@ const Dashboard = () => {
           </Routes>
         </div>
       </div>
+      <div className="swiperContainer">
+        <Swiper
+          modules={[Navigation, Pagination]}
+          // navigation
+          // pagination={{ clickable: true }}
+          spaceBetween={20}
+          slidesPerView={1}
+          className="swiper"
+        >
+          <SwiperSlide className="swiperSlide">
+            <div className="title al-c">
+              <div className="bar">
+                <NavLink to={"./buy"}>Buy</NavLink>
+                <NavLink to={"./hash"}>Hash</NavLink>
+                {/* <NavLink to={"./calculate"}>Calculate</NavLink> */}
+              </div>
+            </div>
+            <Routes>
+              <Route path="/buy" element={<Buy allCoins={allCoins} />} />
+              <Route path="/hash" element={<Hash allCoins={allCoins} />} />
+              {/* <Route
+              path="/calculate"
+              element={<Calculate allCoins={allCoins} />}
+            /> */}
+            </Routes>
+          </SwiperSlide>
+          <SwiperSlide className="swiperSlide">
+            <div className="title al-c">
+              <h3>Coin Updates</h3>
+            </div>
+            <ul className="scrollable">
+              {filteredCoins?.map((coin, index) => (
+                <li>
+                  <div className="icon center">
+                    {/* <i className="bx bx-download"></i> */}
+                    <img src={coin?.image} alt="" />
+                  </div>
+                  <div className="info">
+                    <h3>{coin?.name}</h3>
+                    <h5>
+                      Market Cap:{" "}
+                      <span>${coin?.market_cap?.toLocaleString()}</span>
+                    </h5>
+                    <h5>
+                      Price:{" "}
+                      <span>${coin?.current_price?.toLocaleString()}</span>
+                    </h5>
+                    <motion.h5
+                      style={{
+                        color:
+                          coin?.price_change_percentage_24h > 0
+                            ? "green"
+                            : "red",
+                      }}
+                    >
+                      24h% Change:{" "}
+                      <span>
+                        {coin?.price_change_percentage_24h?.toFixed(2)}%
+                      </span>
+                    </motion.h5>
+                    <p>7 DAYS TREND:</p>
+                    <MiniGraph data={coin?.sparkline_in_7d?.price} />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </SwiperSlide>
+          <SwiperSlide className="swiperSlide"></SwiperSlide>
+        </Swiper>
+      </div>
       <div className="bottom center">
         <CryptoDataTable />
       </div>
@@ -451,7 +526,8 @@ const Buy = ({ allCoins }) => {
               buyVal > 0 && buyVal * exchangeRate * ghsRate.toFixed(2);
             setPayVal((ghsAmount + feeAmtGhs).toFixed(2));
           } else if (payWith.symbol === "USD") {
-            const usdAmount = buyVal > 0 ? parseFloat((buyVal * exchangeRate).toFixed(8)) : 0;
+            const usdAmount =
+              buyVal > 0 ? parseFloat((buyVal * exchangeRate).toFixed(8)) : 0;
             setPayVal((usdAmount + feeAmtUSD).toFixed(2));
           }
         } else {
@@ -798,14 +874,11 @@ const Hash = ({ allCoins }) => {
 
     // Verify hash
     await axios
-      .get(
-        `${domain}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
+      .get(`${domain}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
       .then((response) => {
         if (response.status === 200) {
           return response.data;
