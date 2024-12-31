@@ -521,7 +521,7 @@ export const StyledUser = styled(motion.main)`
             border-radius: 15px;
           }
         }
-        .switchBar{
+        .switchBar {
           display: none;
         }
       }
@@ -1167,7 +1167,6 @@ export const StyledUser = styled(motion.main)`
                 }
                 > h3 {
                   font-size: ${fixedHeight(1.75)}px;
-              
                 }
               }
               &.on {
@@ -1704,7 +1703,101 @@ export const StyledUser = styled(motion.main)`
                 }
               }
               &:nth-child(3) {
-                background: green;
+                /* background: green; */
+                > .slab {
+                  display: flex;
+                  align-items: center;
+                  width: 100%;
+                  height: 90%;
+                  column-gap: ${fixedWidth(0.5)}px;
+                  > .left {
+                    border-radius: 15px;
+                    width: 45%;
+                    height: 100%;
+                    /* background: red; */
+                    overflow: hidden;
+                    > img {
+                      position: absolute;
+                      z-index: 1;
+                    }
+                    > .txt {
+                      z-index: 2;
+                      width: 100%;
+                      height: 100%;
+                      background: linear-gradient(
+                        to top,
+                        rgba(0, 0, 0, 0.6),
+                        /* Top blackish overlay */ rgba(26, 30, 58, 0.8) 50%,
+                        /* Deep theme-based overlay */ rgba(232, 215, 250, 0.3)
+                          /* Bottom-light theme hint */
+                      );
+                      display: flex;
+                      flex-direction: column;
+                      justify-content: flex-end;
+                      padding: ${fixedHeight(2)}px ${fixedHeight(2)}px;
+                      color: white;
+                      row-gap: ${fixedHeight(1)}px;
+
+                      > h1 {
+                        font-size: ${fixedHeight(2.5)}px;
+                      }
+                      > p {
+                        font-size: ${fixedHeight(1.75)}px;
+                      }
+                    }
+                  }
+                  > .right {
+                    width: 55%;
+                    height: 100%;
+
+                    > ul {
+                      list-style-type: none;
+                      width: 100%;
+                      /* height: auto; */
+                      height: ${fixedHeight(47.5)}px;
+                      display: flex;
+                      flex-direction: column;
+                      row-gap: ${fixedHeight(1.25)}px;
+                      > li {
+                        width: 100%;
+                        min-height: ${fixedHeight(12.5)}px;
+                        background: #e8d7fa;
+                        border-radius: 15px;
+                        display: flex;
+                        align-items: flex-start;
+                        justify-content: flex-start;
+                        padding: ${fixedWidth(0.5)}px;
+                        column-gap: ${fixedWidth(0.5)}px;
+                        > .icon {
+                          width: 25%;
+                          height: 100%;
+                          overflow: hidden;
+                          background: linear-gradient(
+                            135deg,
+                            hsl(40.7, 90.6%, 49.8%),
+                            hsl(41, 90%, 75%)
+                          );
+                          color: white;
+                          border-radius: 7.5px;
+                          > i,
+                          ion-icon {
+                            font-size: ${fixedHeight(2.25)}px;
+                          }
+                          > img {
+                            mix-blend-mode: multiply;
+                          }
+                        }
+                        > .info {
+                          width: 75%;
+                          height: 100%;
+                          display: flex;
+                          flex-direction: column;
+                          row-gap: ${fixedHeight(1)}px;
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
           }

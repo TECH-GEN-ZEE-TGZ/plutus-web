@@ -141,7 +141,12 @@ const Dashboard = () => {
               <ion-icon name="cog"></ion-icon>
             </button>
           </div>
-          <button onClick={()=>{setSwitchBar(!switchBar)}} className="switchBar">
+          <button
+            onClick={() => {
+              setSwitchBar(!switchBar);
+            }}
+            className="switchBar"
+          >
             <ion-icon name="swap-vertical-outline"></ion-icon>
           </button>
           <AnimatePresence>
@@ -328,7 +333,7 @@ const Dashboard = () => {
               ))}
             </ul>
           </SwiperSlide>
-          <SwiperSlide className="swiperSlide"></SwiperSlide>
+          
         </Swiper>
       </div>
       <div className="bottom center">
@@ -1028,3 +1033,40 @@ const Calculate = ({ allCoins }) => (
     </div>
   </>
 );
+
+
+{/* <SwiperSlide className={"swiperSlide"}>
+  <div className="title al-c">
+    <h3>Information Updates</h3>
+  </div>
+  <div className={"slab" + `${inMobileView() && "scrollable"}`}>
+    <div className="left">
+      <img src={I1} alt="" />
+      <div className="txt">
+        <h1>The latest Upcoming News</h1>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias
+          consequuntur velit natus, quas nisi sunt.
+        </p>
+      </div>
+    </div>
+    <div className="right">
+      <ul className="scrollable">
+        {recentNotifs?.map((notif, index) => (
+          <li>
+            <div className="icon center">
+              <img src={I2} alt="" />
+            </div>
+            <div className="info">
+              <h3>Crypto convert christmas exclusive!!!</h3>
+              <p>
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Est,
+                atque!
+              </p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</SwiperSlide>; */}
