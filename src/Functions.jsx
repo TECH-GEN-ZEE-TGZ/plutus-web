@@ -141,7 +141,16 @@ export const motionImgItem3 = {
 
 // const navigate = useNavigate();
 
-export const makeapiCall = (domain, username, password, onSucess, onError, navigate, setAuthInfo) => {
+export const makeapiCall = (
+  domain,
+  username,
+  password,
+  onSucess,
+  onError,
+  navigate,
+  setAuthInfo,
+  addNotification
+) => {
   axios
     .post(
       `${domain}/optimus/v1/api/users/login`,
@@ -161,6 +170,7 @@ export const makeapiCall = (domain, username, password, onSucess, onError, navig
         return response.data; // Parse JSON here
       } else {
         onError("Invalid username or password");
+        addNotification("Error", "Invalid username or password");
       }
     })
     .then((data) => {
@@ -174,11 +184,12 @@ export const makeapiCall = (domain, username, password, onSucess, onError, navig
           })
         );
 
-        setAuthInfo && setAuthInfo({
-          username: username,
-          token: data?.token,
-          email: data?.email,
-        });
+        setAuthInfo &&
+          setAuthInfo({
+            username: username,
+            token: data?.token,
+            email: data?.email,
+          });
         onSucess();
         navigate("/user/buy");
       }

@@ -18,12 +18,12 @@ export const ContextVariablesProvider = ({ children }) => {
     }, 5000);
   };
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     addNotification({ type: "Success", message: "Message Received" });
-  //   }, 7000);
+    // const interval = setInterval(() => {
+    //   addNotification("Success", "Message Received" );
+    // }, 7000);
 
-  //   return () => clearInterval(interval);
+    // return () => clearInterval(interval);
+  // useEffect(() => {
   // }, []);
 
   return (

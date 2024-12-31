@@ -10,7 +10,7 @@ import ContextVariables from "../../context/ContextVariables";
 const Login = () => {
   const navigate = useNavigate();
 
-  const { domain } = useContext(ContextVariables);
+  const { domain, addNotification } = useContext(ContextVariables);
   const { authInfo, setAuthInfo } = useContext(AuthContext);
 
   const [username, setUsername] = useState("");
@@ -67,7 +67,8 @@ const Login = () => {
             () => setLoading(false),
             setError,
             navigate,
-            setAuthInfo
+            setAuthInfo,
+            addNotification,
           );
         } else {
           setLoading(false);

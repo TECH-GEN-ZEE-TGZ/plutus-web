@@ -743,7 +743,7 @@ const Hash = ({ allCoins }) => {
   useEffect(() => {
     getCoins();
   }, [allCoins]);
-
+const [cryptoType, setCryptoType] = useState("");
   const [hash, setHash] = useState("");
 
   const handleVerifyHash = async (e) => {
@@ -804,11 +804,18 @@ const Hash = ({ allCoins }) => {
     document.getElementById("results").hidden = false;
 }
 
+  
+
   return (
     <>
       <div className="opt">
         <h4>Select Cryptocurrency</h4>
-        <select name="" id="">
+        <select
+          name=""
+          id=""
+          value={cryptoType}
+          onChange={(e) => setCryptoType(e.target.value)}
+        >
           <option value="">Choose Cryptocurrency</option>
           {filteredCoins?.map((coin, index) => (
             <option key={index} value={coin?.symbol?.toUpperCase()}>
@@ -820,8 +827,12 @@ const Hash = ({ allCoins }) => {
       <div className="opt">
         <h4>Enter Transaction Hash</h4>
         <form onSubmit={handleVerifyHash} className="input">
-          <input type="text" placeholder="Enter hash" />
-          {/* <button type="submit">Verify</button> */}
+          <input
+            type="text"
+            placeholder="Enter hash"
+            value={hash}
+            onChange={(e) => setHash(e.target.value)}
+          />
         </form>
       </div>
       <button onClick={handleVerifyHash}>#Verify</button>

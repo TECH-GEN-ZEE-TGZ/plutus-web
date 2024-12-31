@@ -9,7 +9,7 @@ export const AuthContextProvider = ({ children }) => {
     JSON.parse(localStorage.getItem("plutusAuth"))
   );
 
-  const { domain } = useContext(ContextVariables);
+  const { domain, addNotification } = useContext(ContextVariables);
 
   // Fetch user data
   const fetchUserRest = async () => {
@@ -42,14 +42,14 @@ export const AuthContextProvider = ({ children }) => {
       }
     } catch (error) {
       console.log(error)
-      alert("An error occurred. Could not fetch user info!");
+      addNotification("Error", "An error occurred. Could not fetch user info!");
     }
   };
 
   const handleLogout = () => {
     localStorage.removeItem("plutusAuth");
-    setAuthInfo(null);
-    window.location.href = "/auth/login";
+    setAuthInfo({});
+    window.location.href = "/";
   };
 
   useEffect(() => {
@@ -88,6 +88,7 @@ export const AuthContextProvider = ({ children }) => {
       value={{
         authInfo,
         setAuthInfo,
+        fetchUserRest,
       }}
     >
       {children}
