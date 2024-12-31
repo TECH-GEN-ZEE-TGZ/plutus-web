@@ -348,7 +348,7 @@ const CryptoDataTable = () => {
 
   useEffect(() => {
     const fetchTransactions = async () => {
-      console.log(`The email is now ${authInfo?.email} and ${authInfo?.token}`);
+      // console.log(`The email is now ${authInfo?.email} and ${authInfo?.token}`);
 
       const response = await fetch(
         `${domain}/optimus/v1/api/orders/list/${authInfo?.email}`,
@@ -362,7 +362,7 @@ const CryptoDataTable = () => {
       );
 
       if (response.status === 401) {
-        console.log(response);
+        // console.log(response);
         localStorage.removeItem("plutusAuth");
         window.location.href = "/auth/login";
       }
@@ -372,12 +372,13 @@ const CryptoDataTable = () => {
         if (contentType && contentType.includes("application/json")) {
           const data = await response.json();
           setAllTransactions(data);
-          console.log(data);
+          // console.log(data);
         } else {
-          console.log("Response is empty");
+          // console.log("Response is empty");
         }
       } else {
-        console.log(response);
+        // console.log(response);
+        
         localStorage.removeItem("plutusAuth");
         window.location.href = "/auth/login";
       }
@@ -412,7 +413,7 @@ const CryptoDataTable = () => {
 
   useEffect(() => {
     setPaginatedData(getPag(filteredData, currentPage, itemsPerPage));
-    console.log("Paginated data:", paginatedData);
+    // console.log("Paginated data:", paginatedData);
   }, [allTransactions, searchTerm]);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
