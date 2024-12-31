@@ -20,43 +20,6 @@ export const AuthContextProvider = ({ children }) => {
     }
   }, []);
 
-  // fetch("http://localhost:9090/optimus/v1/api/users/getUser/" + user, {
-  //       method: "GET",
-  //       headers: {
-  //           "X-API-KEY": "your-api-key",
-  //           'Authorization': "Bearer " + window.localStorage.getItem("token")
-  //       }
-  //   })
-  //       .then(response => {
-  //           if (response.status === 401) {
-  //               window.localStorage.clear();
-  //               window.location.href = "/p/login";
-  //           }
-  //           if (response.ok) {
-  //               return response.json(); // Parse the JSON data
-  //           } else {
-  //               window.localStorage.clear();
-  //               window.location.href = "/p/login";
-  //           }
-  //       })
-  //       .then(data => {
-
-  //           // Save data in localStorage
-  //           console.log("Data:", data);
-  //           localStorage.setItem("username", data.username);
-  //           localStorage.setItem("balance", data.balance);
-  //           localStorage.setItem("totalReferrals", data.totalReferrals);
-  //           localStorage.setItem("referralCode", data.referralCode);
-  //           localStorage.setItem("accruedBalance", data.accruedBalance);
-
-  //           document.getElementById("username").textContent = data.username;
-  //           document.getElementById("balance").textContent = "Balance: $" + data.balance + ".00";
-
-  //       })
-  //       .catch(error => {
-  //           console.error("An error occurred:", error);
-  //       });
-
   const fetchUserRest = async () => {
     await axios
       .post(`${domain}/optimus/v1/api/users/getUser/${authInfo?.username}`, {
