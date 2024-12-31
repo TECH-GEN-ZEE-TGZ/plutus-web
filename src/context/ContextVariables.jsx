@@ -9,6 +9,25 @@ export const ContextVariablesProvider = ({ children }) => {
   const [hideContact, setHideContact] = useState(false);
   const [allCoins, setAllCoins] = useState([]);
   const [allNotifs, setAllNotifs] = useState([]);
+  const addNotification = ({type, message}) => {
+    setAllNotifs((prevNotifs) => [...prevNotifs, { type: type, message: message, date: Date.now() }]);
+    
+    setTimeout(() => {
+      setAllNotifs((prevNotifs) =>
+        prevNotifs.filter(
+          (n) => n !== ({ type: type, message: message, date: Date.now() })
+        )
+      );
+    }, 5000);
+  };
+
+  setInterval(() => {
+    setAllNotifs((prevNotifs) =>
+      prevNotifs.filter(
+        (n) => n !== ({ type: "Success", message: "message received", date: Date.now() })
+      )
+    );
+  }, 5000);
 
   return (
     <ContextVariables.Provider
@@ -24,6 +43,7 @@ export const ContextVariablesProvider = ({ children }) => {
         setAllCoins,
         allNotifs,
         setAllNotifs,
+        addNotification,
       }}
     >
       {children}
