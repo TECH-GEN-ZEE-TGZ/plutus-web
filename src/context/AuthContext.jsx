@@ -36,6 +36,7 @@ export const AuthContextProvider = ({ children }) => {
           referralCode: data?.referralCode,
           accruedBalance: data?.accruedBalance,
         }));
+        addNotification("Success", "Successfully fetched user info!");
         console.log("User Data:", data);
       } else if (response.status === 401) {
         handleLogout();
