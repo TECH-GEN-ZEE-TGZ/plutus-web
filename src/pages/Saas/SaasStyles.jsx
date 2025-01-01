@@ -748,7 +748,7 @@ export const StyledUser = styled(motion.main)`
             justify-content: space-between;
             border: 1px solid #ddb9e5;
             height: 60%;
-            border-radius: 100px;
+            border-radius: 15px;
             z-index: 2;
             isolation: isolate;
             /* overflow: hidden; */
@@ -757,7 +757,7 @@ export const StyledUser = styled(motion.main)`
               min-width: 25%;
               width: 27.5%;
               height: 100%;
-              border-radius: 100px;
+              border-radius: 15px;
               z-index: 3;
               > .val {
                 cursor: pointer;
@@ -869,7 +869,7 @@ export const StyledUser = styled(motion.main)`
             justify-content: space-between;
             border: 1px solid #ddb9e5;
             height: 60%;
-            border-radius: 100px;
+            border-radius: 15px;
             overflow: hidden;
 
             > input {
@@ -889,7 +889,7 @@ export const StyledUser = styled(motion.main)`
             background: transparent;
             width: 100%;
             height: 60%;
-            border-radius: 100px;
+            border-radius: 15px;
             overflow: hidden;
             border: 1px solid #ddb9e5;
             display: flex;
@@ -911,7 +911,7 @@ export const StyledUser = styled(motion.main)`
         }
         > .times {
           background: #e8d7fa;
-          border-radius: 100px;
+          border-radius: 15px;
           width: 100%;
           max-width: 100%;
           height: 7.5%;
@@ -1290,7 +1290,7 @@ export const StyledUser = styled(motion.main)`
                     justify-content: space-between;
                     border: 1px solid #ddb9e5;
                     height: 60%;
-                    border-radius: 100px;
+                    border-radius: 15px;
                     z-index: 2;
                     isolation: isolate;
                     /* overflow: hidden; */
@@ -1299,7 +1299,7 @@ export const StyledUser = styled(motion.main)`
                       min-width: 25%;
                       width: 27.5%;
                       height: 100%;
-                      border-radius: 100px;
+                      border-radius: 15px;
                       z-index: 3;
                       > .val {
                         cursor: pointer;
@@ -1401,6 +1401,7 @@ export const StyledUser = styled(motion.main)`
                         font-weight: 700;
                         font-family: Aeonik Regular;
                         border: none;
+                        padding-right: 2.5%;
                         outline: none;
                       }
                     }
@@ -1411,7 +1412,7 @@ export const StyledUser = styled(motion.main)`
                     justify-content: space-between;
                     border: 1px solid #ddb9e5;
                     height: 60%;
-                    border-radius: 100px;
+                    border-radius: 15px;
                     overflow: hidden;
 
                     > input {
@@ -1431,7 +1432,7 @@ export const StyledUser = styled(motion.main)`
                     background: transparent;
                     width: 100%;
                     height: 60%;
-                    border-radius: 100px;
+                    border-radius: 15px;
                     overflow: hidden;
                     border: 1px solid #ddb9e5;
                     display: flex;
@@ -1453,7 +1454,7 @@ export const StyledUser = styled(motion.main)`
                 }
                 > .times {
                   background: #e8d7fa;
-                  border-radius: 100px;
+                  border-radius: 15px;
                   width: 100%;
                   max-width: 100%;
                   height: 7.5%;
@@ -1584,9 +1585,9 @@ export const StyledUser = styled(motion.main)`
                         > button {
                           min-width: ${fixedHeight(2.5)}px;
                           width: auto;
-                          height: ${fixedHeight(2.5)}px;
+                          height: ${fixedHeight(3.5)}px;
                           border-radius: 50px;
-                          padding: 0 5px;
+                          padding: 0 ${fixedHeight(1.5)}px;
                           color: white;
                           font-size: ${fixedHeight(1.5)}px;
                           > ion-icon {

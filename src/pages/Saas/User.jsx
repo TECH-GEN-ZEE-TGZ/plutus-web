@@ -504,7 +504,7 @@ const Buy = ({ allCoins }) => {
             setBuyVal((usdAmount / exchangeRate).toFixed(8));
           }
         } else {
-          // alert("Response doesn't contain exchange rate!");
+          // alert("Response doesn't contain exchange rate!");  
           setBuyVal(0);
         }
       }
