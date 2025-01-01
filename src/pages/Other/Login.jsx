@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import AuthContext from "../../context/AuthContext";
 import { makeapiCall } from "../../Functions";
 import ContextVariables from "../../context/ContextVariables";
+import { Helmet } from 'react-helmet';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -75,14 +76,13 @@ const Login = () => {
           setLoading(false);
           const errorResult = await response.json();
           setError(
-            `CAPTCHA verification failed: ${
-              errorResult.message || "Unknown error"
+            `CAPTCHA verification failed: ${errorResult.message || "Unknown error"
             }`
           );
           grecaptcha.reset(); // Reset the CAPTCHA if needed
         }
       });
-    } catch (error) { 
+    } catch (error) {
       console.error("An error occurred:", error);
       setError(error.message);
       setLoading(false);
@@ -98,6 +98,9 @@ const Login = () => {
       exit={{ opacity: 0, scale: 0.75 }}
       onSubmit={handleSubmit}
     >
+      <Helmet>
+        <script src="https://www.google.com/recaptcha/api.js?render=6LeG0KEqAAAAAB0ij0gsJi4IFC6RC1dU-UpLFjfQ" async defer></script>
+      </Helmet>
       <h3>Log in to account.</h3>
       <AnimatePresence>
         {error && (

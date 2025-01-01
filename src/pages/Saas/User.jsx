@@ -118,9 +118,8 @@ const Dashboard = () => {
             </div>
           </div>
           <div
-            className={`otherIcons ${
-              inMobileView() && !switchBar ? "on" : "off"
-            }`}
+            className={`otherIcons ${inMobileView() && !switchBar ? "on" : "off"
+              }`}
           >
             <button
               onClick={() => setOnTab(onTab === "redeem" ? "" : "redeem")}
@@ -333,7 +332,7 @@ const Dashboard = () => {
               ))}
             </ul>
           </SwiperSlide>
-          
+
         </Swiper>
       </div>
       <div className="bottom center">
@@ -518,6 +517,10 @@ const Buy = ({ allCoins }) => {
   };
 
   const getExchangeRateB = async (coin) => {
+    if (buyVal < 1) {
+      return;
+    }
+
     setExPay(true);
 
     try {
@@ -721,6 +724,7 @@ const Buy = ({ allCoins }) => {
                   setPayVal(parseFloat(e.target.value).toFixed(2));
                   getExchangeRateP(buying?.symbol?.toLowerCase());
                 }} // Format when input loses focus
+                style={{fontSize: "16px"}}
               />
             )}
           </div>
@@ -789,6 +793,7 @@ const Buy = ({ allCoins }) => {
                   setBuyVal(parseFloat(e.target.value).toFixed(2));
                   getExchangeRateB(buying?.symbol?.toLowerCase());
                 }} // Format when input loses focus
+                style={{fontSize: "16px"}}
               />
             )}
           </div>

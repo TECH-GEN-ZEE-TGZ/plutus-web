@@ -35,7 +35,7 @@ export const StyledForm = styled(motion.form)`
     border-radius: 7.5px;
     height: ${fixedHeight(6)}px;
     padding: 0 5%;
-    font-size: ${fixedHeight(1.75)}px;
+    font-size: 16px;
   }
   > button {
     border-radius: 7.5px;
@@ -180,7 +180,7 @@ export const StyledFormS = styled(motion.form)`
     border-radius: 7.5px;
     height: ${fixedHeight(5)}px;
     padding: 0 5%;
-    font-size: ${fixedHeight(1.5)}px;
+    font-size: 16px;
   }
   > button {
     border-radius: 7.5px;

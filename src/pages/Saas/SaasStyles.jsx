@@ -834,7 +834,7 @@ export const StyledUser = styled(motion.main)`
                   input {
                     z-index: 1;
                     padding: 0 2.5%;
-                    font-size: ${fixedHeight(1.3)}px;
+                    font-size: 16px;
                     width: 100%;
                     height: ${fixedHeight(4)}px;
                     border-radius: 10px;
@@ -854,7 +854,7 @@ export const StyledUser = styled(motion.main)`
                 width: 100%;
                 height: 100%;
                 text-align: right;
-                font-size: ${fixedHeight(1.75)}px;
+                font-size: 16px;
                 background: transparent;
                 font-weight: 700;
                 font-family: Aeonik Regular;
