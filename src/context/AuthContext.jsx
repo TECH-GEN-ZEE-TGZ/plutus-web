@@ -9,16 +9,17 @@ export const AuthContextProvider = ({ children }) => {
     JSON.parse(localStorage.getItem("plutusAuth"))
   );
 
-  const { domain, addNotification } = useContext(ContextVariables);
+  const { domain, apiKey, addNotification } = useContext(ContextVariables);
 
   // Fetch user data
   const fetchUserRest = async () => {
+    console.log(`Calling fetchUserRest`);
     try {
       const response = await axios.get(
         `${domain}/optimus/v1/api/users/getUser/${authInfo?.username}`,
         {
           headers: {
-            "X-API-KEY": "your-api-key",
+            "X-API-KEY": apiKey,
             "Authorization": `Bearer ${authInfo?.token}`,
           },
         }
@@ -34,7 +35,7 @@ export const AuthContextProvider = ({ children }) => {
           referralCode: data?.referralCode,
           accruedBalance: data?.accruedBalance,
         }));
-        addNotification("Success", "Successfully fetched user info!");
+        // addNotification("Success", "Successfully fetched user info!");
       } else if (response.status === 401) {
         handleLogout();
       }

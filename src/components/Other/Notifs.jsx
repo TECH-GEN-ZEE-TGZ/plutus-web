@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
+import React from "react";
 import styled from "styled-components";
 import {
   fixedHeight,
@@ -10,7 +11,7 @@ import {
 import ContextVariables from "../../context/ContextVariables";
 import { useContext } from "react";
 
-const StyledNotifs = styled(motion.aside)`
+const StyledNotifs = React.memo(styled(motion.aside)`
   z-index: 50;
   position: absolute;
   top: 0;
@@ -58,10 +59,10 @@ const StyledNotifs = styled(motion.aside)`
       margin: 0 2.5%;
     }
   }
-`;
+`);
 
 const Notifs = () => {
-  const { allNotifs, setAllNotifs } = useContext(ContextVariables);
+  const { allNotifs } = useContext(ContextVariables);
 
   return (
     <StyledNotifs>
@@ -73,7 +74,7 @@ const Notifs = () => {
       >
         <AnimatePresence>
           {allNotifs.map((notif, index) => (
-            <Notif notif={notif} index={index} />
+            <Notif key={index} notif={notif} index={index} />
           ))}
         </AnimatePresence>
       </motion.ul>

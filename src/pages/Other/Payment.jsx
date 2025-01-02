@@ -94,13 +94,32 @@ const Payment = () => {
 
 export default Payment;
 
+import { useSearchParams } from "react-router-dom";
+import axios from "axios";
+
 const PayDone = ({ type }) => {
-    const navigate = useNavigate();
-    useEffect(() => {
-        setTimeout(() => {
-            navigate("/user/buy")
-        }, 2000);
-    }, [])
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const checkoutId = searchParams.get("checkoutid");
+
+  useEffect(() => {
+    const performCheckoutActions = async () => {
+      if (checkoutId) {
+        try {
+          await axios.post("/api/checkout", { checkoutId });
+          // Perform any other actions if needed
+        } catch (error) {
+          console.error("Error performing checkout actions:", error);
+        }
+      }
+      setTimeout(() => {
+        navigate("/user/buy");
+      }, 2000);
+    };
+
+    performCheckoutActions();
+  }, [checkoutId, navigate]);
+
   return (
     <div className="payDone center">
       {type.toLowerCase() === "success" ? (

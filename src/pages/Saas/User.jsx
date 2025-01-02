@@ -1,5 +1,5 @@
 import { NavLink, Route, Routes, useNavigate } from "react-router-dom";
-import CryptoDataTable from "../../components/DaTAble/DaTAble";
+import CryptoDataTable from "../../components/DataTable/DataTable";
 import SaasNav from "../../components/Navbar/SaasNav";
 import { StyledUser } from "./SaasStyles";
 import ContextVariables from "../../context/ContextVariables";
@@ -14,13 +14,12 @@ import Redeem from "../Other/Redeem";
 import Support from "../Other/Support";
 import MiniGraph from "../../components/Other/MiniGraph";
 import Notifs from "../../components/Other/Notifs";
-// import * as bitcoin from "bitcoinjs-lib";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination } from "swiper/modules";
-import { inMobileView } from "../../Functions";
+import { generate_payment_link_hubtel, inMobileView } from "../../Functions";
 
 const User = () => {
   const { authInfo, fetchUserRest } = useContext(AuthContext);
@@ -54,10 +53,10 @@ const User = () => {
 export default User;
 
 const Dashboard = () => {
-  const { setAllCoins, allCoins } = useContext(ContextVariables);
+  const { allCoins } = useContext(ContextVariables);
   const { authInfo } = useContext(AuthContext);
 
-  const [recentNotifs, setRecentNotifs] = useState([
+  const [recentNotifs] = useState([
     { type: "send" },
     { type: "send" },
     { type: "send" },
@@ -72,7 +71,7 @@ const Dashboard = () => {
 
   const [switchBar, setSwitchBar] = useState(false);
 
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm] = useState("");
   const allowedCoins = ["btc", "ltc", "usdt", "xmr"];
 
   const filteredCoins = allCoins.filter(
@@ -178,8 +177,8 @@ const Dashboard = () => {
             <h3>Coin Updates</h3>
           </div>
           <ul className="scrollable">
-            {filteredCoins?.map((coin, index) => (
-              <li>
+            {filteredCoins?.map((coin) => (
+              <li key={coin.id}>
                 <div className="icon center">
                   {/* <i className="bx bx-download"></i> */}
                   <img src={coin?.image} alt="" />
@@ -228,8 +227,8 @@ const Dashboard = () => {
             </div>
             <div className="right">
               <ul className="scrollable">
-                {recentNotifs?.map((notif, index) => (
-                  <li>
+                {recentNotifs?.map((notif, idx) => (
+                  <li key={idx}>
                     <div className="icon center">
                       {/* <i className="bx bx-download"></i> */}
                       <img src={I2} alt="" />
@@ -347,7 +346,8 @@ const Dashboard = () => {
 // <ion-icon name="swap-horizontal-outline"></ion-icon>
 
 const Buy = ({ allCoins }) => {
-  const { domain, addNotification } = useContext(ContextVariables);
+  const { domain, apikey, addNotification } = useContext(ContextVariables);
+  const { authInfo } = useContext(AuthContext);
   const ghsRate = 15.6;
   const fees = {
     btc: 10,
@@ -392,18 +392,11 @@ const Buy = ({ allCoins }) => {
 
   const [buyFee, setBuyFee] = useState(0);
   const [exRate, setExRate] = useState(0);
-  const [buyVal, setBuyVal] = useState(0);
+  const [cryptoVal, setCryptoVal] = useState(0);
   const [payVal, setPayVal] = useState(0);
-  const [payWal, setPayWal] = useState("");
+  const [cryptoWallet, setCryptoWallet] = useState("");
 
-  const [chooseWallet, setChooseWallet] = useState(false);
-  const [addWallet, setAddWallet] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
-
-  const [wallets, setWallets] = useState(() => {
-    const savedWallets = localStorage.getItem("wallets");
-    return savedWallets ? JSON.parse(savedWallets) : [];
-  });
 
   const handleWalletAdd = async (e) => {
     e.preventDefault();
@@ -415,36 +408,22 @@ const Buy = ({ allCoins }) => {
       ))
     ) {
       // alert(`Invalid wallet address!`);
-      addNotification("Error", `Invalid wallet address!`);
+      addNotification("Error", `Invalid ${buying?.symbol?.toUpperCase()} address!`);
       return;
     }
 
     if (!walletAddress.trim()) {
       // alert("Please enter a valid wallet address.");
-      addNotification("Error", `Please enter a valid wallet address.`);
+      addNotification("Error", `Please enter a valid ${buying?.symbol?.toUpperCase()} address.`);
       return;
     }
 
-    // Check for duplicates
-    if (wallets.includes(walletAddress)) {
-      // alert("Wallet address already exists!");
-      addNotification("Error", `Wallet address already exists!`);
-      return;
-    }
 
-    // Add the new wallet address to the array
-    const updatedWallets = [...wallets, walletAddress];
-    // setWallets(updatedWallets);
-    setPayWal(walletAddress);
-    // alert("Wallet address successfully verified!");
-    addNotification("Success", `Wallet address successfully verified!`);
-
-    // Save to localStorage
-    // localStorage.setItem("wallets", JSON.stringify(updatedWallets));
+    setCryptoWallet(walletAddress);
+    addNotification("Success", `${buying?.symbol?.toUpperCase()} address successfully verified!`);
 
     // Reset input and close the form
     setWalletAddress("");
-    setAddWallet(false);
   };
 
   const getExchangeRateP = async (coin) => {
@@ -463,7 +442,7 @@ const Buy = ({ allCoins }) => {
         `Minimum ghs amount to buy is ${feeAmtGhs + 100}`
       );
       setPayVal(feeAmtGhs + 100);
-      setBuyVal(0);
+      setCryptoVal(0);
       setExBuy(false);
       return;
     } else if (
@@ -473,7 +452,7 @@ const Buy = ({ allCoins }) => {
       // alert(`Minimum usd amount to buy is ${feeAmtUSD + 5}`);
       addNotification("Error", `Minimum usd amount to buy is ${feeAmtUSD + 5}`);
       setPayVal(feeAmtUSD + 5);
-      setBuyVal(0);
+      setCryptoVal(0);
       setExBuy(false);
       return;
     }
@@ -485,7 +464,7 @@ const Buy = ({ allCoins }) => {
           {
             headers: {
               "Content-Type": "application/json",
-              "X-API-KEY": "your-api-key",
+              "X-API-KEY": apikey,
             },
           }
         );
@@ -497,27 +476,27 @@ const Buy = ({ allCoins }) => {
         if (exchangeRate) {
           if (payWith.symbol === "GHS") {
             const ghsAmount = payVal > 0 ? payVal - feeAmtGhs : 0;
-            setBuyVal((ghsAmount / ghsRate / exchangeRate).toFixed(8));
+            setCryptoVal((ghsAmount / ghsRate / exchangeRate).toFixed(8));
           } else {
             const usdAmount = payVal > 0 ? payVal - feeAmtUSD : 0;
-            setBuyVal((usdAmount / exchangeRate).toFixed(8));
+            setCryptoVal((usdAmount / exchangeRate).toFixed(8));
           }
         } else {
           // alert("Response doesn't contain exchange rate!");  
-          setBuyVal(0);
+          setCryptoVal(0);
         }
       }
     } catch (error) {
       // alert("Error fetching exchange rate!");
       addNotification("Error", "Error fetching exchange rate!");
-      setBuyVal(0);
+      setCryptoVal(0);
     } finally {
       setExBuy(false);
     }
   };
 
   const getExchangeRateB = async (coin) => {
-    if (buyVal < 1) {
+    if (cryptoVal < 1) {
       return;
     }
 
@@ -531,7 +510,7 @@ const Buy = ({ allCoins }) => {
           {
             headers: {
               "Content-Type": "application/json",
-              "X-API-KEY": "your-api-key",
+              "X-API-KEY": apikey,
             },
           }
         );
@@ -549,11 +528,11 @@ const Buy = ({ allCoins }) => {
 
           if (payWith.symbol === "GHS") {
             const ghsAmount =
-              buyVal > 0 && buyVal * exchangeRate * ghsRate.toFixed(2);
+              cryptoVal > 0 && cryptoVal * exchangeRate * ghsRate.toFixed(2);
             setPayVal((ghsAmount + feeAmtGhs).toFixed(2));
           } else if (payWith.symbol === "USD") {
             const usdAmount =
-              buyVal > 0 ? parseFloat((buyVal * exchangeRate).toFixed(8)) : 0;
+              cryptoVal > 0 ? parseFloat((cryptoVal * exchangeRate).toFixed(8)) : 0;
             setPayVal((usdAmount + feeAmtUSD).toFixed(2));
           }
         } else {
@@ -630,22 +609,40 @@ const Buy = ({ allCoins }) => {
     }
   };
 
+  const paymentData = {
+    description: `Item Purchase`,
+    callbackUrl: `${domain}/optimus/v1/api/payment/callback`,
+    returnUrl: "http:localhost:5173/payment/success",
+    merchantAccountNumber: "2022959",
+    cancellationUrl: `${domain}/payment/failed`,
+    clientReference: `Payment_${Date.now()}`,
+    amountGHS: payVal,
+  };
+
+
+  const orderData = {
+    cryptoAmount: cryptoVal,
+    fee: fees[buying?.symbol?.toLowerCase()],
+    crypto: buying?.symbol?.toUpperCase(),
+    email: authInfo?.email,
+    rate: ghsRate,
+    address: cryptoWallet,
+  };
+
   const buyCryptoCoin = async () => {
-    try {
-      if (
-        !buying?.symbol?.toLowerCase() &&
-        payVal === 0 &&
-        payWal?.length === 0 &&
-        buyVal === 0
-      ) {
-        alert("Invalid Form inputs");
-      } else {
-        alert(`${buying?.symbol?.toLowerCase()} ${payVal} ${payWal} ${buyVal}`);
-      }
-    } catch (error) {
-      alert("Invalid Form inputs");
+    if (
+      !buying?.symbol ||
+      !payVal > 0 ||
+      cryptoWallet?.length === 0 ||
+      !cryptoVal > 0
+    ) {
+      console.log(buying?.symbol?.toLowerCase(), payVal, cryptoWallet?.length, cryptoVal);
+      addNotification("Error", "Invalid Form inputs");
+    } else {
+      generate_payment_link_hubtel(domain, apikey, addNotification, authInfo?.token, paymentData, orderData);
     }
   };
+
 
   useEffect(() => {
     setBuying(filteredCoins[0]);
@@ -724,7 +721,7 @@ const Buy = ({ allCoins }) => {
                   setPayVal(parseFloat(e.target.value).toFixed(2));
                   getExchangeRateP(buying?.symbol?.toLowerCase());
                 }} // Format when input loses focus
-                style={{fontSize: "16px"}}
+                style={{ fontSize: "16px" }}
               />
             )}
           </div>
@@ -787,13 +784,13 @@ const Buy = ({ allCoins }) => {
             ) : (
               <input
                 type="number"
-                value={buyVal}
-                onChange={(e) => setBuyVal(e.target.value)} // Let the value update as typed
+                value={cryptoVal}
+                onChange={(e) => setCryptoVal(e.target.value)} // Let the value update as typed
                 onBlur={(e) => {
-                  setBuyVal(parseFloat(e.target.value).toFixed(2));
+                  setCryptoVal(parseFloat(e.target.value).toFixed(2));
                   getExchangeRateB(buying?.symbol?.toLowerCase());
                 }} // Format when input loses focus
-                style={{fontSize: "16px"}}
+                style={{ fontSize: "16px" }}
               />
             )}
           </div>
@@ -802,11 +799,11 @@ const Buy = ({ allCoins }) => {
 
       {/* Other Sections */}
       <div className="times center">
-        <h5 onClick={() => setPayWal("")}>
-          {payWal || "Enter Wallet Address"}{" "}
+        <h5 onClick={() => setCryptoWallet("")}>
+          {cryptoWallet || "Enter Wallet Address"}{" "}
           <ion-icon name="chevron-down-outline"></ion-icon>
         </h5>
-        {!payWal && (
+        {!cryptoWallet && (
           <div className="wallets">
             <form onSubmit={handleWalletAdd}>
               <input
@@ -819,7 +816,7 @@ const Buy = ({ allCoins }) => {
               />
               <div className="buttons">
                 <button type="submit">
-                  {/* <ion-icon name="checkmark-outline"></ion-icon> */}verify
+                  verify
                 </button>
               </div>
             </form>

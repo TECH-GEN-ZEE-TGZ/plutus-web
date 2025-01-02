@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, delay } from "framer-motion";
 import { NavLink } from "react-router-dom";
 // import StyledForm from "./StyledForm"; // Assuming you have a StyledForm component
 import ContextVariables from "../../context/ContextVariables";
@@ -7,7 +7,7 @@ import { StyledForm, StyledFormS } from "../../components/Form/Form";
 import AuthContext from "../../context/AuthContext";
 
 const Settings = () => {
-  const { domain } = useContext(ContextVariables);
+  const { domain, apiKey, addNotification } = useContext(ContextVariables);
   const { authInfo } = useContext(AuthContext);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -34,7 +34,7 @@ const Settings = () => {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "X-API-KEY": "your-api-key",
+            "X-API-KEY": apiKey,
             Authorization: "Bearer " + authInfo?.token,
           },
           body: JSON.stringify({
@@ -52,15 +52,18 @@ const Settings = () => {
       }
 
       if (response.ok) {
-        alert("Password changed successfully!");
+        addNotification("Success", "Password changed successfully!");
       } else {
         const data = await response.json();
-        setError(data.message);
+        addNotification("Error", data.message);
       }
     } catch (error) {
-      setError(error.message);
+      addNotification("Error", error.message);
     } finally {
       setLoading(false);
+      setTimeout(() => {
+        window.location.href = "/auth/login";
+      }, 2000);
     }
   };
 

@@ -203,24 +203,31 @@ const TableHeader = styled.div`
     justify-content: center;
   }
   &:nth-child(2) {
-    width: 10%;
+      justify-content: center;
+    width: 7.5%;
   }
   &:nth-child(3) {
+    justify-content: center;
     width: 25%;
   }
   &:nth-child(4) {
-    width: 7.5%;
+      justify-content: center;
+    width: 10%;
   }
   &:nth-child(5) {
+      justify-content: center;
     width: 10%;
   }
   &:nth-child(6) {
+      justify-content: center;
     width: 7.5%;
   }
   &:nth-child(7) {
+      justify-content: center;
     width: 10%;
   }
   &:nth-child(8) {
+      justify-content: center;
     width: 12.5%;
   }
 `;
@@ -263,24 +270,31 @@ const TableCell = styled.div`
     justify-content: center;
   }
   &:nth-child(2) {
-    width: 10%;
+    width: 7.5%;
+        justify-content: center;
   }
   &:nth-child(3) {
     width: 25%;
+        justify-content: center;
   }
   &:nth-child(4) {
-    width: 7.5%;
+      justify-content: center;
+    width: 10%;
   }
   &:nth-child(5) {
+      justify-content: center;
     width: 10%;
   }
   &:nth-child(6) {
+      justify-content: center;
     width: 7.5%;
   }
   &:nth-child(7) {
+      justify-content: center;
     width: 10%;
   }
   &:nth-child(8) {
+      justify-content: center;
     width: 12.5%;
   }
   @media (max-width: 768px) {
@@ -314,7 +328,7 @@ const CardButton = styled(Button)`
 const CryptoDataTable = () => {
   const navigate = useNavigate();
   const { authInfo } = useContext(AuthContext);
-  const { setAllCoins, allCoins, domain } = useContext(ContextVariables);
+  const { setAllCoins, allCoins, domain, apiKey } = useContext(ContextVariables);
 
   const [allTransactions, setAllTransactions] = useState([]);
 
@@ -332,25 +346,25 @@ const CryptoDataTable = () => {
 
   const [paginatedData, setPaginatedData] = useState([]);
 
-  // useEffect(() => {
-  //   const fetchCryptoData = async () => {
-  //     const response = await axios.get(
-  //       "https://api.coingecko.com/api/v3/coins/markets",
-  //       {
-  //         params: {
-  //           vs_currency: "usd",
-  //           order: "market_cap_desc",
-  //           per_page: 250,
-  //           page: 1,
-  //           sparkline: true,
-  //         },
-  //       }
-  //     );
-  //     setAllCoins(response.data);
-  //   };
+  useEffect(() => {
+    const fetchCryptoData = async () => {
+      const response = await axios.get(
+        "https://api.coingecko.com/api/v3/coins/markets",
+        {
+          params: {
+            vs_currency: "usd",
+            order: "market_cap_desc",
+            per_page: 250,
+            page: 1,
+            sparkline: true,
+          },
+        }
+      );
+      setAllCoins(response.data);
+    };
 
-  //   fetchCryptoData();
-  // }, [setAllCoins]);
+    fetchCryptoData();
+  }, [setAllCoins]);
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -361,7 +375,7 @@ const CryptoDataTable = () => {
         {
           method: "GET",
           headers: {
-            "X-API-KEY": "your-api-key",
+            "X-API-KEY": apiKey,
             Authorization: "Bearer " + authInfo?.token,
           },
         }
@@ -384,7 +398,7 @@ const CryptoDataTable = () => {
         }
       } else {
         // console.log(response);
-        
+
         localStorage.removeItem("plutusAuth");
         window.location.href = "/auth/login";
       }
@@ -508,58 +522,86 @@ const CryptoDataTable = () => {
             visible: { transition: { staggerChildren: 0.1 } },
           }}
         >
-          {paginatedData?.map((transaction, index) => (
-            <TableRow key={index} variants={tableRowVariants}>
-              <TableCell>{transaction?.transactionId || "N/A"}</TableCell>
-              <TableCell>{transaction?.crypto?.toUpperCase()}</TableCell>
-              <TableCell>{transaction?.address?.toUpperCase()}</TableCell>
-              <TableCell>
-                {transaction?.amountGHS?.toFixed(2)?.toUpperCase()}
-              </TableCell>
-              <TableCell>
-                {transaction?.cryptoAmount?.toLocaleString()?.toUpperCase()}
-              </TableCell>
-              <TableCell>
-                {transaction?.rate?.toLocaleString()?.toUpperCase()}
-              </TableCell>
-              <TableCell>{transaction?.status?.toUpperCase()}</TableCell>
-              <TableCell>{transaction?.createdAt || "N/A"}</TableCell>
-            </TableRow>
-          ))}
+          {paginatedData?.map((transaction, index) => {
+            const date = new Date(transaction?.createdAt);
+            const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(
+              date.getMonth() + 1
+            )
+              .toString()
+              .padStart(2, '0')}-${date.getFullYear()} | ${date
+              .getHours()
+              .toString()
+              .padStart(2, '0')}:${date
+              .getMinutes()
+              .toString()
+              .padStart(2, '0')}`;
+            return (
+              <TableRow key={index} variants={tableRowVariants}>
+                <TableCell>{transaction?.transactionId || "N/A"}</TableCell>
+                <TableCell>{transaction?.crypto?.toUpperCase()}</TableCell>
+                <TableCell>{transaction?.address?.toUpperCase()}</TableCell>
+                <TableCell>
+                  {transaction?.amountGHS?.toFixed(2)?.toUpperCase()}
+                </TableCell>
+                <TableCell>
+                  {transaction?.cryptoAmount?.toLocaleString()?.toUpperCase()}
+                </TableCell>
+                <TableCell>
+                  {transaction?.rate?.toLocaleString()?.toUpperCase()}
+                </TableCell>
+                <TableCell>{transaction?.status?.toUpperCase()}</TableCell>
+                <TableCell>{formattedDate || "N/A"}</TableCell>
+              </TableRow>
+            );
+          })}
         </motion.div>
       </CryptoTable>
       <CryptoCardContainer className="scrollable">
-        {paginatedData?.map((transaction, index) => (
-          <li key={index}>
-            <h3>
-              <span>ID:</span> {transaction?.transactionId || "N/A"}
-            </h3>
-            <h3>
-              <span>Crypto:</span> {transaction?.crypto?.toUpperCase()}
-            </h3>
-            <h3>
-              <span>Address:</span> {transaction?.address?.toUpperCase()}
-            </h3>
-            <h3>
-              <span>Amount (GHS):</span>{" "}
-              {transaction?.amountGHS?.toFixed(2)?.toUpperCase()}
-            </h3>
-            <h3>
-              <span>Crypto Amount:</span>{" "}
-              {transaction?.cryptoAmount?.toLocaleString()?.toUpperCase()}
-            </h3>
-            <h3>
-              <span>Rate:</span>{" "}
-              {transaction?.rate?.toLocaleString()?.toUpperCase()}
-            </h3>
-            <h3>
-              <span>Status:</span> {transaction?.status?.toUpperCase()}
-            </h3>
-            <h3>
-              <span>Date:</span> {transaction?.createdAt || "N/A"}
-            </h3>
-          </li>
-        ))}
+        {paginatedData?.map((transaction, index) => {
+          const date = new Date(transaction?.createdAt);
+          const formattedDate = `${date.getDate().toString().padStart(2, '0')} ${(
+            date.getMonth() + 1
+          )
+            .toString()
+            .padStart(2, '0')} ${date.getFullYear()} ${date
+            .getHours()
+            .toString()
+            .padStart(2, '0')}:${date
+            .getMinutes()
+            .toString()
+            .padStart(2, '0')}`;
+          return (
+            <li key={index}>
+              <h3>
+                <span>ID:</span> {transaction?.transactionId || "N/A"}
+              </h3>
+              <h3>
+                <span>Crypto:</span> {transaction?.crypto?.toUpperCase()}
+              </h3>
+              <h3>
+                <span>Address:</span> {transaction?.address?.toUpperCase()}
+              </h3>
+              <h3>
+                <span>Amount (GHS):</span>{" "}
+                {transaction?.amountGHS?.toFixed(2)?.toUpperCase()}
+              </h3>
+              <h3>
+                <span>Crypto Amount:</span>{" "}
+                {transaction?.cryptoAmount?.toLocaleString()?.toUpperCase()}
+              </h3>
+              <h3>
+                <span>Rate:</span>{" "}
+                {transaction?.rate?.toLocaleString()?.toUpperCase()}
+              </h3>
+              <h3>
+                <span>Status:</span> {transaction?.status?.toUpperCase()}
+              </h3>
+              <h3>
+                <span>Date:</span> {formattedDate || "N/A"}
+              </h3>
+            </li>
+          );
+        })}
       </CryptoCardContainer>
     </TableContainer>
   );

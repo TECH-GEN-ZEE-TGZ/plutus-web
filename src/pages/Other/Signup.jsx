@@ -8,7 +8,7 @@ import ContextVariables from "../../context/ContextVariables";
 
 const Signup = () => {
   const { authInfo, seAuthInfo } = useContext(AuthContext);
-  const { domain } = useContext(ContextVariables);
+  const { domain, apiKey } = useContext(ContextVariables);
 
   const [verifyEmail, setVerifyEmail] = useState(false);
 
@@ -68,7 +68,7 @@ const Signup = () => {
           {
             headers: {
               "Content-Type": "application/json",
-              "X-API-KEY": "your-api-key",
+              "X-API-KEY": apiKey,
             },
           }
         )
@@ -115,7 +115,7 @@ const Signup = () => {
           {
             headers: {
               "Content-Type": "application/json",
-              "X-API-KEY": "your-api-key",
+              "X-API-KEY": apiKey,
             },
           }
         )

@@ -11,7 +11,7 @@ import { Helmet } from 'react-helmet';
 const Login = () => {
   const navigate = useNavigate();
 
-  const { domain, addNotification } = useContext(ContextVariables);
+  const { domain,apiKey, addNotification } = useContext(ContextVariables);
   const { authInfo, setAuthInfo } = useContext(AuthContext);
 
   const [username, setUsername] = useState("");
@@ -54,7 +54,7 @@ const Login = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "X-API-KEY": "your-api-key", // Replace with your actual API key
+            "X-API-KEY": apiKey, // Replace with your actual API key
           },
           body: JSON.stringify({
             token: recaptchaToken,

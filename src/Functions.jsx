@@ -5,6 +5,7 @@ import styled from "styled-components";
 import AuthContext from "./context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { use } from "react";
 
 export const fixedHeight = (height) => {
   return (height / 100) * window.innerHeight;
@@ -143,6 +144,7 @@ export const motionImgItem3 = {
 
 export const makeapiCall = (
   domain,
+  apiKey,
   username,
   password,
   onSucess,
@@ -161,7 +163,7 @@ export const makeapiCall = (
       {
         headers: {
           "Content-Type": "application/json",
-          "X-API-KEY": "your-api-key",
+          "X-API-KEY": apiKey,
         },
       }
     )
@@ -204,3 +206,51 @@ export const makeapiCall = (
       addNotification("Error", "An error occurred");
     });
 };
+
+export const generate_payment_link_hubtel = (domain, apiKey, addNotification, token, paymentData, orderData) => {
+
+  console.log( `The domain for genratinng the link is ${domain}`);
+  const url = domain + "/optimus/v1/api/payment/generate";
+  const headers = {
+    "X-API-KEY": apiKey,
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + token
+  };
+
+  console.log( `The domain for genratinng the link is ${url}`);
+
+  const data = {
+    "description": paymentData.description,
+    "callbackUrl": paymentData.callbackUrl,
+    "returnUrl": paymentData.returnUrl,
+    "merchantAccountNumber": paymentData.merchantAccountNumber,
+    "cancellationUrl": paymentData.cancellationUrl,
+    "clientReference": paymentData.clientReference,
+    "currency": "GHS",
+    "amountGHS": paymentData.amountGHS,
+    "cryptoAmount": orderData.cryptoAmount,
+    "fee": orderData.fee,
+    "crypto": orderData.crypto,
+    "email": orderData.email,
+    "rate": orderData.rate,
+    "address": orderData.address,
+    "transactionId": orderData.transactionId
+  };
+
+  axios
+    .post(url, data, { headers })
+    .then((response) => {
+      console.log(response);
+      const result = response.data;
+      if (result.status && result.data && result.data.checkoutUrl) {
+        console.log(`The payment url ${result.data.checkoutUrl}`);
+        let paymentUrl = result.data.checkoutUrl;
+        window.location.href = paymentUrl;
+      } else {
+        addNotification("Error", "Error generating payment link");
+      }
+    })
+    .catch((error) => {
+      addNotification("Error", error.message);
+    });
+}

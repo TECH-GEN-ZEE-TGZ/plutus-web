@@ -3,7 +3,8 @@ import { createContext, useEffect, useState } from "react";
 const ContextVariables = createContext({});
 
 export const ContextVariablesProvider = ({ children }) => {
-  const domain = "https://4cxk0ffs-9090.uks1.devtunnels.ms";
+  const domain = process.env.REACT_APP_BACKEND_URL;
+  const apiKey = process.env.REACT_APP_API_KEY;
   const [toggleMode, setToggleMode] = useState(false);
   const [hideNav, setHideNav] = useState(false);
   const [hideContact, setHideContact] = useState(false);
@@ -22,6 +23,7 @@ export const ContextVariablesProvider = ({ children }) => {
     <ContextVariables.Provider
       value={{
         domain,
+        apiKey,
         toggleMode,
         setToggleMode,
         hideNav,

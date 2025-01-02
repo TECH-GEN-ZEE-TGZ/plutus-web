@@ -4,7 +4,7 @@ import { fixedHeight, fixedWidth } from "../../Functions";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import AuthContext from "../../context/AuthContext";
-import Logo from "../../assets/img/plutus.jpg"
+import Logo from "../../assets/img/logo.png"
 
 const StyledNav = styled(motion.nav)`
   /* position: fixed; */
@@ -12,7 +12,10 @@ const StyledNav = styled(motion.nav)`
   left: 0;
   width: 100%;
   height: 7.5%;
-  padding: 0 5%;
+  padding-right: 5%;
+  padding-left: 2%;
+  padding-top: 2%;
+  padding-bottom: 2%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -24,8 +27,8 @@ const StyledNav = styled(motion.nav)`
     cursor: pointer;
     border-radius: 50%;
     overflow: hidden;
-    width: ${fixedHeight(6)}px;
-    height: ${fixedHeight(6)}px;
+    width: ${fixedHeight(10)}px;
+    height: ${fixedHeight(10)}px;
 
     > p {
       display: none;
@@ -133,11 +136,11 @@ const SaasNav = () => {
       <div
         className="logo"
         onClick={() => {
-          navigate("/");
+          navigate("/user/buy");
         }}
       >
         <p>The Plutus Home</p>
-        <img src={Logo} alt="" />
+        <img src={Logo} alt=""/>
       </div>
       {!authInfo?.token && (
         <ul className="links">
