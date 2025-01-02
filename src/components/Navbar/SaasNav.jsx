@@ -4,7 +4,7 @@ import { fixedHeight, fixedWidth } from "../../Functions";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import AuthContext from "../../context/AuthContext";
-import Logo from "../../assets/img/logo.png"
+import Logo from "../../assets/img/log.png"
 
 const StyledNav = styled(motion.nav)`
   /* position: fixed; */

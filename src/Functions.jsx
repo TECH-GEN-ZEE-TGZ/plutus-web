@@ -150,8 +150,7 @@ export const makeapiCall = (
   onSucess,
   onError,
   navigate,
-  setAuthInfo,
-  addNotification
+  setAuthInfo
 ) => {
   axios
     .post(
@@ -170,10 +169,6 @@ export const makeapiCall = (
     .then((response) => {
       if (response.status === 200) {
         return response.data; // Parse JSON here
-      } else {
-        onError("Invalid username or password");
-        onSucess()
-        addNotification("Error", "Invalid username or password");
       }
     })
     .then((data) => {
@@ -196,20 +191,20 @@ export const makeapiCall = (
         onSucess();
         navigate("/user/buy");
       }
-      else {
-        addNotification("Error", "Invalid username or password");
-      }
     })
     .catch((error) => {
-      onError(error.message);
+      if (error.status === 400) {
+        onError(error.response.data.message);
+      } else {
+        onError("An error occurred. Please try again.");
+      }
       onSucess();
-      addNotification("Error", "An error occurred");
-    });
+    })
 };
 
 export const generate_payment_link_hubtel = (domain, apiKey, addNotification, token, paymentData, orderData) => {
 
-  console.log( `The domain for genratinng the link is ${domain}`);
+  console.log(`The domain for genratinng the link is ${domain}`);
   const url = domain + "/optimus/v1/api/payment/generate";
   const headers = {
     "X-API-KEY": apiKey,
@@ -217,7 +212,7 @@ export const generate_payment_link_hubtel = (domain, apiKey, addNotification, to
     "Authorization": "Bearer " + token
   };
 
-  console.log( `The domain for genratinng the link is ${url}`);
+  console.log(`The domain for genratinng the link is ${url}`);
 
   const data = {
     "description": paymentData.description,

@@ -29,6 +29,15 @@ export const StyledForm = styled(motion.form)`
     font-size: ${fixedHeight(2)}px;
     color: red;
   }
+  > .logo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-center;
+    cursor: pointer;
+    overflow: hidden;
+    width: ${fixedHeight(50)}px;
+    height: ${fixedHeight(30)}px;
+  }
   > input,
   select {
     border: 1px solid silver;

@@ -7,11 +7,13 @@ import AuthContext from "../../context/AuthContext";
 import { makeapiCall } from "../../Functions";
 import ContextVariables from "../../context/ContextVariables";
 import { Helmet } from 'react-helmet';
+import Logo from "../../assets/img/log.png"
+
 
 const Login = () => {
   const navigate = useNavigate();
 
-  const { domain,apiKey, addNotification } = useContext(ContextVariables);
+  const { domain, apiKey, addNotification } = useContext(ContextVariables);
   const { authInfo, setAuthInfo } = useContext(AuthContext);
 
   const [username, setUsername] = useState("");
@@ -21,6 +23,8 @@ const Login = () => {
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
+    console.log(`Domain: ${domain}`);
+    console.log(`API Key: ${apiKey}`);
     e.preventDefault();
     setLoading(true);
 
@@ -64,6 +68,7 @@ const Login = () => {
         if (response.ok) {
           makeapiCall(
             domain,
+            apiKey,
             username,
             password,
             () => setLoading(false),
@@ -83,7 +88,7 @@ const Login = () => {
         }
       });
     } catch (error) {
-      console.error("An error occurred:", error);
+      console.error("A new error occurred:", error.message);
       setError(error.message);
       setLoading(false);
     } finally {
@@ -101,6 +106,11 @@ const Login = () => {
       <Helmet>
         <script src="https://www.google.com/recaptcha/api.js?render=6LeG0KEqAAAAAB0ij0gsJi4IFC6RC1dU-UpLFjfQ" async defer></script>
       </Helmet>
+      <div
+        className="logo"
+      >
+        <img src={Logo} alt="" />
+      </div>
       <h3>Log in to account.</h3>
       <AnimatePresence>
         {error && (
