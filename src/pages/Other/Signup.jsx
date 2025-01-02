@@ -273,7 +273,7 @@ const EmailV = ({
     <>
       <h3>Verify your email.</h3>
       <p>
-        Check <span>{formData?.email} for OTP Verification Code.</span>
+        We've sent a verification code to <span>{formData?.email}</span>. Please check your inbox and don't forget to look in your spam or junk folder too!
       </p>
       <AnimatePresence>
         {error && (
@@ -292,8 +292,8 @@ const EmailV = ({
       <input
         type="text"
         name="verification"
-        placeholder="Enter Code Sent To Your Email"
-        value={formData?.veirfication}
+        placeholder="Enter the code sent to your email"
+        value={formData?.verification}
         onChange={handleChange}
       />
       <button type="submit" disabled={loading}>

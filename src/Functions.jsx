@@ -204,15 +204,12 @@ export const makeapiCall = (
 
 export const generate_payment_link_hubtel = (domain, apiKey, addNotification, token, paymentData, orderData) => {
 
-  console.log(`The domain for genratinng the link is ${domain}`);
   const url = domain + "/optimus/v1/api/payment/generate";
   const headers = {
     "X-API-KEY": apiKey,
     "Content-Type": "application/json",
     "Authorization": "Bearer " + token
   };
-
-  console.log(`The domain for genratinng the link is ${url}`);
 
   const data = {
     "description": paymentData.description,
@@ -235,10 +232,8 @@ export const generate_payment_link_hubtel = (domain, apiKey, addNotification, to
   axios
     .post(url, data, { headers })
     .then((response) => {
-      console.log(response);
       const result = response.data;
       if (result.status && result.data && result.data.checkoutUrl) {
-        console.log(`The payment url ${result.data.checkoutUrl}`);
         let paymentUrl = result.data.checkoutUrl;
         window.location.href = paymentUrl;
       } else {

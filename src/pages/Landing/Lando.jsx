@@ -50,7 +50,6 @@ const Landing = () => {
         );
         setPrices(formattedPrices);
       } catch (error) {
-        console.error("Error fetching prices:", error);
       }
     };
 

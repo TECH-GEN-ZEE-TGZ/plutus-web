@@ -5,8 +5,6 @@ const ContextVariables = createContext({});
 export const ContextVariablesProvider = ({ children }) => {
   const domain = import.meta.env.VITE_BACKEND_URL;
   const apiKey = import.meta.env.VITE_API_KEY;
-  console.log(`Imported Domain: ${import.meta.env.VITE_BACKEND_URL}`);
-  console.log(`Imported API Key: ${import.meta.env.VITE_API_KEY}`);
   const [toggleMode, setToggleMode] = useState(false);
   const [hideNav, setHideNav] = useState(false);
   const [hideContact, setHideContact] = useState(false);

@@ -23,8 +23,6 @@ const Login = () => {
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
-    console.log(`Domain: ${domain}`);
-    console.log(`API Key: ${apiKey}`);
     e.preventDefault();
     setLoading(true);
 
@@ -50,8 +48,6 @@ const Login = () => {
           "6LeG0KEqAAAAAB0ij0gsJi4IFC6RC1dU-UpLFjfQ",
           { action: "submit" }
         );
-
-        console.log("CAPTCHA Token:", recaptchaToken);
 
         // Send the token and form data to your backend
         const response = await fetch(`${domain}/api/verify-captcha`, {
@@ -88,7 +84,6 @@ const Login = () => {
         }
       });
     } catch (error) {
-      console.error("A new error occurred:", error.message);
       setError(error.message);
       setLoading(false);
     } finally {

@@ -13,7 +13,6 @@ export const AuthContextProvider = ({ children }) => {
 
   // Fetch user data
   const fetchUserRest = async () => {
-    console.log(`Calling fetchUserRest`);
     try {
       const response = await axios.get(
         `${domain}/optimus/v1/api/users/getUser/${authInfo?.username}`,

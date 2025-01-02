@@ -542,7 +542,6 @@ const Buy = ({ allCoins }) => {
       }
     } catch (error) {
       // Handle fetch errors
-      console.log(error);
       addNotification("Error", error.message);
       setPayVal(0);
     } finally {
@@ -636,7 +635,6 @@ const Buy = ({ allCoins }) => {
       cryptoWallet?.length === 0 ||
       !cryptoVal > 0
     ) {
-      console.log(buying?.symbol?.toLowerCase(), payVal, cryptoWallet?.length, cryptoVal);
       addNotification("Error", "Invalid Form inputs");
     } else {
       generate_payment_link_hubtel(domain, apikey, addNotification, authInfo?.token, paymentData, orderData);
@@ -920,8 +918,6 @@ const Hash = ({ allCoins }) => {
       })
       .catch((error) => {
         setIsLoading(false);
-        console.error("An error occurred:", error);
-        // alert("An error occurred. Please try again.");
         addNotification("Error", "An error occurred. Please try again.");
       });
   };
