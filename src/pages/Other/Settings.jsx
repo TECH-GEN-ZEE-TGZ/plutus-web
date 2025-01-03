@@ -52,7 +52,7 @@ const Settings = () => {
       }
 
       if (response.ok) {
-        addNotification("Success", "Password changed successfully!");
+        addNotification("Success", "Password changed successfully");
       } else {
         const data = await response.json();
         addNotification("Error", data.message);
