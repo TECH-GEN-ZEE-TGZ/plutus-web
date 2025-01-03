@@ -599,9 +599,9 @@ const Buy = ({ allCoins }) => {
   const paymentData = {
     description: `Item Purchase`,
     callbackUrl: `${domain}/optimus/v1/api/payment/callback`,
-    returnUrl: "http:localhost:5173/payment/success",
+    returnUrl: "https://theplutushome.com/payment/success",
     merchantAccountNumber: "2022959",
-    cancellationUrl: `${domain}/payment/failed`,
+    cancellationUrl: "https://theplutushome.com/payment/failed",
     clientReference: `Payment_${Date.now()}`,
     amountGHS: payVal,
   };
