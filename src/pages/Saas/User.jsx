@@ -845,7 +845,7 @@ const Buy = ({ allCoins }) => {
 const Hash = ({ allCoins }) => {
   const { addNotification } = useContext(ContextVariables);
   var domain = "";
-  const apikey = process.env.TOKENVIEW_KEY;
+  const apikey = process.env.REACT_APP_TOKENVIEW_KEY;
   const allowedCoins = ["btc", "ltc", "usdt", "xmr"];
 
   const [isLoading, setIsLoading] = useState(false);
