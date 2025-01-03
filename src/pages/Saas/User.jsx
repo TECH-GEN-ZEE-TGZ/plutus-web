@@ -1,7 +1,7 @@
 import { NavLink, Route, Routes, useNavigate } from "react-router-dom";
 import CryptoDataTable from "../../components/DataTable/DataTable";
 import SaasNav from "../../components/Navbar/SaasNav";
-import { StyledUser } from "./SaasStyles";
+import { StyledUser, StyledFormS } from "./SaasStyles";
 import ContextVariables from "../../context/ContextVariables";
 import { useContext, useEffect, useState } from "react";
 import I1 from "../../assets/img/img3.jpeg";
@@ -10,7 +10,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import axios from "axios";
 import AuthContext from "../../context/AuthContext";
 import Settings from "../Other/Settings";
-import Redeem from "../Other/Redeem";
+// import Redeem from "../Other/Redeem";
 import Support from "../Other/Support";
 import MiniGraph from "../../components/Other/MiniGraph";
 import Notifs from "../../components/Other/Notifs";
@@ -94,7 +94,7 @@ const Dashboard = () => {
           <div
             className={`balance ${inMobileView() && !switchBar ? "on" : "off"}`}
           >
-            <div className="icon center">
+            {/* <div className="icon center">
               <ion-icon name="people-outline"></ion-icon>
             </div>
             <div className="text">
@@ -107,7 +107,7 @@ const Dashboard = () => {
             <div className="text">
               <h5>Accrued Balance</h5>
               <h3>${authInfo?.accruedBalance | 0.0}</h3>
-            </div>
+            </div> */}
             <div className="icon center">
               <ion-icon name="wallet-outline"></ion-icon>
             </div>
@@ -120,12 +120,6 @@ const Dashboard = () => {
             className={`otherIcons ${inMobileView() && !switchBar ? "on" : "off"
               }`}
           >
-            <button
-              onClick={() => setOnTab(onTab === "redeem" ? "" : "redeem")}
-              className="redeem"
-            >
-              <ion-icon name="ticket"></ion-icon>
-            </button>
             <button
               onClick={() => setOnTab(onTab === "support" ? "" : "support")}
               className="support"
@@ -158,8 +152,6 @@ const Dashboard = () => {
                 <div className="tab">
                   {onTab === "settings" ? (
                     <Settings />
-                  ) : onTab === "redeem" ? (
-                    <Redeem />
                   ) : onTab === "support" ? (
                     <Support />
                   ) : (
@@ -250,17 +242,15 @@ const Dashboard = () => {
           <div className="title al-c">
             <div className="bar">
               <NavLink to={"./buy"}>Buy</NavLink>
-              <NavLink to={"./hash"}>Hash</NavLink>
-              {/* <NavLink to={"./calculate"}>Calculate</NavLink> */}
+              {/* <NavLink to={"./hash"}>Hash</NavLink> */}
+              <NavLink to={"./referrals"}>Referrals</NavLink>
             </div>
           </div>
           <Routes>
             <Route path="/buy" element={<Buy allCoins={allCoins} />} />
-            <Route path="/hash" element={<Hash allCoins={allCoins} />} />
-            {/* <Route
-              path="/calculate"
-              element={<Calculate allCoins={allCoins} />}
-            /> */}
+            {/* <Route path="/hash" element={<Hash allCoins={allCoins} />} /> */}
+            <Route path="/referrals" element={<Referrals />}
+            />
           </Routes>
         </div>
       </div>
@@ -277,17 +267,15 @@ const Dashboard = () => {
             <div className="title al-c">
               <div className="bar">
                 <NavLink to={"./buy"}>Buy</NavLink>
-                <NavLink to={"./hash"}>Hash</NavLink>
-                {/* <NavLink to={"./calculate"}>Calculate</NavLink> */}
+                {/* <NavLink to={"./hash"}>Hash</NavLink> */}
+                <NavLink to={"./referrals"}>Referrals</NavLink>
               </div>
             </div>
             <Routes>
               <Route path="/buy" element={<Buy allCoins={allCoins} />} />
-              <Route path="/hash" element={<Hash allCoins={allCoins} />} />
-              {/* <Route
-              path="/calculate"
-              element={<Calculate allCoins={allCoins} />}
-            /> */}
+              {/* <Route path="/hash" element={<Hash allCoins={allCoins} />} /> */}
+              <Route path="/referrals" element={<Referrals />}
+              />
             </Routes>
           </SwiperSlide>
           <SwiperSlide className="swiperSlide">
@@ -996,75 +984,126 @@ const Hash = ({ allCoins }) => {
   );
 };
 
-const Calculate = ({ allCoins }) => (
-  <>
-    <h4>Calculate</h4>
-    <div className="opt">
-      <h4>Buy</h4>
-      <div className="select">
-        <div className="selector center">
-          <div className="val">
-            <img src={allCoins[0]?.image} alt="" />
-            <p>{allCoins[0]?.symbol.toUpperCase()}</p>
-            <ion-icon name="chevron-down-outline"></ion-icon>
-          </div>
-        </div>
-        <div className="amt">
-          <h3>1,356,789.54</h3>
-        </div>
-      </div>
-    </div>
-    <div className="opt">
-      <h4>Pay With</h4>
-      <div className="select">
-        <div className="selector center">
-          <div className="val">
-            <img src={allCoins[1]?.image} alt="" />
-            <p>{allCoins[1]?.symbol.toUpperCase()}</p>
-            <ion-icon name="chevron-down-outline"></ion-icon>
-          </div>
-        </div>
-        <div className="amt">
-          <h3>1,356,789.54</h3>
-        </div>
-      </div>
-    </div>
-  </>
-);
 
+const Referrals = () => {
+  const { domain, apiKey, addNotification } = useContext(ContextVariables);
+  const { authInfo } = useContext(AuthContext);
 
-{/* <SwiperSlide className={"swiperSlide"}>
-  <div className="title al-c">
-    <h3>Information Updates</h3>
-  </div>
-  <div className={"slab" + `${inMobileView() && "scrollable"}`}>
-    <div className="left">
-      <img src={I1} alt="" />
-      <div className="txt">
-        <h1>The latest Upcoming News</h1>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias
-          consequuntur velit natus, quas nisi sunt.
-        </p>
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleRedeem = async (event) => {
+    event.preventDefault();
+
+    if (authInfo?.accruedBalance < 1) {
+      setError("Insufficient balance to redeem.");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch(`${domain}/optimus/v1/api/users/redeem`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": apiKey,
+          Authorization: "Bearer " + authInfo?.token,
+        },
+        body: JSON.stringify({
+          username: authInfo?.username,
+        }),
+      });
+
+      if (response.status === 401) {
+        localStorage.removeItem("plutusAuth");
+        window.location.href = "/auth/login";
+        return;
+      }
+
+      if (response.ok) {
+        addNotification("Success", "Points redeemed successfully!");
+      } else {
+        const data = await response.json();
+        addNotification("Error", data?.message);
+      }
+    } catch (error) {
+      addNotification("Error", "An error occurred. Please try again later.");
+    } finally {
+      setLoading(false);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    }
+  };
+
+  return (
+    <>
+      <h3>Referral Info</h3>
+      <div className="referralSlab">
+        <div className="left">
+          <div className="text">
+            <h5>Your Referral Code</h5>
+            <h3>{authInfo?.referralCode || "N/A"}</h3>
+          </div>
+
+          <div className="text">
+            <h5>Total Referrals</h5>
+            <h3>{authInfo?.totalReferrals || 0}</h3>
+          </div>
+
+          <div className="text">
+            <h5>Available Balance</h5>
+            <h3>${authInfo?.balance || 0.0}</h3>
+          </div>
+
+        </div>
+
+        <div className="right">
+          <StyledFormS
+            initial={{ opacity: 0, scale: 0.75 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.75 }}
+            onSubmit={handleRedeem}
+          >
+            <AnimatePresence>
+              {error && (
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="error"
+                >
+                  <i className="bx bxs-error bx-tada"></i>
+                  {error}
+                  <i className="bx bxs-error bx-tada"></i>
+                </motion.p>
+              )}
+            </AnimatePresence>
+            <p>Accrued Balance</p>
+            <h1>${authInfo?.accruedBalance || parseFloat(0.0)}</h1>
+
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              type="submit"
+              disabled={loading}
+            >
+              <span>
+                {loading ? (
+                  <>
+                    <i className="bx bx-loader bx-spin"></i> Redeeming Points
+                  </>
+                ) : (
+                  <>
+                    Redeem
+                  </>
+                )}
+              </span>
+            </motion.button>
+          </StyledFormS>
+        </div>
       </div>
-    </div>
-    <div className="right">
-      <ul className="scrollable">
-        {recentNotifs?.map((notif, index) => (
-          <li>
-            <div className="icon center">
-              <img src={I2} alt="" />
-            </div>
-            <div className="info">
-              <h3>Crypto convert christmas exclusive!!!</h3>
-              <p>
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Est,
-                atque!
-              </p>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </div>
-</SwiperSlide>; */}
+    </>
+  );
+};

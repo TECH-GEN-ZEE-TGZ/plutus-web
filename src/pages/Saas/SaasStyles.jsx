@@ -1806,4 +1806,97 @@ export const StyledUser = styled(motion.main)`
       }
     }
   }
+
+  .referralSlab {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    .left {
+      flex: 1;
+      padding: 10px;
+      padding-left: 20px;
+    }
+
+    .right {
+      flex: 1;
+    }
+
+    .left {
+      .text {
+        margin-bottom: 10px;
+
+        h5 {
+          margin: 0;
+          font-size: 15px;
+          color: #555;
+        }
+
+        h3 {
+          margin: 5px 0 0;
+          font-size: 20px;
+          color: #333;
+        }
+      }
+    }
+
+    .right {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  }
+`;
+
+export const StyledFormS = styled(motion.form)`
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 2rem);
+  align-items: center;
+  row-gap: 1rem;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+
+  .error {
+    color: red;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  p {
+    font-size: 1rem;
+    color: #333;
+  }
+
+  h1 {
+    font-size: 2rem;
+    color: #333;
+  }
+
+  button {
+    background: #9e5dad;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+
+    &:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+  }
 `;
