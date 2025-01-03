@@ -799,6 +799,7 @@ const Buy = ({ allCoins }) => {
                 onChange={(e) => {
                   setWalletAddress(e.target.value);
                 }}
+                style={{ fontSize: "16px" }}
               />
               <div className="buttons">
                 <button type="submit">
