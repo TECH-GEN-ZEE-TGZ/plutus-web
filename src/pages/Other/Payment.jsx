@@ -5,7 +5,8 @@ import I5 from "../../assets/img/img5.jpeg";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Login from "./Login";
 import Signup from "./Signup";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
+
 
 export const StyledPay = styled(motion.section)`
   width: 100%;
@@ -96,20 +97,40 @@ export default Payment;
 
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
+import ContextVariables from "../../context/ContextVariables";
+import AuthContext from "../../context/AuthContext";
 
 const PayDone = ({ type }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const checkoutId = searchParams.get("checkoutid");
+  const { domain, apiKey } = useContext(ContextVariables);
+  const { authInfo } = useContext(AuthContext);
 
+  // https://optimus-backend-49b31c7c7d3a.herokuapp.com/optimus/v1/api/payment/verify/dddb9fb916d243be962deb7b86b4b3cc
   useEffect(() => {
     const performCheckoutActions = async () => {
       if (checkoutId) {
         try {
-          await axios.post("/api/checkout", { checkoutId });
-          // Perform any other actions if needed
+          const response = await axios.post(
+            `${domain}/optimus/v1/api/payment/verify/${checkoutId}`,
+            { checkoutId },
+            {
+              headers: {
+                'Authorization': `Bearer ${authInfo?.token}`,
+                'X-API-KEY': apiKey,
+                'Content-Type': 'application/json'
+              }
+            }
+          );
+
+          if (response.status === 200 && response.data.data.status === "Paid") {
+            console.log("Payment verification successful:");
+          } else {
+            console.error("Payment verification failed:");
+          }
         } catch (error) {
-          console.error("Error performing checkout actions:", error);
+          console.error("Error performing checkout actions");
         }
       }
       setTimeout(() => {
