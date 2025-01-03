@@ -383,6 +383,7 @@ const Buy = ({ allCoins }) => {
   const [cryptoVal, setCryptoVal] = useState(0);
   const [payVal, setPayVal] = useState(0);
   const [cryptoWallet, setCryptoWallet] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [walletAddress, setWalletAddress] = useState("");
 
@@ -616,16 +617,21 @@ const Buy = ({ allCoins }) => {
     address: cryptoWallet,
   };
 
-  const buyCryptoCoin = async () => {
+  const buyCryptoCoin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
     if (
       !buying?.symbol ||
-      !payVal > 0 ||
+      payVal <= 0 ||
       cryptoWallet?.length === 0 ||
-      !cryptoVal > 0
+      cryptoVal <= 0
     ) {
       addNotification("Error", "Invalid Form inputs");
+      setLoading(false);
+      return;
     } else {
       generate_payment_link_hubtel(domain, apiKey, addNotification, authInfo?.token, paymentData, orderData);
+      setLoading(false);
     }
   };
 
@@ -826,7 +832,27 @@ const Buy = ({ allCoins }) => {
         </div>
       </div>
 
-      <button onClick={buyCryptoCoin}>Top up wallet</button>
+      {loading ? (
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          type="submit"
+          disabled={loading}
+        >
+          <span>
+            <i className="bx bx-loader bx-spin"></i> Processing
+          </span>
+        </motion.button>
+      ) : (
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          type="submit"
+          onClick={buyCryptoCoin}
+        >
+          <span>
+            Top up wallet
+          </span>
+        </motion.button>
+      )}
     </>
   );
 };
