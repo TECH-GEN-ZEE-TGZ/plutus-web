@@ -112,7 +112,7 @@ const PayDone = ({ type }) => {
     const performCheckoutActions = async () => {
       if (checkoutId) {
         try {
-          const response = await axios.post(
+          const response = await axios.get(
             `${domain}/optimus/v1/api/payment/verify/${checkoutId}`,
             { checkoutId },
             {
