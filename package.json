@@ -22,6 +22,7 @@
     "chart.js": "^4.4.6",
     "framer-motion": "^11.3.31",
     "gsap": "^3.12.5",
+    "pipx": "^1.0.1",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.3.1",

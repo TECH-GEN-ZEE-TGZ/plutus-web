@@ -3,8 +3,8 @@ import { createContext, useEffect, useState } from "react";
 const ContextVariables = createContext({});
 
 export const ContextVariablesProvider = ({ children }) => {
-  const domain = import.meta.env.VITE_BACKEND_URL;
-  const apiKey = import.meta.env.VITE_API_KEY;
+  const domain = process.env.BACKEND_URL;
+  const apiKey = process.env.API_KEY;
   const [toggleMode, setToggleMode] = useState(false);
   const [hideNav, setHideNav] = useState(false);
   const [hideContact, setHideContact] = useState(false);
