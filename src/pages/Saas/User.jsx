@@ -845,7 +845,7 @@ const Buy = ({ allCoins }) => {
 const Hash = ({ allCoins }) => {
   const { addNotification } = useContext(ContextVariables);
   var domain = "";
-  const apikey = "lsZGSdo9TopH5nikdSyz";
+  const apikey = import.meta.env.VITE_BACKEND_URL;
   const allowedCoins = ["btc", "ltc", "usdt", "xmr"];
 
   const [isLoading, setIsLoading] = useState(false);
