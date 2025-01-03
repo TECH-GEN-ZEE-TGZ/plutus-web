@@ -334,7 +334,7 @@ const Dashboard = () => {
 // <ion-icon name="swap-horizontal-outline"></ion-icon>
 
 const Buy = ({ allCoins }) => {
-  const { domain, apikey, addNotification } = useContext(ContextVariables);
+  const { domain, apiKey, addNotification } = useContext(ContextVariables);
   const { authInfo } = useContext(AuthContext);
   const ghsRate = 15.6;
   const fees = {
@@ -452,7 +452,7 @@ const Buy = ({ allCoins }) => {
           {
             headers: {
               "Content-Type": "application/json",
-              "X-API-KEY": apikey,
+              "X-API-KEY": apiKey,
             },
           }
         );
@@ -498,7 +498,7 @@ const Buy = ({ allCoins }) => {
           {
             headers: {
               "Content-Type": "application/json",
-              "X-API-KEY": apikey,
+              "X-API-KEY": apiKey,
             },
           }
         );
@@ -625,7 +625,7 @@ const Buy = ({ allCoins }) => {
     ) {
       addNotification("Error", "Invalid Form inputs");
     } else {
-      generate_payment_link_hubtel(domain, apikey, addNotification, authInfo?.token, paymentData, orderData);
+      generate_payment_link_hubtel(domain, apiKey, addNotification, authInfo?.token, paymentData, orderData);
     }
   };
 
@@ -833,7 +833,7 @@ const Buy = ({ allCoins }) => {
 const Hash = ({ allCoins }) => {
   const { addNotification } = useContext(ContextVariables);
   var domain = "";
-  const apikey = process.env.REACT_APP_TOKENVIEW_KEY;
+  const apiKey = process.env.REACT_APP_TOKENVIEW_KEY;
   const allowedCoins = ["btc", "ltc", "usdt", "xmr"];
 
   const [isLoading, setIsLoading] = useState(false);
@@ -878,9 +878,9 @@ const Hash = ({ allCoins }) => {
     }
 
     if (cryptoType === "usdt") {
-      domain = `https://services.tokenview.io/vipapi/usdt/txdetail/${hash}?apikey=${apikey}`;
+      domain = `https://services.tokenview.io/vipapi/usdt/txdetail/${hash}?apiKey=${apiKey}`;
     } else {
-      domain = `https://services.tokenview.io/vipapi/tx/${cryptoType}/${hash}?apikey=${apikey}`;
+      domain = `https://services.tokenview.io/vipapi/tx/${cryptoType}/${hash}?apiKey=${apiKey}`;
     }
 
     // Verify hash

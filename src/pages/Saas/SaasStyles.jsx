@@ -720,6 +720,14 @@ export const StyledUser = styled(motion.main)`
                   display: flex;
                   flex-direction: column;
                   row-gap: ${fixedHeight(1)}px;
+
+                  h3 {
+                    font-size: ${fixedHeight(2.2)}px;
+                  }
+
+                  p {
+                    font-size: ${fixedHeight(1.75)}px;
+                  }
                 }
               }
             }
