@@ -6,7 +6,7 @@ import ContextVariables from "../../context/ContextVariables";
 import { useContext, useEffect, useState } from "react";
 import I1 from "../../assets/img/img3.jpeg";
 import I2 from "../../assets/img/img5.jpeg";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, color, motion } from "framer-motion";
 import axios from "axios";
 import AuthContext from "../../context/AuthContext";
 import Settings from "../Other/Settings";
@@ -91,56 +91,67 @@ const Dashboard = () => {
     <section id="dashboard">
       <div className="trades">
         <div className="slab">
-          <div
-            className={`balance ${inMobileView() && !switchBar ? "on" : "off"}`}
-          >
-            {/* <div className="icon center">
-              <ion-icon name="people-outline"></ion-icon>
-            </div>
-            <div className="text">
-              <h5>Total Referrals</h5>
-              <h3>{authInfo?.totalReferrals | 0}</h3>
-            </div>
-            <div className="icon center">
-              <ion-icon name="cash-outline"></ion-icon>
-            </div>
-            <div className="text">
-              <h5>Accrued Balance</h5>
-              <h3>${authInfo?.accruedBalance | 0.0}</h3>
-            </div> */}
-            <div className="icon center">
-              <ion-icon name="wallet-outline"></ion-icon>
-            </div>
-            <div className="text">
-              <h5>Available Balance</h5>
-              <h3>${authInfo?.balance | 0.0}</h3>
-            </div>
+          <div className={`balance ${inMobileView() ? "on" : "off"}`}>
+            {inMobileView() ? (
+              // Show only Accrued Balance in mobile view
+              <>
+                <div className="icon center">
+                  <ion-icon name="cash-outline"></ion-icon>
+                </div>
+                <div className="text">
+                  <h5>Accrued Balance</h5>
+                  <h3>${authInfo?.accruedBalance || 0.0}</h3>
+                </div>
+              </>
+            ) : (
+              // Show all balances in non-mobile view
+              <>
+                <div className="icon center">
+                  <ion-icon name="people-outline"></ion-icon>
+                </div>
+                <div className="text" style={{ marginRight: "10px" }}>
+                  <h5>Total Referrals</h5>
+                  <h3>{authInfo?.totalReferrals || 0}</h3>
+                </div>
+                <div className="icon center">
+                  <ion-icon name="cash-outline"></ion-icon>
+                </div>
+                <div className="text" style={{ marginRight: "10px" }}>
+                  <h5>Accrued Balance</h5>
+                  <h3>${authInfo?.accruedBalance || 0.0}</h3>
+                </div>
+                <div className="icon center">
+                  <ion-icon name="wallet-outline"></ion-icon>
+                </div>
+                <div className="text">
+                  <h5>Available Balance</h5>
+                  <h3>${authInfo?.balance || 0.0}</h3>
+                </div>
+              </>
+            )}
           </div>
-          <div
-            className={`otherIcons ${inMobileView() && !switchBar ? "on" : "off"
-              }`}
-          >
+          <div className={`otherIcons ${inMobileView() ? "on" : "off"}`}>
             <button
               onClick={() => setOnTab(onTab === "support" ? "" : "support")}
               className="support"
+              style={{
+                backgroundColor: onTab === "support" ? "#723081" : "",
+                color: onTab === "support" ? "white" : "#723081",
+              }}
             >
               <i className="bx bx-support bx-tada"></i>
             </button>
             <button
               onClick={() => setOnTab(onTab === "settings" ? "" : "settings")}
               className="settings"
+              style={{
+                backgroundColor: onTab === "settings" ? "#723081" : "",
+                color: onTab === "settings" ? "white" : "#723081",
+              }}
             >
               <ion-icon name="cog"></ion-icon>
             </button>
           </div>
-          <button
-            onClick={() => {
-              setSwitchBar(!switchBar);
-            }}
-            className="switchBar"
-          >
-            <ion-icon name="swap-vertical-outline"></ion-icon>
-          </button>
           <AnimatePresence>
             {onTab && (
               <motion.div
@@ -150,18 +161,13 @@ const Dashboard = () => {
                 className="tabs"
               >
                 <div className="tab">
-                  {onTab === "settings" ? (
-                    <Settings />
-                  ) : onTab === "support" ? (
-                    <Support />
-                  ) : (
-                    <></>
-                  )}
+                  {onTab === "settings" ? <Settings /> : onTab === "support" ? <Support /> : <></>}
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
+
       </div>
       <div className="top">
         <div className="left">
