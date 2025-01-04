@@ -779,7 +779,7 @@ const Buy = ({ allCoins }) => {
                 value={cryptoVal}
                 onChange={(e) => setCryptoVal(e.target.value)} // Let the value update as typed
                 onBlur={(e) => {
-                  setCryptoVal(parseFloat(e.target.value).toFixed(2));
+                  setCryptoVal(parseFloat(e.target.value).toFixed(8));
                   getExchangeRateB(buying?.symbol?.toLowerCase());
                 }} // Format when input loses focus
                 style={{ fontSize: "16px" }}
