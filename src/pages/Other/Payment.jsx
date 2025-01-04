@@ -130,7 +130,10 @@ const PayDone = ({ type }) => {
           }
         } catch (error) {
           console.log(`The apiKey is: ${apiKey}`);
-          console.error("Error performing checkout actions");
+          console.error("Error performing checkout actions");\
+          console.error(error.message);
+          console.error(error.response.data);
+          console.log(error)
         }
       }
       setTimeout(() => {
