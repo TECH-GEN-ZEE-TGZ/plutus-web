@@ -842,7 +842,7 @@ export const StyledUser = styled(motion.main)`
                   input {
                     z-index: 1;
                     padding: 0 2.5%;
-                    font-size: 16px;
+                    font-size: 12px;
                     width: 100%;
                     height: ${fixedHeight(4)}px;
                     border-radius: 10px;
@@ -862,7 +862,7 @@ export const StyledUser = styled(motion.main)`
                 width: 100%;
                 height: 100%;
                 text-align: right;
-                font-size: 16px;
+                font-size: 12px;
                 background: transparent;
                 font-weight: 700;
                 font-family: Aeonik Regular;
@@ -1819,7 +1819,7 @@ export const StyledUser = styled(motion.main)`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background-color: #f9f9f9;
+    background-color: #e8d7fa;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
@@ -1868,7 +1868,7 @@ export const StyledFormS = styled(motion.form)`
   align-items: center;
   row-gap: 1rem;
   padding: 1rem;
-  background: #fff;
+  background:rgb(198, 151, 245);
   border-radius: 1rem;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 
@@ -1886,7 +1886,7 @@ export const StyledFormS = styled(motion.form)`
   }
 
   h1 {
-    font-size: 2rem;
+    font-size: 1.5rem;
     color: #333;
   }
 

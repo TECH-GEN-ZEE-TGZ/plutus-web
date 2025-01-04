@@ -10,7 +10,7 @@ import { AnimatePresence, color, motion } from "framer-motion";
 import axios from "axios";
 import AuthContext from "../../context/AuthContext";
 import Settings from "../Other/Settings";
-// import Redeem from "../Other/Redeem";
+import styled from "styled-components";
 import Support from "../Other/Support";
 import MiniGraph from "../../components/Other/MiniGraph";
 import Notifs from "../../components/Other/Notifs";
@@ -20,6 +20,16 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination } from "swiper/modules";
 import { generate_payment_link_hubtel, inMobileView } from "../../Functions";
+
+const Button = styled.button`
+  border: none;
+  background-color: transparent;
+  color: #723081;
+  cursor: pointer;
+  &:hover {
+    background-color:rgb(165, 145, 170);
+  }
+`;
 
 const User = () => {
   const { authInfo, fetchUserRest } = useContext(AuthContext);
@@ -812,7 +822,7 @@ const Buy = ({ allCoins }) => {
                 onChange={(e) => {
                   setWalletAddress(e.target.value);
                 }}
-                style={{ fontSize: "16px" }}
+                style={{ fontSize: "13px" }}
               />
               <div className="buttons">
                 <button type="submit">
@@ -1074,12 +1084,16 @@ const Referrals = () => {
 
   return (
     <>
-      <h3>Referral Info</h3>
       <div className="referralSlab">
         <div className="left">
           <div className="text">
             <h5>Your Referral Code</h5>
-            <h3>{authInfo?.referralCode || "N/A"}</h3>
+            <div style={{ display: 'flex', alignItems: 'baseline' }}>
+              <h3>{authInfo?.referralCode || "N/A"}</h3>
+              <Button onClick={() => navigator.clipboard.writeText(authInfo?.referralCode || "")} style={{ marginLeft: '10px' }}>
+                <ion-icon name="copy-outline" style={{ fontSize: '15px' }}></ion-icon>
+              </Button>
+            </div>
           </div>
 
           <div className="text">

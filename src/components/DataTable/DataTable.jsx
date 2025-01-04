@@ -152,6 +152,7 @@ const PaginationControls = styled.div`
 
   @media only screen and (max-width: 768px) {
     & {
+      gap: 5px;
       // display: none;
     }
   }
@@ -312,11 +313,11 @@ const CryptoCard = motion(styled.div`
 
 const Button = styled.button`
   border: none;
-  background-color: #ddb9e5;
-  color: #fff;
+  background-color: transparent;
+  color: #723081;
   cursor: pointer;
   &:hover {
-    background-color: #c9a7d1;
+    background-color:rgb(165, 145, 170);
   }
 `;
 
@@ -330,7 +331,7 @@ const CryptoDataTable = () => {
   const { authInfo } = useContext(AuthContext);
   const { setAllCoins, allCoins, domain, apiKey } = useContext(ContextVariables);
   const [allTransactions, setAllTransactions] = useState([]);
- 
+
   const [sortConfig, setSortConfig] = useState({
     key: "transactionId",
     direction: "asc",
@@ -459,7 +460,7 @@ const CryptoDataTable = () => {
               value={searchTerm}
               placeholder="Enter address"
               onChange={(e) => setSearchTerm(e.target.value)}
-              style={{ fontSize: "16px" }}
+              style={{ fontSize: "12px" }}
             />
           </label>
         </div>
@@ -531,27 +532,27 @@ const CryptoDataTable = () => {
                   .padStart(2, '0')}`;
             return (
               <TableRow key={index} variants={tableRowVariants}>
-              <TableCell>
-                {transaction?.transactionId ? `${transaction.transactionId.slice(0, 10)}**********${transaction.transactionId.slice(-10)}` : "N/A"}
-                {transaction?.transactionId && (
-                <Button onClick={() => navigator.clipboard.writeText(transaction?.transactionId || "")} style={{ marginLeft: '10px' }}>
-                  <ion-icon name="copy-outline" style={{ fontSize: '15px' }}></ion-icon>
-                </Button>
-                )}
-              </TableCell>
-              <TableCell>{transaction?.crypto?.toUpperCase()}</TableCell>
-              <TableCell>{transaction?.address?.toUpperCase()}</TableCell>
-              <TableCell>
-                {transaction?.amountGHS?.toFixed(2)?.toUpperCase()}
-              </TableCell>
-              <TableCell>
-                {transaction?.cryptoAmount?.toLocaleString()?.toUpperCase()}
-              </TableCell>
-              <TableCell>
-                {transaction?.rate?.toLocaleString()?.toUpperCase()}
-              </TableCell>
-              <TableCell>{transaction?.status?.toUpperCase()}</TableCell>
-              <TableCell>{formattedDate || "N/A"}</TableCell>
+                <TableCell>
+                  {transaction?.transactionId ? `${transaction.transactionId.slice(0, 10)}**********${transaction.transactionId.slice(-10)}` : "N/A"}
+                  {transaction?.transactionId && (
+                    <Button onClick={() => navigator.clipboard.writeText(transaction?.transactionId || "")} style={{ marginLeft: '10px' }}>
+                      <ion-icon name="copy-outline" style={{ fontSize: '15px' }}></ion-icon>
+                    </Button>
+                  )}
+                </TableCell>
+                <TableCell>{transaction?.crypto?.toUpperCase()}</TableCell>
+                <TableCell>{transaction?.address?.toUpperCase()}</TableCell>
+                <TableCell>
+                  {transaction?.amountGHS?.toFixed(2)?.toUpperCase()}
+                </TableCell>
+                <TableCell>
+                  {transaction?.cryptoAmount?.toLocaleString()?.toUpperCase()}
+                </TableCell>
+                <TableCell>
+                  {transaction?.rate?.toLocaleString()?.toUpperCase()}
+                </TableCell>
+                <TableCell>{transaction?.status?.toUpperCase()}</TableCell>
+                <TableCell>{formattedDate || "N/A"}</TableCell>
               </TableRow>
             );
           })}
