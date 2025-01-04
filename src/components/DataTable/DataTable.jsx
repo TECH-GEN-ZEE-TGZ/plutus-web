@@ -453,7 +453,7 @@ const CryptoDataTable = () => {
       <div className="up">
         <div className="labels">
           <label>
-            Search order by address:
+            Search order:
             <input
               type="search"
               name="searchTerm"
