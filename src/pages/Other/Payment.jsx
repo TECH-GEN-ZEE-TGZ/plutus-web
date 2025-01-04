@@ -107,7 +107,6 @@ const PayDone = ({ type }) => {
   const { domain, apiKey } = useContext(ContextVariables);
   const { authInfo } = useContext(AuthContext);
 
-  // https://optimus-backend-49b31c7c7d3a.herokuapp.com/optimus/v1/api/payment/verify/dddb9fb916d243be962deb7b86b4b3cc
   useEffect(() => {
     const performCheckoutActions = async () => {
       if (checkoutId) {
@@ -130,6 +129,7 @@ const PayDone = ({ type }) => {
             console.error("Payment verification failed:");
           }
         } catch (error) {
+          console.log(`The apiKey is: ${apiKey}`);
           console.error("Error performing checkout actions");
         }
       }
