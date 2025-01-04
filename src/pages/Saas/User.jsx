@@ -485,7 +485,7 @@ const Buy = ({ allCoins }) => {
   };
 
   const getExchangeRateB = async (coin) => {
-    if (cryptoVal < 1) {
+    if (!cryptoVal > 0) {
       return;
     }
 
