@@ -113,7 +113,6 @@ const PayDone = ({ type }) => {
         try {
           const response = await axios.get(
             `${domain}/optimus/v1/api/payment/verify/${checkoutId}`,
-            { checkoutId },
             {
               headers: {
                 'Authorization': `Bearer ${authInfo?.token}`,
@@ -130,10 +129,7 @@ const PayDone = ({ type }) => {
           }
         } catch (error) {
           console.log(`The apiKey is: ${apiKey}`);
-          console.error("Error performing checkout actions");
-          console.error(error.message);
           console.error(error.response.data);
-          console.log(error)
         }
       }
       setTimeout(() => {
@@ -142,7 +138,7 @@ const PayDone = ({ type }) => {
     };
 
     performCheckoutActions();
-  }, [checkoutId, navigate]);
+  }, [checkoutId, domain, authInfo, apiKey, navigate]);
 
   return (
     <div className="payDone center">
