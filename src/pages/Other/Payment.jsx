@@ -122,7 +122,7 @@ const PayDone = ({ type }) => {
             }
           );
 
-          if (response.status === 200 && response.data.data.status === "Paid") {
+          if (response.status === 200) {
             console.log("Payment verification successful:");
           } else {
             console.error("Payment verification failed:");
