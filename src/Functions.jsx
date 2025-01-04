@@ -202,7 +202,7 @@ export const makeapiCall = (
     })
 };
 
-export const generate_payment_link_hubtel = (domain, apiKey, addNotification, token, paymentData, orderData) => {
+export const generate_payment_link_hubtel = (domain, apiKey, addNotification, token, paymentData, orderData, onSucess) => {
 
   const url = domain + "/optimus/v1/api/payment/generate";
   const headers = {
@@ -236,12 +236,15 @@ export const generate_payment_link_hubtel = (domain, apiKey, addNotification, to
       const result = response.data;
       if (result.status && result.data && result.data.checkoutUrl) {
         let paymentUrl = result.data.checkoutUrl;
+        onSucess();
         window.location.href = paymentUrl;
       } else {
         addNotification("Error", "Error generating payment link");
+        onSucess();
       }
     })
     .catch((error) => {
       addNotification("Error", error.message);
+      onSucess();
     });
 }

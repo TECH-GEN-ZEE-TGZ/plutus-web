@@ -620,6 +620,7 @@ const Buy = ({ allCoins }) => {
   const buyCryptoCoin = async (e) => {
     e.preventDefault();
     setLoading(true);
+    console.log(loading);
     if (
       !buying?.symbol ||
       payVal <= 0 ||
@@ -630,9 +631,9 @@ const Buy = ({ allCoins }) => {
       setLoading(false);
       return;
     } else {
-      generate_payment_link_hubtel(domain, apiKey, addNotification, authInfo?.token, paymentData, orderData);
-      setLoading(false);
+      generate_payment_link_hubtel(domain, apiKey, addNotification, authInfo?.token, paymentData, orderData, () => setLoading(false));
     }
+
   };
 
 
