@@ -329,9 +329,8 @@ const CryptoDataTable = () => {
   const navigate = useNavigate();
   const { authInfo } = useContext(AuthContext);
   const { setAllCoins, allCoins, domain, apiKey } = useContext(ContextVariables);
-
   const [allTransactions, setAllTransactions] = useState([]);
-
+ 
   const [sortConfig, setSortConfig] = useState({
     key: "transactionId",
     direction: "asc",
@@ -391,9 +390,9 @@ const CryptoDataTable = () => {
           const data = await response.json();
           setAllTransactions(data);
         } else {
+
         }
       } else {
-
         localStorage.removeItem("plutusAuth");
         window.location.href = "/auth/login";
       }
@@ -453,13 +452,14 @@ const CryptoDataTable = () => {
       <div className="up">
         <div className="labels">
           <label>
-            Search order:
+            Search:
             <input
               type="search"
               name="searchTerm"
               value={searchTerm}
               placeholder="Enter address"
               onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ fontSize: "16px" }}
             />
           </label>
         </div>
