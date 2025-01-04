@@ -342,7 +342,7 @@ const CryptoDataTable = () => {
   });
   const [searchTerm, setSearchTerm] = useState(""); // State for search input
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 8;
 
   const [paginatedData, setPaginatedData] = useState([]);
 
@@ -428,7 +428,7 @@ const CryptoDataTable = () => {
 
   useEffect(() => {
     setPaginatedData(getPag(filteredData, currentPage, itemsPerPage));
-  }, [allTransactions, searchTerm]);
+  }, [allTransactions, searchTerm, currentPage, filters]);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
@@ -523,12 +523,12 @@ const CryptoDataTable = () => {
             )
               .toString()
               .padStart(2, '0')}-${date.getFullYear()} | ${date
-              .getHours()
-              .toString()
-              .padStart(2, '0')}:${date
-              .getMinutes()
-              .toString()
-              .padStart(2, '0')}`;
+                .getHours()
+                .toString()
+                .padStart(2, '0')}:${date
+                  .getMinutes()
+                  .toString()
+                  .padStart(2, '0')}`;
             return (
               <TableRow key={index} variants={tableRowVariants}>
                 <TableCell>{transaction?.transactionId || "N/A"}</TableCell>
@@ -558,12 +558,12 @@ const CryptoDataTable = () => {
           )
             .toString()
             .padStart(2, '0')} ${date.getFullYear()} ${date
-            .getHours()
-            .toString()
-            .padStart(2, '0')}:${date
-            .getMinutes()
-            .toString()
-            .padStart(2, '0')}`;
+              .getHours()
+              .toString()
+              .padStart(2, '0')}:${date
+                .getMinutes()
+                .toString()
+                .padStart(2, '0')}`;
           return (
             <li key={index}>
               <h3>
