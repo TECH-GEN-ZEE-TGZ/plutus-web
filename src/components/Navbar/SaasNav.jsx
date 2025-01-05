@@ -165,7 +165,7 @@ const SaasNav = () => {
             <h4>{authInfo?.email || "email address"}</h4>
           </div>
           <div className="img center">
-            {authInfo?.image ? <img src="" alt="" /> : <h1>AN</h1>}
+            {authInfo?.image ? <img src="" alt="" /> : <h1>{authInfo?.username.charAt(0).toUpperCase()}</h1>}
           </div>
           <motion.button
             whileTap={{ scale: 0.9 }}
