@@ -460,7 +460,6 @@ const CryptoDataTable = () => {
               value={searchTerm}
               placeholder="Enter address"
               onChange={(e) => setSearchTerm(e.target.value)}
-              style={{ fontSize: "12px" }}
             />
           </label>
         </div>

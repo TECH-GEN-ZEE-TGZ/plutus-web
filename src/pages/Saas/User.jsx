@@ -728,6 +728,7 @@ const Buy = ({ allCoins }) => {
             ) : (
               <input
                 type="number"
+                inputMode="decimal"
                 value={payVal}
                 onChange={(e) => setPayVal(e.target.value)} // Let the value update as typed
                 onBlur={(e) => {
@@ -797,6 +798,7 @@ const Buy = ({ allCoins }) => {
             ) : (
               <input
                 type="number"
+                inputMode="decimal"
                 value={cryptoVal}
                 onChange={(e) => setCryptoVal(e.target.value)} // Let the value update as typed
                 onBlur={(e) => {
@@ -826,7 +828,6 @@ const Buy = ({ allCoins }) => {
                 onChange={(e) => {
                   setWalletAddress(e.target.value);
                 }}
-                style={{ fontSize: "13px" }}
               />
               <div className="buttons">
                 <button type="submit">
