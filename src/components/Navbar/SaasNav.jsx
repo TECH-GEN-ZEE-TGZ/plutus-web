@@ -161,8 +161,8 @@ const SaasNav = () => {
       {authInfo?.token ? (
         <div className="account">
           <div className="text">
-            <p>{authInfo?.username || "username"}</p>
-            <h4>{authInfo?.email || "email address"}</h4>
+            <h4>{authInfo?.username || "username"}</h4>
+            {/* <h4>{authInfo?.email || "email address"}</h4> */}
           </div>
           <div className="img center">
             {authInfo?.image ? <img src="" alt="" /> : <h1>{authInfo?.username.charAt(0).toUpperCase()}</h1>}

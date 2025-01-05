@@ -1162,7 +1162,7 @@ export const StyledUser = styled(motion.main)`
               padding: 2.5%;
               background: #9e5dad;
               border-radius: ${fixedHeight(50)}px;
-              justify-content: center;
+              // justify-content: start;
               z-index: 1;
               > .icon {
                 width: ${fixedHeight(4)}px;
