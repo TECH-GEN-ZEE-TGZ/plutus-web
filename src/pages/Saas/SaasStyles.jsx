@@ -1818,6 +1818,7 @@ export const StyledUser = styled(motion.main)`
   .referralSlab {
     display: flex;
     flex-direction: column;
+    height: 100%;
     justify-content: space-between;
     background-color: #e8d7fa;
     border-radius: 10px;
@@ -1827,10 +1828,11 @@ export const StyledUser = styled(motion.main)`
       flex: 1;
       padding: 10px;
       padding-left: 20px;
+      padding-top: 20px;
     }
 
     .right {
-      flex: 1;
+      // flex: 1;
     }
 
     .left {
@@ -1845,7 +1847,7 @@ export const StyledUser = styled(motion.main)`
 
         h3 {
           margin: 5px 0 0;
-          font-size: 20px;
+          font-size: 18px;
           color: #333;
         }
       }
@@ -1868,7 +1870,7 @@ export const StyledFormS = styled(motion.form)`
   align-items: center;
   row-gap: 1rem;
   padding: 1rem;
-  background:rgb(198, 151, 245);
+  background:rgb(186, 180, 193);
   border-radius: 1rem;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 
@@ -1887,6 +1889,7 @@ export const StyledFormS = styled(motion.form)`
 
   h1 {
     font-size: 1.5rem;
+    font-weight: 700;
     color: #333;
   }
 
