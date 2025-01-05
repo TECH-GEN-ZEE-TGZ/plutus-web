@@ -540,7 +540,7 @@ const CryptoDataTable = () => {
                   )}
                 </TableCell>
                 <TableCell>{transaction?.crypto?.toUpperCase()}</TableCell>
-                <TableCell>{transaction?.address?.toUpperCase()}</TableCell>
+                <TableCell>{transaction?.address}</TableCell>
                 <TableCell>
                   {transaction?.amountGHS?.toFixed(2)?.toUpperCase()}
                 </TableCell>
@@ -580,7 +580,7 @@ const CryptoDataTable = () => {
                 <span>Crypto:</span> {transaction?.crypto?.toUpperCase()}
               </h3>
               <h3>
-                <span>Address:</span> {transaction?.address?.toUpperCase()}
+                <span>Address:</span> {transaction?.address}
               </h3>
               <h3>
                 <span>Amount (GHS):</span>{" "}
