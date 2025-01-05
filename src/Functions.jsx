@@ -8,10 +8,8 @@ import axios from "axios";
 import { use } from "react";
 
 export const fixedHeight = (height) => {
-  const size = (height / 100) * window.innerHeight;
-  return size < 16 ? 16 : size; // Ensure a minimum size of 16px
+  return (height / 100) * window.innerHeight;
 };
-
 export const fixedWidth = (width) => {
   return (width / 100) * window.innerWidth;
 };
