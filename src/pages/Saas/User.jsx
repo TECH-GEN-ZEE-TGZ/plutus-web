@@ -336,7 +336,7 @@ const Dashboard = ({ handleCopy }) => {
               {filteredCoins?.map((coin, index) => (
                 <li>
                   <div className="icon center">
-                    {/* <i className="bx bx-download"></i> */}
+                    {/* <i className="bx bx-down..............//load"></i> */}
                     <img src={coin?.image} alt="" />
                   </div>
                   <div className="info">

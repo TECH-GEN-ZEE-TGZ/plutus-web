@@ -193,6 +193,7 @@ export const StyledFormS = styled(motion.form)`
   > button {
     border-radius: 7.5px;
     height: ${fixedHeight(6)}px;
+    padding: 0 5%;
     /* background: black; */
     background: linear-gradient(
       135deg,
@@ -200,7 +201,7 @@ export const StyledFormS = styled(motion.form)`
       hsl(289.09, 55%, 45%) /* Medium purple */
     );
     color: white;
-    font-size: ${fixedHeight(2)}px;
+    font-size: ${fixedHeight(1.75)}px;
   }
   > .remember {
     width: 100%;
