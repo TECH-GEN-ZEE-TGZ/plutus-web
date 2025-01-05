@@ -573,8 +573,21 @@ const CryptoDataTable = () => {
                 .padStart(2, '0')}`;
           return (
             <li key={index}>
-              <h3>
-                <span>Hash:</span> {transaction?.transactionId || "N/A"}
+              <h3 style={{ display: 'flex', alignItems: 'baseline' }}>
+                <span>Hash: </span>
+                <span style={{ marginLeft: '10px' }}>
+                  {transaction?.transactionId
+                    ? `${transaction.transactionId.slice(0, 10)}**********${transaction.transactionId.slice(-10)}`
+                    : 'N/A'}
+                </span>
+                {transaction?.transactionId && (
+                  <Button
+                    onClick={() => navigator.clipboard.writeText(transaction?.transactionId || '')}
+                    style={{ marginLeft: '10px', display: 'flex', alignItems: 'center' }}
+                  >
+                    <ion-icon name="copy-outline" style={{ fontSize: fixedWidth(3) }}></ion-icon>
+                  </Button>
+                )}
               </h3>
               <h3>
                 <span>Crypto:</span> {transaction?.crypto?.toUpperCase()}
