@@ -40,6 +40,7 @@ const User = () => {
     if (!authInfo?.token) {
       navigate("/auth/login");
     } else {
+      // window.location.reload();
       fetchUserRest();
     }
 

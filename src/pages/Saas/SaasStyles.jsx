@@ -1818,21 +1818,21 @@ export const StyledUser = styled(motion.main)`
   .referralSlab {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    // height: calc(100% - 2rem);
     justify-content: space-between;
-    background-color: #e8d7fa;
+    background-color:rgb(228, 197, 236);
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(W0, 0, 0, 0.1);
 
     .left {
       flex: 1;
       padding: 10px;
       padding-left: 20px;
-      padding-top: 20px;
     }
 
     .right {
-      // flex: 1;
+      flex: 1;
+      justify-content: end;
     }
 
     .left {
@@ -1842,7 +1842,7 @@ export const StyledUser = styled(motion.main)`
         h5 {
           margin: 0;
           font-size: 15px;
-          color: #555;
+          color: hsl(291, 82.30%, 37.60%);
         }
 
         h3 {
@@ -1870,7 +1870,7 @@ export const StyledFormS = styled(motion.form)`
   align-items: center;
   row-gap: 1rem;
   padding: 1rem;
-  background:rgb(186, 180, 193);
+  background:rgb(253, 253, 253);
   border-radius: 1rem;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 
@@ -1884,7 +1884,7 @@ export const StyledFormS = styled(motion.form)`
 
   p {
     font-size: 1rem;
-    color: #333;
+    color: hsl(41, 85.40%, 42.90%);
   }
 
   h1 {
@@ -1894,7 +1894,7 @@ export const StyledFormS = styled(motion.form)`
   }
 
   button {
-    background: #9e5dad;
+    background: hsl(41, 72.40%, 53.10%);
     color: white;
     border: none;
     padding: 0.5rem 1rem;

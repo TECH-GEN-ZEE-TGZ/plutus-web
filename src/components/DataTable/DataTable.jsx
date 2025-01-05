@@ -561,11 +561,11 @@ const CryptoDataTable = () => {
       <CryptoCardContainer className="scrollable">
         {paginatedData?.map((transaction, index) => {
           const date = new Date(transaction?.createdAt);
-          const formattedDate = `${date.getDate().toString().padStart(2, '0')} ${(
+          const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(
             date.getMonth() + 1
           )
             .toString()
-            .padStart(2, '0')} ${date.getFullYear()} ${date
+            .padStart(2, '0')}-${date.getFullYear()} | ${date
               .getHours()
               .toString()
               .padStart(2, '0')}:${date
