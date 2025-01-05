@@ -404,6 +404,7 @@ const Buy = ({ allCoins }) => {
   const [payVal, setPayVal] = useState(0);
   const [cryptoWallet, setCryptoWallet] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showVerifyButton, setShowVerifyButton] = useState(true);
 
   const [walletAddress, setWalletAddress] = useState("");
 
@@ -431,8 +432,15 @@ const Buy = ({ allCoins }) => {
     setCryptoWallet(walletAddress);
     addNotification("Success", `${buying?.symbol?.toUpperCase()} address successfully verified!`);
 
-    // Reset input and close the form
-    setWalletAddress("");
+    setWalletAddress(
+      walletAddress
+        .split('')
+        .map((char, index) =>
+          index < 4 || index >= walletAddress.length - 4 ? char : '*'
+        )
+        .join('')
+    );
+    setShowVerifyButton(false);
   };
 
   const getExchangeRateP = async (coin) => {
@@ -814,29 +822,29 @@ const Buy = ({ allCoins }) => {
 
       {/* Other Sections */}
       <div className="times center">
-        <h5 onClick={() => setCryptoWallet("")}>
-          {cryptoWallet || "Enter Wallet Address"}{" "}
-          <ion-icon name="chevron-down-outline"></ion-icon>
-        </h5>
-        {!cryptoWallet && (
-          <div className="wallets">
-            <form onSubmit={handleWalletAdd}>
-              <input
-                type="text"
-                placeholder="Enter valid wallet address"
-                value={walletAddress}
-                onChange={(e) => {
-                  setWalletAddress(e.target.value);
-                }}
-              />
+        <h5>Enter Wallet Address</h5>
+        <div className="wallets">
+          <form onSubmit={handleWalletAdd}>
+            <input
+              type="text"
+              placeholder="Enter valid wallet address"
+              value={walletAddress}
+              onClick={() => setShowVerifyButton(true)}
+              onChange={(e) => {
+                setWalletAddress(e.target.value);
+              }}
+            />
+            {showVerifyButton ? (
               <div className="buttons">
-                <button type="submit">
-                  verify
-                </button>
+                <button type="submit">verify</button>
               </div>
-            </form>
-          </div>
-        )}
+            ) : (
+              <div className="verified">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+              </div>
+            )}
+          </form>
+        </div>
       </div>
 
       <div className="stat">
@@ -870,9 +878,7 @@ const Buy = ({ allCoins }) => {
           type="submit"
           onClick={buyCryptoCoin}
         >
-          <span>
-            Top up wallet
-          </span>
+          <span>Top up wallet</span>
         </motion.button>
       )}
     </>

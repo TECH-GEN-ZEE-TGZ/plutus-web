@@ -1015,7 +1015,7 @@ export const StyledUser = styled(motion.main)`
                         font-size: ${fixedHeight(2)}px;
                       }
                       &:nth-child(1) {
-                        background: limegreen;
+                        background: blue;
                       }
                       &:nth-child(2) {
                         background: red;
@@ -1034,7 +1034,7 @@ export const StyledUser = styled(motion.main)`
               border-radius: 100px;
               > input {
                 border-radius: 100px;
-                width: 80%;
+                width: 90%;
                 height: 100%;
                 background: #e8d7fa;
                 padding: 0 0 0 2.5%;
@@ -1059,13 +1059,24 @@ export const StyledUser = styled(motion.main)`
                     font-size: ${fixedHeight(2)}px;
                   }
                   &:nth-child(1) {
-                    background: limegreen;
+                    background: linear-gradient(
+                      135deg,
+                      hsl(288.75, 40%, 30%),
+                      hsl(289.09, 55%, 45%) /* Medium purple the verify button*/
+                    );
                   }
                   &:nth-child(2) {
                     background: red;
                   }
                 }
               }
+             > .verified {
+                  width: 10%;
+                  > ion-icon {
+                    color: green;
+                    font-size: 24px;
+                  }
+                }
             }
           }
         }
@@ -1558,7 +1569,7 @@ export const StyledUser = styled(motion.main)`
                                 font-size: ${fixedHeight(2)}px;
                               }
                               &:nth-child(1) {
-                                background: limegreen;
+                                background: blue;
                               }
                               &:nth-child(2) {
                                 background: red;
@@ -1602,7 +1613,7 @@ export const StyledUser = styled(motion.main)`
                             font-size: ${fixedHeight(2)}px;
                           }
                           &:nth-child(1) {
-                            background: limegreen;
+                            background: yellow;
                           }
                           &:nth-child(2) {
                             background: red;
