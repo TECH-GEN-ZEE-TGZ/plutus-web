@@ -44,7 +44,7 @@ export const StyledForm = styled(motion.form)`
     border-radius: 7.5px;
     height: ${fixedHeight(6)}px;
     padding: 0 5%;
-    font-size: ${fixedHeight(1.5)}px;
+    font-size: ${fixedHeight(2)}px;
   }
   > button {
     border-radius: 7.5px;
@@ -152,10 +152,9 @@ export const StyledFormS = styled(motion.form)`
   height: auto;
   display: flex;
   flex-direction: column;
-  /* position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); */
+  align-items: center;
+  text-align: center;
+  justify-content: center;
   padding: ${fixedWidth(1)}px;
   background: transparent;
   row-gap: ${fixedHeight(1.5)}px;
@@ -176,7 +175,7 @@ export const StyledFormS = styled(motion.form)`
     -webkit-text-fill-color: transparent;
   }
   > p {
-    font-size: ${fixedHeight(1.5)}px;
+    font-size: ${fixedHeight(1.75)}px;
     color: hsl(288.75, 40%, 30%);
   }
   > .error {
@@ -189,7 +188,7 @@ export const StyledFormS = styled(motion.form)`
     border-radius: 7.5px;
     height: ${fixedHeight(5)}px;
     padding: 0 5%;
-    font-size: ${fixedHeight(1.5)}px;
+    font-size: ${fixedHeight(1.75)}px;
   }
   > button {
     border-radius: 7.5px;
