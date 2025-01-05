@@ -31,11 +31,19 @@ const Button = styled.button`
   }
 `;
 
+
 const User = () => {
   const { authInfo, fetchUserRest } = useContext(AuthContext);
   const { allNotifs } = useContext(ContextVariables);
+  const [showNotification, setShowNotification] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const handleCopy = () => {
+    setShowNotification(true);
+    setTimeout(() => setShowNotification(false), 1000);
+  };
+
 
   useEffect(() => {
     console.log(location.state);
@@ -55,9 +63,32 @@ const User = () => {
       <SaasNav />
       <AnimatePresence>{allNotifs?.length > 0 && <Notifs />}</AnimatePresence>
 
+      {/* Add Notification */}
+      {showNotification && (
+        <div
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            color: "black",
+            background: "hsl(289.0909090909091, 45.833333333333336%, 81.17647058823529%)",
+            padding: "10px",
+            border: "1px solid #9e5dad",
+            borderRadius: "10px",
+            zIndex: 9999,
+          }}
+        >
+          Copied!
+        </div>
+      )}
+
       <div className="routes scrollable">
         <Routes>
-          <Route path="/*" element={<Dashboard />} />
+          <Route
+            path="/*"
+            element={<Dashboard handleCopy={handleCopy} />} // Pass the handleCopy function to Dashboard
+          />
         </Routes>
       </div>
     </StyledUser>
@@ -66,7 +97,7 @@ const User = () => {
 
 export default User;
 
-const Dashboard = () => {
+const Dashboard = ({ handleCopy }) => {
   const { allCoins } = useContext(ContextVariables);
   const { authInfo } = useContext(AuthContext);
 
@@ -269,8 +300,7 @@ const Dashboard = () => {
           <Routes>
             <Route path="/buy" element={<Buy allCoins={allCoins} />} />
             {/* <Route path="/hash" element={<Hash allCoins={allCoins} />} /> */}
-            <Route path="/referrals" element={<Referrals />}
-            />
+            <Route path="/referrals" element={<Referrals handleCopy={handleCopy} />} />
           </Routes>
         </div>
       </div>
@@ -294,7 +324,7 @@ const Dashboard = () => {
             <Routes>
               <Route path="/buy" element={<Buy allCoins={allCoins} />} />
               {/* <Route path="/hash" element={<Hash allCoins={allCoins} />} /> */}
-              <Route path="/referrals" element={<Referrals />}
+              <Route path="/referrals" element={<Referrals handleCopy={handleCopy}/>}
               />
             </Routes>
           </SwiperSlide>
@@ -343,7 +373,7 @@ const Dashboard = () => {
         </Swiper>
       </div>
       <div className="bottom center">
-        <CryptoDataTable />
+        <CryptoDataTable handleCopy={handleCopy} />
       </div>
     </section>
   );
@@ -1040,7 +1070,7 @@ const Hash = ({ allCoins }) => {
 };
 
 
-const Referrals = () => {
+const Referrals = ({ handleCopy }) => {
   const { domain, apiKey, addNotification } = useContext(ContextVariables);
   const { authInfo } = useContext(AuthContext);
 
@@ -1101,9 +1131,16 @@ const Referrals = () => {
             <h5>Your Referral Code</h5>
             <div style={{ display: 'flex', alignItems: 'baseline' }}>
               <h3>{authInfo?.referralCode || "N/A"}</h3>
-              <Button onClick={() => navigator.clipboard.writeText(authInfo?.referralCode || "")} style={{ marginLeft: '10px' }}>
+              <Button
+                onClick={() => {
+                  navigator.clipboard.writeText(authInfo?.referralCode || ""); // Copy referral code
+                  handleCopy(); // Trigger notification
+                }}
+                style={{ marginLeft: '10px' }}
+              >
                 <ion-icon name="copy-outline" style={{ fontSize: '15px' }}></ion-icon>
               </Button>
+
             </div>
           </div>
 

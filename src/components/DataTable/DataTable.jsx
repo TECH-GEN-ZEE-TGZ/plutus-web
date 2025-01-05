@@ -326,7 +326,7 @@ const CardButton = styled(Button)`
   width: 100%; /* Full-width buttons in cards */
 `;
 
-const CryptoDataTable = () => {
+const CryptoDataTable = ({ handleCopy }) => {
   const navigate = useNavigate();
   const { authInfo } = useContext(AuthContext);
   const { setAllCoins, allCoins, domain, apiKey } = useContext(ContextVariables);
@@ -534,7 +534,13 @@ const CryptoDataTable = () => {
                 <TableCell>
                   {transaction?.transactionId ? `${transaction.transactionId.slice(0, 10)}**********${transaction.transactionId.slice(-10)}` : "N/A"}
                   {transaction?.transactionId && (
-                    <Button onClick={() => navigator.clipboard.writeText(transaction?.transactionId || "")} style={{ marginLeft: '10px' }}>
+                    <Button
+                      onClick={() => {
+                        navigator.clipboard.writeText(transaction?.transactionId || "");
+                        handleCopy(); // Trigger notification
+                      }}
+                      style={{ marginLeft: '10px' }}
+                    >
                       <ion-icon name="copy-outline" style={{ fontSize: '15px' }}></ion-icon>
                     </Button>
                   )}
@@ -582,10 +588,13 @@ const CryptoDataTable = () => {
                 </span>
                 {transaction?.transactionId && (
                   <Button
-                    onClick={() => navigator.clipboard.writeText(transaction?.transactionId || '')}
-                    style={{ marginLeft: '10px', display: 'flex', alignItems: 'center' }}
+                    onClick={() => {
+                      navigator.clipboard.writeText(transaction?.transactionId || "");
+                      handleCopy(); // Trigger notification
+                    }}
+                    style={{ marginLeft: '10px' }}
                   >
-                    <ion-icon name="copy-outline" style={{ fontSize: fixedWidth(3) }}></ion-icon>
+                    <ion-icon name="copy-outline" style={{ fontSize: '15px' }}></ion-icon>
                   </Button>
                 )}
               </h3>
