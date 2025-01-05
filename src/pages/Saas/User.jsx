@@ -101,7 +101,7 @@ const Dashboard = () => {
     <section id="dashboard">
       <div className="trades">
         <div className="slab">
-          <div className={`balance ${inMobileView() ? "on" : "off"}`}>
+          <div className={`balance ${inMobileView() ? "off" : "on"}`}>
             {inMobileView() ? (
               // Show only Accrued Balance in mobile view
               <>
