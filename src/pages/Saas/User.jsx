@@ -37,15 +37,20 @@ const User = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!authInfo?.token) {
-      navigate("/auth/login");
-    } else {
-      // window.location.reload();
-      fetchUserRest();
+    // Check if this is the first time the page is being loaded
+    if (!localStorage.getItem('reloaded')) {
+      // If there's no token, navigate to the login page
+      if (!authInfo?.token) {
+        navigate("/auth/login");
+      } else {
+        // Fetch user data and mark the page as reloaded
+        fetchUserRest();
+        localStorage.setItem('reloaded', 'true'); // Set 'reloaded' flag to prevent infinite reload
+        window.location.reload(); // Reload the page
+      }
     }
+  }, [authInfo?.token, navigate, fetchUserRest]); // Added dependencies to trigger the effect when authInfo changes
 
-    return;
-  }, [authInfo?.token]);
 
   return (
     <StyledUser scrollable>
