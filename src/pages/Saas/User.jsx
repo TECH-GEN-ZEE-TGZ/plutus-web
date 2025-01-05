@@ -1,4 +1,4 @@
-import { NavLink, Route, Routes, useNavigate } from "react-router-dom";
+import { NavLink, Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import CryptoDataTable from "../../components/DataTable/DataTable";
 import SaasNav from "../../components/Navbar/SaasNav";
 import { StyledUser, StyledFormS } from "./SaasStyles";
@@ -35,22 +35,20 @@ const User = () => {
   const { authInfo, fetchUserRest } = useContext(AuthContext);
   const { allNotifs } = useContext(ContextVariables);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    // Check if this is the first time the page is being loaded
-    if (!localStorage.getItem('reloaded')) {
-      // If there's no token, navigate to the login page
-      if (!authInfo?.token) {
-        navigate("/auth/login");
-      } else {
-        // Fetch user data and mark the page as reloaded
-        fetchUserRest();
-        localStorage.setItem('reloaded', 'true'); // Set 'reloaded' flag to prevent infinite reload
-        window.location.reload(); // Reload the page
-      }
+    console.log(location.state);
+    if (location.state?.reload) {
+      navigate(location.pathname, { replace: true, state: {} }); // Reset state
+      window.location.reload();
     }
-  }, [authInfo?.token, navigate, fetchUserRest]); // Added dependencies to trigger the effect when authInfo changes
-
+    if (!authInfo?.token) {
+      navigate("/auth/login");
+    } else if (!authInfo?.referralCode) {
+      fetchUserRest();
+    }
+  }, [location, navigate]);
 
   return (
     <StyledUser scrollable>

@@ -486,7 +486,7 @@ const CryptoDataTable = () => {
         <div className="thead">
           <div className="tr">
             <TableHeader onClick={() => handleSort("transactionId")}>
-              Transaction ID
+              Transaction Hash
             </TableHeader>
             <TableHeader onClick={() => handleSort("crypto")}>
               Crypto
@@ -575,7 +575,7 @@ const CryptoDataTable = () => {
           return (
             <li key={index}>
               <h3>
-                <span>ID:</span> {transaction?.transactionId || "N/A"}
+                <span>Hash:</span> {transaction?.transactionId || "N/A"}
               </h3>
               <h3>
                 <span>Crypto:</span> {transaction?.crypto?.toUpperCase()}

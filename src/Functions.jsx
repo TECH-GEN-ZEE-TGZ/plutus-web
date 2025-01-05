@@ -189,7 +189,8 @@ export const makeapiCall = (
             email: data?.email,
           });
         onSucess();
-        navigate("/user/buy");
+        // navigate("/user/buy");
+        navigate("/user/buy", { state: { reload: true } });
       }
     })
     .catch((error) => {
