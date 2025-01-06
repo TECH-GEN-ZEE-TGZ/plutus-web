@@ -1,15 +1,17 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+// vite.config.js
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import nodePolyfills from 'rollup-plugin-polyfill-node';
 import inject from '@rollup/plugin-inject';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
+    nodePolyfills(), // This plugin polyfills Node.js globals and modules for the browser
     inject({
       Buffer: ['buffer', 'Buffer'],
-      process: 'process/browser',
-    })
+      process: ['process/browser', 'process'], // Updated to use 'process'
+    }),
   ],
   resolve: {
     alias: {
