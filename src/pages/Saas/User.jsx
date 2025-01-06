@@ -19,7 +19,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination } from "swiper/modules";
-import { geneghsRate_payment_link_hubtel, inMobileView } from "../../Functions";
+import { generate_payment_link_hubtel, inMobileView } from "../../Functions";
 
 const Button = styled.button`
   border: none;
@@ -378,20 +378,16 @@ const Dashboard = ({ handleCopy }) => {
   );
 };
 
-// <i class='bx bx-download' ></i>
-// <i class='bx bx-upload'></i>
-// <ion-icon name="swap-horizontal-outline"></ion-icon>
-
 const Buy = ({ allCoins }) => {
   const { domain, apiKey, addNotification } = useContext(ContextVariables);
   const { authInfo } = useContext(AuthContext);
   const ghsRate = 15.6;
-  const fees = {
-    btc: 10,
-    usdt: 5,
-    ltc: 3,
-    xmr: 3,
-  };
+  // const fees = {
+  //   btc: 10,
+  //   usdt: 5,
+  //   ltc: 3,
+  //   xmr: 3,
+  // };
 
   const myCurrencies = [
     {
@@ -434,6 +430,7 @@ const Buy = ({ allCoins }) => {
   const [cryptoWallet, setCryptoWallet] = useState("");
   const [loading, setLoading] = useState(false);
   const [showVerifyButton, setShowVerifyButton] = useState(true);
+  const [totalFee, setTotalFee] = useState(0);
 
   const [walletAddress, setWalletAddress] = useState("");
 
@@ -479,7 +476,7 @@ const Buy = ({ allCoins }) => {
 
     try {
       const response = await axios.get(
-        `${domain}/optimus/v1/api/cryptomus/exchange-ghsRate/${coin}?to=USD`,
+        `${domain}/optimus/v1/api/cryptomus/exchange-rate/${coin.toUpperCase()}?to=USD`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -504,6 +501,8 @@ const Buy = ({ allCoins }) => {
       }
 
       const totalFeeUSD = withdrawalFee + additionalFee;
+      setTotalFee(totalFeeUSD);
+      setBuyFee(totalFee);
 
       // Update the state with calculated values
       setExRate(exchangeRate);
@@ -536,7 +535,7 @@ const Buy = ({ allCoins }) => {
 
     try {
       const response = await axios.get(
-        `${domain}/optimus/v1/api/cryptomus/exchange-ghsRate/${coin}?to=USD`,
+        `${domain}/optimus/v1/api/cryptomus/exchange-rate/${coin.toUpperCase()}?to=USD`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -552,10 +551,6 @@ const Buy = ({ allCoins }) => {
       let fiatEquivalent = cryptoVal * exchangeRate;
       let additionalFee = 0;
 
-      if (payWith?.symbol?.toUpperCase() === "GHS") {
-        fiatEquivalent *= ghsRate; // Convert USD to GHS for fee calculation
-      }
-
       // Apply fee rules based on fiat amount
       if (fiatEquivalent >= 0 && fiatEquivalent <= 50) {
         additionalFee = 3;
@@ -566,6 +561,8 @@ const Buy = ({ allCoins }) => {
       }
 
       const totalFee = withdrawalFee + additionalFee;
+      setTotalFee(totalFee);
+      setBuyFee(totalFee);
 
       // Calculate the total amount to pay including fees
       if (payWith?.symbol?.toUpperCase() === "GHS") {
@@ -656,7 +653,7 @@ const Buy = ({ allCoins }) => {
 
   const orderData = {
     cryptoAmount: cryptoVal,
-    fee: fees[buying?.symbol?.toLowerCase()],
+    fee: totalFee,
     crypto: buying?.symbol?.toUpperCase(),
     email: authInfo?.email,
     ghsRate: ghsRate,
@@ -677,7 +674,7 @@ const Buy = ({ allCoins }) => {
       setLoading(false);
       return;
     } else {
-      geneghsRate_payment_link_hubtel(domain, apiKey, addNotification, authInfo?.token, paymentData, orderData, () => setLoading(false));
+      generate_payment_link_hubtel(domain, apiKey, addNotification, authInfo?.token, paymentData, orderData, () => setLoading(false));
     }
 
   };
@@ -693,8 +690,27 @@ const Buy = ({ allCoins }) => {
   }, [buying]);
 
   useEffect(() => {
-    setBuyFee(fees[buying?.symbol?.toLowerCase()]);
-  }, [buying]);
+    const fetchFee = async () => {
+      if (!buying?.symbol) {
+        return; // Exit if no symbol is provided
+      }
+      try {
+        const response = await axios.get(`${domain}/optimus/v1/api/cryptomus/exchange-rate/${buying.symbol.toUpperCase()}?to=USD`, {
+          headers: { "X-API-KEY": apiKey }
+        });
+
+        // Assuming the API returns a structure where the fee is directly accessible
+        // Adjust the path according to your API response structure
+        const feeFromApi = parseFloat(response?.data?.result[0]?.withdrawalFee);
+        setBuyFee(feeFromApi.toFixed(2));
+      } catch (error) {
+        console.error('Error fetching fee');
+        setBuyFee(0); // Reset to default or handle error as needed
+      }
+    };
+
+    fetchFee();
+  }, [buying]); // Depen
 
   return (
     <>
@@ -1056,7 +1072,6 @@ const Hash = ({ allCoins }) => {
     </>
   );
 };
-
 
 const Referrals = ({ handleCopy }) => {
   const { domain, apiKey, addNotification } = useContext(ContextVariables);
