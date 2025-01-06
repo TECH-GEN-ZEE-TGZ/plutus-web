@@ -8,6 +8,7 @@ export default defineConfig({
     react(),
     inject({
       Buffer: ['buffer', 'Buffer'],
+      process: 'process/browser',
     })
   ],
   resolve: {
