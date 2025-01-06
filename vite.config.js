@@ -1,7 +1,7 @@
 // vite.config.js
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import nodePolyfills from 'rollup-plugin-polyfill-node';
+import nodePolyfills from 'vite-plugin-node-polyfills';
 import inject from '@rollup/plugin-inject';
 
 export default defineConfig({
