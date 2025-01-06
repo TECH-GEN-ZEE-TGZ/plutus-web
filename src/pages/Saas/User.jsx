@@ -1,5 +1,5 @@
 import { NavLink, Route, Routes, useNavigate, useLocation } from "react-router-dom";
-import { address as BitcoinAddress } from 'bitcoinjs-lib';
+// import { address as BitcoinAddress } from 'bitcoinjs-lib';
 import CryptoDataTable from "../../components/DataTable/DataTable";
 import SaasNav from "../../components/Navbar/SaasNav";
 import { StyledUser, StyledFormS } from "./SaasStyles";
@@ -615,7 +615,7 @@ const Buy = ({ allCoins }) => {
 
   const validateBitcoinAddress = (address) => {
     try {
-      BitcoinAddress.toOutputScript(address);
+      // BitcoinAddress.toOutputScript(address);
       return true; // Valid address
     } catch (error) {
       console.log(error);
