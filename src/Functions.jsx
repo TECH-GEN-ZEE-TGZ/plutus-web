@@ -245,7 +245,12 @@ export const generate_payment_link_hubtel = (domain, apiKey, addNotification, to
       }
     })
     .catch((error) => {
-      addNotification("Error", error.message);
-      onSucess();
+      if (error.status === 400) {
+        addNotification("Error", "Amount not feasible, please reduce or contact admin!");
+        onSucess();
+      } else {
+        addNotification("Error", "Unexpected Error");
+        onSucess();
+      }
     });
 }
