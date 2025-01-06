@@ -1,16 +1,13 @@
 // vite.config.js
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import nodePolyfills from 'rollup-plugin-node-polyfills';
 import inject from '@rollup/plugin-inject';
 
 export default defineConfig({
   plugins: [
     react(),
-    nodePolyfills(), // This plugin polyfills Node.js globals and modules for the browser
     inject({
       Buffer: ['buffer', 'Buffer'],
-      process: ['process/browser', 'process'], // Updated to use 'process'
     }),
   ],
   resolve: {
@@ -25,5 +22,8 @@ export default defineConfig({
     'process.env.REACT_APP_API_KEY': JSON.stringify('pFYuSfBn1Iw2XBlN-CAokQ'),
     'process.env.VITE_ENV': JSON.stringify('production'),
     'process.env.REACT_APP_TOKENVIEW_KEY': JSON.stringify('y3QfwtRNg1ruwQBqDzmm')
+  },
+  build: {
+    chunkSizeWarningLimit: 1000, // Set limit to 1000kB
   }
 });
