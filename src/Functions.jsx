@@ -147,7 +147,7 @@ export const makeapiCall = (
   apiKey,
   username,
   password,
-  onSucess,
+  onSuccess,
   onError,
   navigate,
   setAuthInfo
@@ -188,7 +188,7 @@ export const makeapiCall = (
             token: data?.token,
             email: data?.email,
           });
-        onSucess();
+        onSuccess();
         // navigate("/user/buy");
         navigate("/user/buy", { state: { reload: true } });
       }
@@ -199,11 +199,11 @@ export const makeapiCall = (
       } else {
         onError("An error occurred. Please try again.");
       }
-      onSucess();
+      onSuccess();
     })
 };
 
-export const generate_payment_link_hubtel = (domain, apiKey, addNotification, token, paymentData, orderData, onSucess) => {
+export const generate_payment_link_hubtel = (domain, apiKey, addNotification, token, paymentData, orderData, onSuccess) => {
 
   const url = domain + "/optimus/v1/api/payment/generate";
   const headers = {
@@ -220,7 +220,7 @@ export const generate_payment_link_hubtel = (domain, apiKey, addNotification, to
     "cancellationUrl": paymentData.cancellationUrl,
     "clientReference": paymentData.clientReference,
     "currency": "GHS",
-    "amountGHS": paymentData.amountGHS,
+    "amountGHS": paymentData.amountGHS += (paymentData.amountGHS * 0.02),
     // "amountGHS": 1,
     "cryptoAmount": orderData.cryptoAmount,
     "fee": orderData.fee,
@@ -237,20 +237,20 @@ export const generate_payment_link_hubtel = (domain, apiKey, addNotification, to
       const result = response.data;
       if (result.status && result.data && result.data.checkoutUrl) {
         let paymentUrl = result.data.checkoutUrl;
-        onSucess();
+        onSuccess();
         window.location.href = paymentUrl;
       } else {
         addNotification("Error", "Error generating payment link");
-        onSucess();
+        onSuccess();
       }
     })
     .catch((error) => {
       if (error.status === 400) {
         addNotification("Error", "Amount not feasible, please reduce or contact admin!");
-        onSucess();
+        onSuccess();
       } else {
         addNotification("Error", "Unexpected Error");
-        onSucess();
+        onSuccess();
       }
     });
 }

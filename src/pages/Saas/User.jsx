@@ -19,7 +19,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination } from "swiper/modules";
-import { generate_payment_link_hubtel, inMobileView } from "../../Functions";
+import { geneghsRate_payment_link_hubtel, inMobileView } from "../../Functions";
 
 const Button = styled.button`
   border: none;
@@ -324,7 +324,7 @@ const Dashboard = ({ handleCopy }) => {
             <Routes>
               <Route path="/buy" element={<Buy allCoins={allCoins} />} />
               {/* <Route path="/hash" element={<Hash allCoins={allCoins} />} /> */}
-              <Route path="/referrals" element={<Referrals handleCopy={handleCopy}/>}
+              <Route path="/referrals" element={<Referrals handleCopy={handleCopy} />}
               />
             </Routes>
           </SwiperSlide>
@@ -477,123 +477,112 @@ const Buy = ({ allCoins }) => {
       return;
     }
 
-    const feeAmtUSD = coin ? parseFloat(fees[coin.toLowerCase()]) : 0;
-    const feeAmtGhs = feeAmtUSD * ghsRate;
-    setExBuy(true);
-
-    if (payWith?.symbol?.toUpperCase() === "GHS" && payVal < feeAmtGhs + 100) {
-      // alert(`Minimum ghs amount to buy is ${feeAmtGhs + 100}`);
-      addNotification(
-        "Error",
-        `Minimum ghs amount to buy is ${feeAmtGhs + 100}`
-      );
-      setPayVal(feeAmtGhs + 100);
-      setCryptoVal(0);
-      setExBuy(false);
-      return;
-    } else if (
-      payWith?.symbol?.toUpperCase() === "USD" &&
-      payVal < feeAmtUSD + 5
-    ) {
-      // alert(`Minimum usd amount to buy is ${feeAmtUSD + 5}`);
-      addNotification("Error", `Minimum usd amount to buy is ${feeAmtUSD + 5}`);
-      setPayVal(feeAmtUSD + 5);
-      setCryptoVal(0);
-      setExBuy(false);
-      return;
-    }
-
     try {
-      if (coin) {
-        const response = await axios.get(
-          `${domain}/optimus/v1/api/cryptomus/exchange-rate/${coin}?to=USD`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "X-API-KEY": apiKey,
-            },
-          }
-        );
-
-        const exchangeRate = parseFloat(
-          response?.data?.result[0]?.course
-        ).toFixed(2);
-        setExRate(exchangeRate);
-        if (exchangeRate) {
-          if (payWith.symbol === "GHS") {
-            const ghsAmount = payVal > 0 ? payVal - feeAmtGhs : 0;
-            setCryptoVal((ghsAmount / ghsRate / exchangeRate).toFixed(8));
-          } else {
-            const usdAmount = payVal > 0 ? payVal - feeAmtUSD : 0;
-            setCryptoVal((usdAmount / exchangeRate).toFixed(8));
-          }
-        } else {
-          // alert("Response doesn't contain exchange rate!");  
-          setCryptoVal(0);
+      const response = await axios.get(
+        `${domain}/optimus/v1/api/cryptomus/exchange-ghsRate/${coin}?to=USD`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-API-KEY": apiKey,
+          },
         }
+      );
+
+      const exchangeRate = parseFloat(response?.data?.result[0]?.course).toFixed(2);
+      const withdrawalFee = Math.ceil(parseFloat(response?.data?.result[0]?.withdrawalFee) * 100) / 100;
+
+      // Determine fee based on the purchase amount
+      let additionalFee = 0;
+      const purchaseAmountUSD = payWith?.symbol?.toUpperCase() === "GHS" ? (payVal / ghsRate) : payVal;
+
+      if (purchaseAmountUSD >= 0 && purchaseAmountUSD <= 50) {
+        additionalFee = 3;
+      } else if (purchaseAmountUSD >= 51 && purchaseAmountUSD <= 100) {
+        additionalFee = 4;
+      } else if (purchaseAmountUSD > 100) {
+        additionalFee = 0.05 * purchaseAmountUSD; // 5% of the purchase amount
+      }
+
+      const totalFeeUSD = withdrawalFee + additionalFee;
+
+      // Update the state with calculated values
+      setExRate(exchangeRate);
+      if (exchangeRate) {
+        if (payWith.symbol === "GHS") {
+          const ghsAmount = payVal > 0 ? payVal - (totalFeeUSD * ghsRate) : 0; // Convert fee back to GHS to subtract
+          setCryptoVal((ghsAmount / ghsRate / exchangeRate).toFixed(8));
+        } else {
+          const usdAmount = payVal > 0 ? payVal - totalFeeUSD : 0;
+          setCryptoVal((usdAmount / exchangeRate).toFixed(8));
+        }
+      } else {
+        setCryptoVal(0);
       }
     } catch (error) {
-      // alert("Error fetching exchange rate!");
-      addNotification("Error", "Error fetching exchange rate!");
+      addNotification("Error", "Error fetching exchange ghsRate!");
       setCryptoVal(0);
     } finally {
       setExBuy(false);
     }
   };
 
+
   const getExchangeRateB = async (coin) => {
-    if (!cryptoVal > 0) {
+    if (!(cryptoVal > 0)) {
       return;
     }
 
     setExPay(true);
 
     try {
-      if (coin) {
-        // Fetch exchange rate for the specified coin
-        const response = await axios.get(
-          `${domain}/optimus/v1/api/cryptomus/exchange-rate/${coin}?to=USD`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "X-API-KEY": apiKey,
-            },
-          }
-        );
-
-        // Extract and parse the exchange rate
-        const exchangeRate = parseFloat(
-          response?.data?.result[0]?.course
-        ).toFixed(2);
-        setExRate(exchangeRate);
-
-        if (exchangeRate) {
-          // Calculate fees and payVal
-          const feeAmtUSD = coin ? parseFloat(fees[coin.toLowerCase()]) : 0;
-          const feeAmtGhs = feeAmtUSD * ghsRate;
-
-          if (payWith.symbol === "GHS") {
-            const ghsAmount =
-              cryptoVal > 0 && cryptoVal * exchangeRate * ghsRate.toFixed(2);
-            setPayVal((ghsAmount + feeAmtGhs).toFixed(2));
-          } else if (payWith.symbol === "USD") {
-            const usdAmount =
-              cryptoVal > 0 ? parseFloat((cryptoVal * exchangeRate).toFixed(8)) : 0;
-            setPayVal((usdAmount + feeAmtUSD).toFixed(2));
-          }
-        } else {
-          // Handle missing exchange rate
-          setPayVal(0);
+      const response = await axios.get(
+        `${domain}/optimus/v1/api/cryptomus/exchange-ghsRate/${coin}?to=USD`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-API-KEY": apiKey,
+          },
         }
+      );
+
+      const exchangeRate = parseFloat(response?.data?.result[0]?.course).toFixed(2);
+      const withdrawalFee = Math.ceil(parseFloat(response?.data?.result[0]?.withdrawalFee) * 100) / 100;
+
+      // Calculate the fiat amount before fees to determine the fee tier
+      let fiatEquivalent = cryptoVal * exchangeRate;
+      let additionalFee = 0;
+
+      if (payWith?.symbol?.toUpperCase() === "GHS") {
+        fiatEquivalent *= ghsRate; // Convert USD to GHS for fee calculation
       }
+
+      // Apply fee rules based on fiat amount
+      if (fiatEquivalent >= 0 && fiatEquivalent <= 50) {
+        additionalFee = 3;
+      } else if (fiatEquivalent > 50 && fiatEquivalent <= 100) {
+        additionalFee = 4;
+      } else if (fiatEquivalent > 100) {
+        additionalFee = 0.05 * fiatEquivalent; // 5% of the purchase amount
+      }
+
+      const totalFee = withdrawalFee + additionalFee;
+
+      // Calculate the total amount to pay including fees
+      if (payWith?.symbol?.toUpperCase() === "GHS") {
+        const totalPay = (fiatEquivalent + totalFee) * ghsRate; // Convert back to GHS if needed
+        setPayVal(totalPay.toFixed(2));
+      } else {
+        setPayVal((fiatEquivalent + totalFee).toFixed(2));
+      }
+
     } catch (error) {
-      // Handle fetch errors
-      addNotification("Error", error.message);
+      addNotification("Error", "Error fetching exchange ghsRate!");
       setPayVal(0);
     } finally {
       setExPay(false);
     }
   };
+
 
   const validateMoneroAddress = async (address) => {
     if (
@@ -670,7 +659,7 @@ const Buy = ({ allCoins }) => {
     fee: fees[buying?.symbol?.toLowerCase()],
     crypto: buying?.symbol?.toUpperCase(),
     email: authInfo?.email,
-    rate: ghsRate,
+    ghsRate: ghsRate,
     address: cryptoWallet,
   };
 
@@ -688,7 +677,7 @@ const Buy = ({ allCoins }) => {
       setLoading(false);
       return;
     } else {
-      generate_payment_link_hubtel(domain, apiKey, addNotification, authInfo?.token, paymentData, orderData, () => setLoading(false));
+      geneghsRate_payment_link_hubtel(domain, apiKey, addNotification, authInfo?.token, paymentData, orderData, () => setLoading(false));
     }
 
   };
