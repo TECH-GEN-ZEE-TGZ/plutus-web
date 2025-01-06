@@ -1886,7 +1886,7 @@ export const StyledUser = styled(motion.main)`
     flex-direction: column;
     // height: calc(100% - 2rem);
     justify-content: space-between;
-    background-color:rgb(228, 197, 236);
+    background-color:#e8d7fa;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(W0, 0, 0, 0.1);
 
