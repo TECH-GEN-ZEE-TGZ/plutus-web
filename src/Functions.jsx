@@ -206,6 +206,7 @@ export const makeapiCall = (
 export const generate_payment_link_hubtel = (domain, apiKey, addNotification, token, paymentData, orderData, onSuccess) => {
 
   const url = domain + "/optimus/v1/api/payment/generate";
+  const adjustedAmountGHS = paymentData.amountGHS + (paymentData.amountGHS * 0.02);
   const headers = {
     "X-API-KEY": apiKey,
     "Content-Type": "application/json",
@@ -220,8 +221,7 @@ export const generate_payment_link_hubtel = (domain, apiKey, addNotification, to
     "cancellationUrl": paymentData.cancellationUrl,
     "clientReference": paymentData.clientReference,
     "currency": "GHS",
-    "amountGHS": paymentData.amountGHS += (paymentData.amountGHS * 0.02),
-    // "amountGHS": 1,
+    "amountGHS": adjustedAmountGHS,
     "cryptoAmount": orderData.cryptoAmount,
     "fee": orderData.fee,
     "crypto": orderData.crypto,
@@ -245,6 +245,7 @@ export const generate_payment_link_hubtel = (domain, apiKey, addNotification, to
       }
     })
     .catch((error) => {
+      console.log(error);
       if (error.status === 400) {
         addNotification("Error", "Amount not feasible, please reduce or contact admin!");
         onSuccess();
