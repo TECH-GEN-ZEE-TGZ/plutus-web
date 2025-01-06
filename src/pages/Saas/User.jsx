@@ -21,8 +21,6 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination } from "swiper/modules";
 import { generate_payment_link_hubtel, inMobileView } from "../../Functions";
-import { Helmet } from 'react-helmet';
-
 
 const Button = styled.button`
   border: none;

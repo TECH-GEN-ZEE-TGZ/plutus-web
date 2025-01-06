@@ -47,7 +47,7 @@ const TableContainer = styled.div`
             height: ${fixedHeight(4)}px;
             border-radius: 100px;
             padding: 0 2.5%;
-            font-size: ${fixedHeight(1.75)}px;
+            font-size: ${fixedHeight(1.75 )}px;
 
             @media only screen and (max-width: 768px) {
               &{
