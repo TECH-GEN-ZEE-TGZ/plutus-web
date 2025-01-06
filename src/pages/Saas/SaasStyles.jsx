@@ -1280,13 +1280,12 @@ export const StyledUser = styled(motion.main)`
                 }
               }
               > ul {
-                list-style-type: none;
-                width: 100%;
-                height: 100%;
-                height: ${fixedHeight(47.5)}px;
-                display: flex;
-                flex-direction: column;
-                row-gap: ${fixedHeight(1.25)}px;
+                  list-style-type: none;
+                  height: ${fixedHeight(65)}px;
+                  display: flex;
+                  flex-direction: column;
+                  row-gap: ${fixedHeight(1.25)}px;
+                  // padding: 0 2.5%;
                 > li {
                   background: #e8d7fa;
                   border-radius: 15px;
@@ -1296,8 +1295,8 @@ export const StyledUser = styled(motion.main)`
                   padding: ${fixedWidth(5)}px;
                   column-gap: ${fixedWidth(1.5)}px;
                   > .icon {
-                    width: ${fixedHeight(6)}px;
-                    height: ${fixedHeight(5)}px;
+                    width: ${fixedHeight(5)}px;
+                    // height: ${fixedHeight(5)}px;
                     border-radius: 50%;
                     background: transparent;
                     color: white;
@@ -1740,7 +1739,7 @@ export const StyledUser = styled(motion.main)`
                   list-style-type: none;
                   width: 100%;
                   /* height: auto; */
-                  height: ${fixedHeight(65)}px;
+                  height: ${fixedHeight(75)}px;
                   display: flex;
                   flex-direction: column;
                   row-gap: ${fixedHeight(1.25)}px;
@@ -1757,11 +1756,6 @@ export const StyledUser = styled(motion.main)`
                       width: ${fixedHeight(5)}px;
                       height: ${fixedHeight(5)}px;
                       border-radius: 50%;
-                      /* background: linear-gradient(
-                135deg,
-                hsl(41, 90%, 75%),
-                hsl(40.7, 90.6%, 49.8%)
-              ); */
                       background: transparent;
                       color: white;
                       > i,
