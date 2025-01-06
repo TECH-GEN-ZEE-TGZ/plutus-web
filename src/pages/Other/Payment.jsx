@@ -43,7 +43,7 @@ export const StyledPay = styled(motion.section)`
       > h3 {
         width: auto;
         height: auto;
-        font-size: ${fixedHeight(5)}px;
+        font-size: ${fixedHeight(4)}px;
         > svg {
           width: ${fixedWidth(10)}px;
           height: ${fixedWidth(10)}px;
@@ -56,10 +56,10 @@ export const StyledPay = styled(motion.section)`
         }
       }
       > h1 {
-        font-size: ${fixedHeight(5)}px;
+        font-size: ${fixedHeight(4)}px;
       }
       > p {
-        font-size: ${fixedHeight(2.5)}px;
+        font-size: ${fixedHeight(2.25)}px;
       }
     }
   }
@@ -108,37 +108,40 @@ const PayDone = ({ type }) => {
   const { authInfo } = useContext(AuthContext);
 
   useEffect(() => {
-    const performCheckoutActions = async () => {
-      if (checkoutId) {
-        try {
-          const response = await axios.get(
-            `${domain}/optimus/v1/api/payment/verify/${checkoutId}`,
-            {
-              headers: {
-                'Authorization': `Bearer ${authInfo?.token}`,
-                'X-API-KEY': apiKey,
-                'Content-Type': 'application/json'
-              }
-            }
-          );
+    // const performCheckoutActions = async () => {
+    //   if (checkoutId) {
+    //     try {
+    //       const response = await axios.get(
+    //         `${domain}/optimus/v1/api/payment/verify/${checkoutId}`,
+    //         {
+    //           headers: {
+    //             'Authorization': `Bearer ${authInfo?.token}`,
+    //             'X-API-KEY': apiKey,
+    //             'Content-Type': 'application/json'
+    //           }
+    //         }
+    //       );
 
-          if (response.status === 200) {
-            console.log("Payment verification successful:");
-          } else {
-            console.error("Payment verification failed:");
-          }
-        } catch (error) {
-          console.log(`The apiKey is: ${apiKey}`);
-          console.error(error.response.data);
-        }
-      }
-      setTimeout(() => {
-        navigate("/user/buy");
-      }, 2000);
-    };
+    //       if (response.status === 200) {
+    //         console.log("Payment verification successful:");
+    //       } else {
+    //         console.error("Payment verification failed:");
+    //       }
+    //     } catch (error) {
+    //       console.log(`The apiKey is: ${apiKey}`);
+    //       console.error(error.response.data);
+    //     }
+    //   }
+    //   setTimeout(() => {
+    //     navigate("/user/buy", { state: { reload: true } });
+    //   }, 2000);
+    // };
 
-    performCheckoutActions();
-  }, [checkoutId, domain, authInfo, apiKey, navigate]);
+    // performCheckoutActions();
+    setTimeout(() => {
+      navigate("/user/buy", { state: { reload: true } });
+    }, 2000);
+  }, []);
 
   return (
     <div className="payDone center">
