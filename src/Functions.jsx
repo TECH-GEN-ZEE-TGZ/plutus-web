@@ -206,7 +206,7 @@ export const makeapiCall = (
 export const generate_payment_link_hubtel = (domain, apiKey, addNotification, token, paymentData, orderData, onSuccess) => {
 
   const url = domain + "/optimus/v1/api/payment/generate";
-  const adjustedAmountGHS = paymentData.amountGHS + (paymentData.amountGHS * 0.02);
+  const adjustedAmountGHS = parseFloat(paymentData.amountGHS) + (parseFloat(paymentData.amountGHS) * 0.02);
   const headers = {
     "X-API-KEY": apiKey,
     "Content-Type": "application/json",
@@ -222,7 +222,7 @@ export const generate_payment_link_hubtel = (domain, apiKey, addNotification, to
     "clientReference": paymentData.clientReference,
     "currency": "GHS",
     "amountGHS": adjustedAmountGHS,
-    "cryptoAmount": orderData.cryptoAmount,
+    "cryptoAmount": parseFloat(orderData.cryptoAmount),
     "fee": orderData.fee,
     "crypto": orderData.crypto,
     "email": orderData.email,
@@ -230,6 +230,8 @@ export const generate_payment_link_hubtel = (domain, apiKey, addNotification, to
     "address": orderData.address,
     "transactionId": orderData.transactionId
   };
+
+  console.log(JSON.stringify(data, null, 2));
 
   axios
     .post(url, data, { headers })
