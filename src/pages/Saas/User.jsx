@@ -334,9 +334,8 @@ const Dashboard = ({ handleCopy }) => {
             </div>
             <ul className="scrollable">
               {filteredCoins?.map((coin, index) => (
-                <li>
+                <li key={coin.id}>
                   <div className="icon center">
-                    {/* <i className="bx bx-down..............//load"></i> */}
                     <img src={coin?.image} alt="" />
                   </div>
                   <div className="info">

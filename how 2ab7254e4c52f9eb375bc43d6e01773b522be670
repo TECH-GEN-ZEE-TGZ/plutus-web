@@ -1,0 +1,645 @@
+[33mcommit bae5a8e45a7e5ea0d2529463c9830defbe9102d6[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sun Jan 5 13:02:05 2025 +0000
+
+    update
+
+[1mdiff --git a/src/pages/Saas/SaasStyles.jsx b/src/pages/Saas/SaasStyles.jsx[m
+[1mindex bf54b77..e5b746b 100644[m
+[1m--- a/src/pages/Saas/SaasStyles.jsx[m
+[1m+++ b/src/pages/Saas/SaasStyles.jsx[m
+[36m@@ -1613,13 +1613,25 @@[m [mexport const StyledUser = styled(motion.main)`[m
+                             font-size: ${fixedHeight(2)}px;[m
+                           }[m
+                           &:nth-child(1) {[m
+[31m-                            background: yellow;[m
+[32m+[m[32m                           background: linear-gradient([m
+[32m+[m[32m                              135deg,[m
+[32m+[m[32m                              hsl(288.75, 40%, 30%),[m
+[32m+[m[32m                              hsl(289.09, 55%, 45%) /* Medium purple the verify button mobile*/[m
+[32m+[m[32m                            );[m
+                           }[m
+                           &:nth-child(2) {[m
+                             background: red;[m
+                           }[m
+                         }[m
+                       }[m
+[32m+[m[32m                      > .verified {[m
+[32m+[m[32m                          width: 10%;[m
+[32m+[m[32m                          > ion-icon {[m
+[32m+[m[32m                            color: green;[m
+[32m+[m[32m                            font-size: 24px;[m
+[32m+[m[32m                          }[m
+[32m+[m[32m                        }[m
+[32m+[m[32m                      }[m
+                     }[m
+                   }[m
+                 }[m
+
+[33mcommit 04e6571f19914f461637f91450e1e53057caefc4[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sun Jan 5 12:26:13 2025 +0000
+
+    update
+
+[1mdiff --git a/src/pages/Saas/SaasStyles.jsx b/src/pages/Saas/SaasStyles.jsx[m
+[1mindex b158ea0..bf54b77 100644[m
+[1m--- a/src/pages/Saas/SaasStyles.jsx[m
+[1m+++ b/src/pages/Saas/SaasStyles.jsx[m
+[36m@@ -1015,7 +1015,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+                         font-size: ${fixedHeight(2)}px;[m
+                       }[m
+                       &:nth-child(1) {[m
+[31m-                        background: limegreen;[m
+[32m+[m[32m                        background: blue;[m
+                       }[m
+                       &:nth-child(2) {[m
+                         background: red;[m
+[36m@@ -1034,7 +1034,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+               border-radius: 100px;[m
+               > input {[m
+                 border-radius: 100px;[m
+[31m-                width: 80%;[m
+[32m+[m[32m                width: 90%;[m
+                 height: 100%;[m
+                 background: #e8d7fa;[m
+                 padding: 0 0 0 2.5%;[m
+[36m@@ -1059,13 +1059,24 @@[m [mexport const StyledUser = styled(motion.main)`[m
+                     font-size: ${fixedHeight(2)}px;[m
+                   }[m
+                   &:nth-child(1) {[m
+[31m-                    background: limegreen;[m
+[32m+[m[32m                    background: linear-gradient([m
+[32m+[m[32m                      135deg,[m
+[32m+[m[32m                      hsl(288.75, 40%, 30%),[m
+[32m+[m[32m                      hsl(289.09, 55%, 45%) /* Medium purple the verify button*/[m
+[32m+[m[32m                    );[m
+                   }[m
+                   &:nth-child(2) {[m
+                     background: red;[m
+                   }[m
+                 }[m
+               }[m
+[32m+[m[32m             > .verified {[m
+[32m+[m[32m                  width: 10%;[m
+[32m+[m[32m                  > ion-icon {[m
+[32m+[m[32m                    color: green;[m
+[32m+[m[32m                    font-size: 24px;[m
+[32m+[m[32m                  }[m
+[32m+[m[32m                }[m
+             }[m
+           }[m
+         }[m
+[36m@@ -1558,7 +1569,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+                                 font-size: ${fixedHeight(2)}px;[m
+                               }[m
+                               &:nth-child(1) {[m
+[31m-                                background: limegreen;[m
+[32m+[m[32m                                background: blue;[m
+                               }[m
+                               &:nth-child(2) {[m
+                                 background: red;[m
+[36m@@ -1602,7 +1613,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+                             font-size: ${fixedHeight(2)}px;[m
+                           }[m
+                           &:nth-child(1) {[m
+[31m-                            background: limegreen;[m
+[32m+[m[32m                            background: yellow;[m
+                           }[m
+                           &:nth-child(2) {[m
+                             background: red;[m
+
+[33mcommit 6f9d380396d1558caf2f02f63fb209f10ceaba6d[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sun Jan 5 01:09:45 2025 +0000
+
+    update
+
+[1mdiff --git a/src/pages/Saas/SaasStyles.jsx b/src/pages/Saas/SaasStyles.jsx[m
+[1mindex 878741f..b158ea0 100644[m
+[1m--- a/src/pages/Saas/SaasStyles.jsx[m
+[1m+++ b/src/pages/Saas/SaasStyles.jsx[m
+[36m@@ -1818,21 +1818,21 @@[m [mexport const StyledUser = styled(motion.main)`[m
+   .referralSlab {[m
+     display: flex;[m
+     flex-direction: column;[m
+[31m-    height: 100%;[m
+[32m+[m[32m    // height: calc(100% - 2rem);[m
+     justify-content: space-between;[m
+[31m-    background-color: #e8d7fa;[m
+[32m+[m[32m    background-color:rgb(228, 197, 236);[m
+     border-radius: 10px;[m
+[31m-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);[m
+[32m+[m[32m    box-shadow: 0 4px 8px rgba(W0, 0, 0, 0.1);[m
+ [m
+     .left {[m
+       flex: 1;[m
+       padding: 10px;[m
+       padding-left: 20px;[m
+[31m-      padding-top: 20px;[m
+     }[m
+ [m
+     .right {[m
+[31m-      // flex: 1;[m
+[32m+[m[32m      flex: 1;[m
+[32m+[m[32m      justify-content: end;[m
+     }[m
+ [m
+     .left {[m
+[36m@@ -1842,7 +1842,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+         h5 {[m
+           margin: 0;[m
+           font-size: 15px;[m
+[31m-          color: #555;[m
+[32m+[m[32m          color: hsl(291, 82.30%, 37.60%);[m
+         }[m
+ [m
+         h3 {[m
+[36m@@ -1870,7 +1870,7 @@[m [mexport const StyledFormS = styled(motion.form)`[m
+   align-items: center;[m
+   row-gap: 1rem;[m
+   padding: 1rem;[m
+[31m-  background:rgb(186, 180, 193);[m
+[32m+[m[32m  background:rgb(253, 253, 253);[m
+   border-radius: 1rem;[m
+   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);[m
+ [m
+[36m@@ -1884,7 +1884,7 @@[m [mexport const StyledFormS = styled(motion.form)`[m
+ [m
+   p {[m
+     font-size: 1rem;[m
+[31m-    color: #333;[m
+[32m+[m[32m    color: hsl(41, 85.40%, 42.90%);[m
+   }[m
+ [m
+   h1 {[m
+[36m@@ -1894,7 +1894,7 @@[m [mexport const StyledFormS = styled(motion.form)`[m
+   }[m
+ [m
+   button {[m
+[31m-    background: #9e5dad;[m
+[32m+[m[32m    background: hsl(41, 72.40%, 53.10%);[m
+     color: white;[m
+     border: none;[m
+     padding: 0.5rem 1rem;[m
+
+[33mcommit 3ed30aef0af57352e2237bcd83b55efe5cd3c73f[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sun Jan 5 00:41:49 2025 +0000
+
+    update
+
+[1mdiff --git a/src/pages/Saas/SaasStyles.jsx b/src/pages/Saas/SaasStyles.jsx[m
+[1mindex 99a908a..878741f 100644[m
+[1m--- a/src/pages/Saas/SaasStyles.jsx[m
+[1m+++ b/src/pages/Saas/SaasStyles.jsx[m
+[36m@@ -1818,6 +1818,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+   .referralSlab {[m
+     display: flex;[m
+     flex-direction: column;[m
+[32m+[m[32m    height: 100%;[m
+     justify-content: space-between;[m
+     background-color: #e8d7fa;[m
+     border-radius: 10px;[m
+[36m@@ -1827,10 +1828,11 @@[m [mexport const StyledUser = styled(motion.main)`[m
+       flex: 1;[m
+       padding: 10px;[m
+       padding-left: 20px;[m
+[32m+[m[32m      padding-top: 20px;[m
+     }[m
+ [m
+     .right {[m
+[31m-      flex: 1;[m
+[32m+[m[32m      // flex: 1;[m
+     }[m
+ [m
+     .left {[m
+[36m@@ -1845,7 +1847,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+ [m
+         h3 {[m
+           margin: 5px 0 0;[m
+[31m-          font-size: 20px;[m
+[32m+[m[32m          font-size: 18px;[m
+           color: #333;[m
+         }[m
+       }[m
+[36m@@ -1868,7 +1870,7 @@[m [mexport const StyledFormS = styled(motion.form)`[m
+   align-items: center;[m
+   row-gap: 1rem;[m
+   padding: 1rem;[m
+[31m-  background:rgb(198, 151, 245);[m
+[32m+[m[32m  background:rgb(186, 180, 193);[m
+   border-radius: 1rem;[m
+   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);[m
+ [m
+[36m@@ -1887,6 +1889,7 @@[m [mexport const StyledFormS = styled(motion.form)`[m
+ [m
+   h1 {[m
+     font-size: 1.5rem;[m
+[32m+[m[32m    font-weight: 700;[m
+     color: #333;[m
+   }[m
+ [m
+
+[33mcommit fcff5c04b1c0a775fb893613edb482bb11f0ce1a[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sun Jan 5 00:34:15 2025 +0000
+
+    update
+
+[1mdiff --git a/src/pages/Saas/SaasStyles.jsx b/src/pages/Saas/SaasStyles.jsx[m
+[1mindex 1e717ff..99a908a 100644[m
+[1m--- a/src/pages/Saas/SaasStyles.jsx[m
+[1m+++ b/src/pages/Saas/SaasStyles.jsx[m
+[36m@@ -1162,7 +1162,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+               padding: 2.5%;[m
+               background: #9e5dad;[m
+               border-radius: ${fixedHeight(50)}px;[m
+[31m-              justify-content: center;[m
+[32m+[m[32m              // justify-content: start;[m
+               z-index: 1;[m
+               > .icon {[m
+                 width: ${fixedHeight(4)}px;[m
+
+[33mcommit 35d0088a228ba1e6d7889a1158ef9992290aae46[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sat Jan 4 23:32:07 2025 +0000
+
+    update
+
+[1mdiff --git a/src/pages/Saas/SaasStyles.jsx b/src/pages/Saas/SaasStyles.jsx[m
+[1mindex 629c00a..1e717ff 100644[m
+[1m--- a/src/pages/Saas/SaasStyles.jsx[m
+[1m+++ b/src/pages/Saas/SaasStyles.jsx[m
+[36m@@ -842,7 +842,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+                   input {[m
+                     z-index: 1;[m
+                     padding: 0 2.5%;[m
+[31m-                    font-size: 16px;[m
+[32m+[m[32m                    font-size: 12px;[m
+                     width: 100%;[m
+                     height: ${fixedHeight(4)}px;[m
+                     border-radius: 10px;[m
+[36m@@ -862,7 +862,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+                 width: 100%;[m
+                 height: 100%;[m
+                 text-align: right;[m
+[31m-                font-size: 16px;[m
+[32m+[m[32m                font-size: 12px;[m
+                 background: transparent;[m
+                 font-weight: 700;[m
+                 font-family: Aeonik Regular;[m
+[36m@@ -1819,7 +1819,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+     display: flex;[m
+     flex-direction: column;[m
+     justify-content: space-between;[m
+[31m-    background-color: #f9f9f9;[m
+[32m+[m[32m    background-color: #e8d7fa;[m
+     border-radius: 10px;[m
+     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);[m
+ [m
+[36m@@ -1868,7 +1868,7 @@[m [mexport const StyledFormS = styled(motion.form)`[m
+   align-items: center;[m
+   row-gap: 1rem;[m
+   padding: 1rem;[m
+[31m-  background: #fff;[m
+[32m+[m[32m  background:rgb(198, 151, 245);[m
+   border-radius: 1rem;[m
+   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);[m
+ [m
+[36m@@ -1886,7 +1886,7 @@[m [mexport const StyledFormS = styled(motion.form)`[m
+   }[m
+ [m
+   h1 {[m
+[31m-    font-size: 2rem;[m
+[32m+[m[32m    font-size: 1.5rem;[m
+     color: #333;[m
+   }[m
+ [m
+
+[33mcommit eb1067bf0501466197d40fcc94e66a40f77132d4[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Fri Jan 3 13:26:39 2025 -0500
+
+    Fix: apikey undefined issue
+
+[1mdiff --git a/src/pages/Saas/SaasStyles.jsx b/src/pages/Saas/SaasStyles.jsx[m
+[1mindex cfe3c37..629c00a 100644[m
+[1m--- a/src/pages/Saas/SaasStyles.jsx[m
+[1m+++ b/src/pages/Saas/SaasStyles.jsx[m
+[36m@@ -720,6 +720,14 @@[m [mexport const StyledUser = styled(motion.main)`[m
+                   display: flex;[m
+                   flex-direction: column;[m
+                   row-gap: ${fixedHeight(1)}px;[m
+[32m+[m
+[32m+[m[32m                  h3 {[m
+[32m+[m[32m                    font-size: ${fixedHeight(2.2)}px;[m
+[32m+[m[32m                  }[m
+[32m+[m
+[32m+[m[32m                  p {[m
+[32m+[m[32m                    font-size: ${fixedHeight(1.75)}px;[m
+[32m+[m[32m                  }[m
+                 }[m
+               }[m
+             }[m
+
+[33mcommit bfc99ae526aeba383d192064334d59d7f5a7a854[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Fri Jan 3 04:50:14 2025 -0500
+
+    update
+
+[1mdiff --git a/src/pages/Saas/SaasStyles.jsx b/src/pages/Saas/SaasStyles.jsx[m
+[1mindex 980c71d..cfe3c37 100644[m
+[1m--- a/src/pages/Saas/SaasStyles.jsx[m
+[1m+++ b/src/pages/Saas/SaasStyles.jsx[m
+[36m@@ -1806,4 +1806,97 @@[m [mexport const StyledUser = styled(motion.main)`[m
+       }[m
+     }[m
+   }[m
+[32m+[m
+[32m+[m[32m  .referralSlab {[m
+[32m+[m[32m    display: flex;[m
+[32m+[m[32m    flex-direction: column;[m
+[32m+[m[32m    justify-content: space-between;[m
+[32m+[m[32m    background-color: #f9f9f9;[m
+[32m+[m[32m    border-radius: 10px;[m
+[32m+[m[32m    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);[m
+[32m+[m
+[32m+[m[32m    .left {[m
+[32m+[m[32m      flex: 1;[m
+[32m+[m[32m      padding: 10px;[m
+[32m+[m[32m      padding-left: 20px;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    .right {[m
+[32m+[m[32m      flex: 1;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    .left {[m
+[32m+[m[32m      .text {[m
+[32m+[m[32m        margin-bottom: 10px;[m
+[32m+[m
+[32m+[m[32m        h5 {[m
+[32m+[m[32m          margin: 0;[m
+[32m+[m[32m          font-size: 15px;[m
+[32m+[m[32m          color: #555;[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        h3 {[m
+[32m+[m[32m          margin: 5px 0 0;[m
+[32m+[m[32m          font-size: 20px;[m
+[32m+[m[32m          color: #333;[m
+[32m+[m[32m        }[m
+[32m+[m[32m      }[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    .right {[m
+[32m+[m[32m      display: flex;[m
+[32m+[m[32m      flex-direction: column;[m
+[32m+[m[32m      align-items: center;[m
+[32m+[m[32m      width: 100%;[m
+[32m+[m[32m      margin-bottom: 10px;[m
+[32m+[m[32m    }[m
+[32m+[m[32m  }[m
+ `;[m
+[32m+[m
+[32m+[m[32mexport const StyledFormS = styled(motion.form)`[m
+[32m+[m[32m  display: flex;[m
+[32m+[m[32m  flex-direction: column;[m
+[32m+[m[32m  width: calc(100% - 2rem);[m
+[32m+[m[32m  align-items: center;[m
+[32m+[m[32m  row-gap: 1rem;[m
+[32m+[m[32m  padding: 1rem;[m
+[32m+[m[32m  background: #fff;[m
+[32m+[m[32m  border-radius: 1rem;[m
+[32m+[m[32m  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);[m
+[32m+[m
+[32m+[m[32m  .error {[m
+[32m+[m[32m    color: red;[m
+[32m+[m[32m    font-size: 0.875rem;[m
+[32m+[m[32m    display: flex;[m
+[32m+[m[32m    align-items: center;[m
+[32m+[m[32m    gap: 0.5rem;[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  p {[m
+[32m+[m[32m    font-size: 1rem;[m
+[32m+[m[32m    color: #333;[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  h1 {[m
+[32m+[m[32m    font-size: 2rem;[m
+[32m+[m[32m    color: #333;[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  button {[m
+[32m+[m[32m    background: #9e5dad;[m
+[32m+[m[32m    color: white;[m
+[32m+[m[32m    border: none;[m
+[32m+[m[32m    padding: 0.5rem 1rem;[m
+[32m+[m[32m    border-radius: 0.5rem;[m
+[32m+[m[32m    cursor: pointer;[m
+[32m+[m[32m    display: flex;[m
+[32m+[m[32m    align-items: center;[m
+[32m+[m[32m    gap: 0.5rem;[m
+[32m+[m[32m    font-size: 1rem;[m
+[32m+[m
+[32m+[m[32m    &:disabled {[m
+[32m+[m[32m      background: #ccc;[m
+[32m+[m[32m      cursor: not-allowed;[m
+[32m+[m[32m    }[m
+[32m+[m[32m  }[m
+[32m+[m[32m`;[m
+\ No newline at end of file[m
+
+[33mcommit 51072b293a87fa2e0ecf7a53ac2284dbe09d8210[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Wed Jan 1 07:01:12 2025 -0500
+
+    updat
+
+[1mdiff --git a/src/pages/Saas/SaasStyles.jsx b/src/pages/Saas/SaasStyles.jsx[m
+[1mindex c9f0636..980c71d 100644[m
+[1m--- a/src/pages/Saas/SaasStyles.jsx[m
+[1m+++ b/src/pages/Saas/SaasStyles.jsx[m
+[36m@@ -834,7 +834,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+                   input {[m
+                     z-index: 1;[m
+                     padding: 0 2.5%;[m
+[31m-                    font-size: ${fixedHeight(1.3)}px;[m
+[32m+[m[32m                    font-size: 16px;[m
+                     width: 100%;[m
+                     height: ${fixedHeight(4)}px;[m
+                     border-radius: 10px;[m
+[36m@@ -854,7 +854,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+                 width: 100%;[m
+                 height: 100%;[m
+                 text-align: right;[m
+[31m-                font-size: ${fixedHeight(1.75)}px;[m
+[32m+[m[32m                font-size: 16px;[m
+                 background: transparent;[m
+                 font-weight: 700;[m
+                 font-family: Aeonik Regular;[m
+
+[33mcommit 6c7c31383a68617c401164a48c7c32810995b5ac[m
+Author: AGBaby09 <agbotsem@gmail.com>
+Date:   Wed Jan 1 05:06:49 2025 +0000
+
+    done
+
+[1mdiff --git a/src/pages/Saas/SaasStyles.jsx b/src/pages/Saas/SaasStyles.jsx[m
+[1mindex 716b5e1..c9f0636 100644[m
+[1m--- a/src/pages/Saas/SaasStyles.jsx[m
+[1m+++ b/src/pages/Saas/SaasStyles.jsx[m
+[36m@@ -748,7 +748,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+             justify-content: space-between;[m
+             border: 1px solid #ddb9e5;[m
+             height: 60%;[m
+[31m-            border-radius: 100px;[m
+[32m+[m[32m            border-radius: 15px;[m
+             z-index: 2;[m
+             isolation: isolate;[m
+             /* overflow: hidden; */[m
+[36m@@ -757,7 +757,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+               min-width: 25%;[m
+               width: 27.5%;[m
+               height: 100%;[m
+[31m-              border-radius: 100px;[m
+[32m+[m[32m              border-radius: 15px;[m
+               z-index: 3;[m
+               > .val {[m
+                 cursor: pointer;[m
+[36m@@ -869,7 +869,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+             justify-content: space-between;[m
+             border: 1px solid #ddb9e5;[m
+             height: 60%;[m
+[31m-            border-radius: 100px;[m
+[32m+[m[32m            border-radius: 15px;[m
+             overflow: hidden;[m
+ [m
+             > input {[m
+[36m@@ -889,7 +889,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+             background: transparent;[m
+             width: 100%;[m
+             height: 60%;[m
+[31m-            border-radius: 100px;[m
+[32m+[m[32m            border-radius: 15px;[m
+             overflow: hidden;[m
+             border: 1px solid #ddb9e5;[m
+             display: flex;[m
+[36m@@ -911,7 +911,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+         }[m
+         > .times {[m
+           background: #e8d7fa;[m
+[31m-          border-radius: 100px;[m
+[32m+[m[32m          border-radius: 15px;[m
+           width: 100%;[m
+           max-width: 100%;[m
+           height: 7.5%;[m
+[36m@@ -1290,7 +1290,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+                     justify-content: space-between;[m
+                     border: 1px solid #ddb9e5;[m
+                     height: 60%;[m
+[31m-                    border-radius: 100px;[m
+[32m+[m[32m                    border-radius: 15px;[m
+                     z-index: 2;[m
+                     isolation: isolate;[m
+                     /* overflow: hidden; */[m
+[36m@@ -1299,7 +1299,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+                       min-width: 25%;[m
+                       width: 27.5%;[m
+                       height: 100%;[m
+[31m-                      border-radius: 100px;[m
+[32m+[m[32m                      border-radius: 15px;[m
+                       z-index: 3;[m
+                       > .val {[m
+                         cursor: pointer;[m
+[36m@@ -1401,6 +1401,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+                         font-weight: 700;[m
+                         font-family: Aeonik Regular;[m
+                         border: none;[m
+[32m+[m[32m                        padding-right: 2.5%;[m
+                         outline: none;[m
+                       }[m
+                     }[m
+[36m@@ -1411,7 +1412,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+                     justify-content: space-between;[m
+                     border: 1px solid #ddb9e5;[m
+                     height: 60%;[m
+[31m-                    border-radius: 100px;[m
+[32m+[m[32m                    border-radius: 15px;[m
+                     overflow: hidden;[m
+ [m
+                     > input {[m
+[36m@@ -1431,7 +1432,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+                     background: transparent;[m
+                     width: 100%;[m
+                     height: 60%;[m
+[31m-                    border-radius: 100px;[m
+[32m+[m[32m                    border-radius: 15px;[m
+                     overflow: hidden;[m
+                     border: 1px solid #ddb9e5;[m
+                     display: flex;[m
+[36m@@ -1453,7 +1454,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+                 }[m
+                 > .times {[m
+                   background: #e8d7fa;[m
+[31m-                  border-radius: 100px;[m
+[32m+[m[32m                  border-radius: 15px;[m
+                   width: 100%;[m
+                   max-width: 100%;[m
+                   height: 7.5%;[m
+[36m@@ -1584,9 +1585,9 @@[m [mexport const StyledUser = styled(motion.main)`[m
+                         > button {[m
+                           min-width: ${fixedHeight(2.5)}px;[m
+                           width: auto;[m
+[31m-                          height: ${fixedHeight(2.5)}px;[m
+[32m+[m[32m                          height: ${fixedHeight(3.5)}px;[m
+                           border-radius: 50px;[m
+[31m-                          padding: 0 5px;[m
+[32m+[m[32m                          padding: 0 ${fixedHeight(1.5)}px;[m
+                           color: white;[m
+                           font-size: ${fixedHeight(1.5)}px;[m
+                           > ion-icon {[m
+
+[33mcommit f7188fb6f83474a037eb9687e8b87b0082ae8a69[m
+Author: AGBaby09 <agbotsem@gmail.com>
+Date:   Tue Dec 31 21:34:22 2024 +0000
+
+    done
+
+[1mdiff --git a/src/pages/Saas/SaasStyles.jsx b/src/pages/Saas/SaasStyles.jsx[m
+[1mindex a0a42f0..716b5e1 100644[m
+[1m--- a/src/pages/Saas/SaasStyles.jsx[m
+[1m+++ b/src/pages/Saas/SaasStyles.jsx[m
+[36m@@ -521,7 +521,7 @@[m [mexport const StyledUser = styled(motion.main)`[m
+             border-radius: 15px;[m
+           }[m
+         }[m
+[31m-        .switchBar{[m
+[32m+[m[32m        .switchBar {[m
+           display: none;[m
+         }[m
+       }[m
+[36m@@ -1167,7 +1167,6 @@[m [mexport const StyledUser = styled(motion.main)`[m
+                 }[m
+                 > h3 {[m
+                   font-size: ${fixedHeight(1.75)}px;[m
+[31m-              [m
+                 }[m
+               }[m
+               &.on {[m
+[36m@@ -1704,7 +1703,101 @@[m [mexport const StyledUser = styled(motion.main)`[m
+                 }[m
+               }[m
+               &:nth-child(3) {[m
+[31m-                background: green;[m
+[32m+[m[32m                /* background: green; */[m
+[32m+[m[32m                > .slab {[m
+[32m+[m[32m                  display: flex;[m
+[32m+[m[32m                  align-items: center;[m
+[32m+[m[32m                  width: 100%;[m
+[32m+[m[32m                  height: 90%;[m
+[32m+[m[32m                  column-gap: ${fixedWidth(0.5)}px;[m
+[32m+[m[32m               

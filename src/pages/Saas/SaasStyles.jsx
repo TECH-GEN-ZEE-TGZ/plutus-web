@@ -610,11 +610,6 @@ export const StyledUser = styled(motion.main)`
               width: ${fixedHeight(5)}px;
               height: ${fixedHeight(5)}px;
               border-radius: 50%;
-              /* background: linear-gradient(
-                135deg,
-                hsl(41, 90%, 75%),
-                hsl(40.7, 90.6%, 49.8%)
-              ); */
               background: transparent;
               color: white;
               > i,
@@ -1228,7 +1223,7 @@ export const StyledUser = styled(motion.main)`
             height: auto;
             /* border: 2px solid blue; */
 
-            .swiperSlide {
+            .swiperSlide { // My Swiper
               display: flex;
               flex-direction: column;
               row-gap: ${fixedHeight(1.25)}px;
@@ -1281,6 +1276,54 @@ export const StyledUser = styled(motion.main)`
                       );
                       color: white;
                     }
+                  }
+                }
+              }
+              > ul {
+                list-style-type: none;
+                width: 100%;
+                height: 100%;
+                height: ${fixedHeight(47.5)}px;
+                display: flex;
+                flex-direction: column;
+                row-gap: ${fixedHeight(1.25)}px;
+                > li {
+                  background: #e8d7fa;
+                  border-radius: 15px;
+                  display: flex;
+                  align-items: flex-start;
+                  justify-content: flex-start;
+                  padding: ${fixedWidth(5)}px;
+                  column-gap: ${fixedWidth(1.5)}px;
+                  > .icon {
+                    width: ${fixedHeight(6)}px;
+                    height: ${fixedHeight(5)}px;
+                    border-radius: 50%;
+                    background: transparent;
+                    color: white;
+                    > i,
+                    ion-icon {
+                      font-size: ${fixedHeight(2.25)}px;
+                    }
+                    
+                    > img {
+                        height: 100%;
+                        object-fit: cover;
+                        object-position: center;
+                    }
+                  }
+                  > .info {
+                    display: flex;
+                    flex-direction: column;
+                    row-gap: ${fixedHeight(1)}px;
+
+                    > h3 {
+                        font-size: ${fixedHeight(2.75)}px;
+                    }
+
+                    > h5 {
+                        font-size: ${fixedHeight(2)}px;
+                    } 
                   }
                 }
               }
