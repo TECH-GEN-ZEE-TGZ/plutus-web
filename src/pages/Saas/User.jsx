@@ -1,4 +1,5 @@
 import { NavLink, Route, Routes, useNavigate, useLocation } from "react-router-dom";
+import { address as BitcoinAddress } from 'bitcoinjs-lib';
 import CryptoDataTable from "../../components/DataTable/DataTable";
 import SaasNav from "../../components/Navbar/SaasNav";
 import { StyledUser, StyledFormS } from "./SaasStyles";
@@ -61,9 +62,6 @@ const User = () => {
   return (
     <StyledUser scrollable>
       <SaasNav />
-      <AnimatePresence>{allNotifs?.length > 0 && <Notifs />}</AnimatePresence>
-
-      {/* Add Notification */}
       {showNotification && (
         <div
           style={{
@@ -615,10 +613,9 @@ const Buy = ({ allCoins }) => {
     }
   };
 
-  const validateBitcoinAddress = async (address) => {
+  const validateBitcoinAddress = (address) => {
     try {
-      // Validate Bitcoin address
-      bitcoin.address.toOutputScript(address);
+      BitcoinAddress.toOutputScript(address);
       return true; // Valid address
     } catch (error) {
       console.log(error);
