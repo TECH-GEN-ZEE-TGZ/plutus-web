@@ -6,6 +6,7 @@ export const ContextVariablesProvider = ({ children }) => {
   const domain = process.env.BACKEND_URL || process.env.REACT_APP_BACKEND_URL;
   const apiKey = process.env.API_KEY || process.env.REACT_APP_API_KEY;
   const cediRate = process.env.CEDI_RATE || process.env.REACT_APP_CEDI_RATE;
+  const merchantId = process.env.MERCHANT_ID || process.env.REACT_APP_MERCHANT_ID;
   const [toggleMode, setToggleMode] = useState(false);
   const [hideNav, setHideNav] = useState(false);
   const [hideContact, setHideContact] = useState(false);
@@ -26,6 +27,7 @@ export const ContextVariablesProvider = ({ children }) => {
         domain,
         apiKey,
         cediRate,
+        merchantId,
         toggleMode,
         setToggleMode,
         hideNav,

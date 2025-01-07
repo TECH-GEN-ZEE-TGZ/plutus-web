@@ -376,7 +376,7 @@ const Dashboard = ({ handleCopy }) => {
 };
 
 const Buy = ({ allCoins }) => {
-  const { domain, apiKey, cediRate } = useContext(ContextVariables);
+  const { domain, apiKey, cediRate, merchantId } = useContext(ContextVariables);
   const { authInfo } = useContext(AuthContext);
   const ghsRate = parseFloat(cediRate);
 
@@ -659,7 +659,7 @@ const Buy = ({ allCoins }) => {
     description: `Item Purchase`,
     callbackUrl: `${domain}/optimus/v1/api/payment/callback`,
     returnUrl: "https://theplutushome.com/payment/success",
-    merchantAccountNumber: "2022959",
+    merchantAccountNumber: merchantId,
     cancellationUrl: "https://theplutushome.com/payment/failed",
     clientReference: `Payment_${Date.now()}`,
     amountGHS: payWith.symbol === "GHS" ? payVal : payVal * ghsRate,

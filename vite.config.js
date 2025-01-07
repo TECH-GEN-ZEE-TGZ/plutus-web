@@ -22,7 +22,8 @@ export default defineConfig({
     'process.env.REACT_APP_API_KEY': JSON.stringify('pFYuSfBn1Iw2XBlN-CAokQ'),
     'process.env.VITE_ENV': JSON.stringify('production'),
     'process.env.REACT_APP_TOKENVIEW_KEY': JSON.stringify('y3QfwtRNg1ruwQBqDzmm'),
-    'process.env.REACT_APP_CEDI_RATE': JSON.stringify('15.7')
+    'process.env.REACT_APP_CEDI_RATE': JSON.stringify('15.7'),
+    'process.env.REACT_APP_MERCHANT_ID': JSON.stringify('2022959')
   },
   build: {
     chunkSizeWarningLimit: 1000, // Set limit to 1000kB
