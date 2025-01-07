@@ -563,7 +563,7 @@ const Buy = ({ allCoins }) => {
       setBuyFee(totalFee);
 
       // Calculate the total amount to pay including fees
-      if (payWith?.symbol?.toUpperCase() === "GHS") {
+      if (payWith.symbol === "GHS") {
         const totalPay = (fiatEquivalent + totalFee) * ghsRate; // Convert back to GHS if needed
         setPayVal(totalPay.toFixed(2));
       } else {
@@ -645,7 +645,7 @@ const Buy = ({ allCoins }) => {
     merchantAccountNumber: "2022959",
     cancellationUrl: "https://theplutushome.com/payment/failed",
     clientReference: `Payment_${Date.now()}`,
-    amountGHS: payVal,
+    amountGHS: payWith.symbol === "GHS" ? payVal : payVal * ghsRate ,
   };
 
 

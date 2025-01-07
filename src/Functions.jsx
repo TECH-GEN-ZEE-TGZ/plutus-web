@@ -247,7 +247,6 @@ export const generate_payment_link_hubtel = (domain, apiKey, addNotification, to
       }
     })
     .catch((error) => {
-      console.log(error);
       if (error.status === 400) {
         addNotification("Error", "Amount not feasible, please reduce or contact admin!");
         onSuccess();
