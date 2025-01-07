@@ -376,15 +376,9 @@ const Dashboard = ({ handleCopy }) => {
 };
 
 const Buy = ({ allCoins }) => {
-  const { domain, apiKey } = useContext(ContextVariables);
+  const { domain, apiKey, cediRate } = useContext(ContextVariables);
   const { authInfo } = useContext(AuthContext);
-  const ghsRate = 15.6;
-  // const fees = {
-  //   btc: 10,
-  //   usdt: 5,
-  //   ltc: 3,
-  //   xmr: 3,
-  // };
+  const ghsRate = parseFloat(cediRate);
 
   const myCurrencies = [
     {
