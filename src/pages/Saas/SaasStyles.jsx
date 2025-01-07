@@ -1089,7 +1089,7 @@ export const StyledUser = styled(motion.main)`
             align-items: center;
             justify-content: space-between;
             border-bottom: 1px solid #9e5dad;
-            height: calc(100% / 3);
+            height: calc(100% / 4);
             > h3 {
               font-size: ${fixedHeight(1.75)}px;
               color: hsl(288.75, 40%, 30%);
@@ -1691,7 +1691,7 @@ export const StyledUser = styled(motion.main)`
                     align-items: center;
                     justify-content: space-between;
                     border-bottom: 1px solid #9e5dad;
-                    height: calc(100% / 3);
+                    height: calc(100% / 4);
                     > h3 {
                       font-size: ${fixedHeight(1.75)}px;
                       color: hsl(288.75, 40%, 30%);

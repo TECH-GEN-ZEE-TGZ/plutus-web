@@ -379,6 +379,7 @@ const Buy = ({ allCoins }) => {
   const { domain, apiKey, cediRate, merchantId } = useContext(ContextVariables);
   const { authInfo } = useContext(AuthContext);
   const ghsRate = parseFloat(cediRate);
+  const [ghsAmountToPay, setGhsAmountToPay] = useState(0);
 
   const myCurrencies = [
     {
@@ -504,12 +505,14 @@ const Buy = ({ allCoins }) => {
         setPayValError(`Minimum ghs amount to buy is ${minimumGhsAmount.toFixed(2)}`);
         setPayVal(minimumGhsAmount.toFixed(2));
         setCryptoVal(0);
+        setGhsAmountToPay(0);
         setExBuy(false);
         return;
       } else if (payWith?.symbol === "USD" && payVal < minimumUsdAmount) {
         setPayValError(`Minimum usd amount to buy is ${minimumUsdAmount.toFixed(2)}`);
         setPayVal(minimumUsdAmount.toFixed(2));
         setCryptoVal(0);
+        setGhsAmountToPay(0);
         setExBuy(false);
         return;
       } else {
@@ -523,14 +526,19 @@ const Buy = ({ allCoins }) => {
       setExRate(exchangeRate);
       if (exchangeRate) {
         if (payWith.symbol === "GHS") {
-          const ghsAmount = payVal > 0 ? payVal - (totalFeeUSD * ghsRate) : 0; // Convert fee back to GHS to subtract
-          setCryptoVal((ghsAmount / ghsRate / exchangeRate).toFixed(8));
+          const ghsAmountWithoutFee = payVal > 0 ? payVal : 0;
+          const ghsAmountWithFee = ghsAmountWithoutFee + (totalFeeUSD * ghsRate); // Convert fee back to GHS to subtract
+          setCryptoVal((ghsAmountWithoutFee / ghsRate / exchangeRate).toFixed(8));
+          setGhsAmountToPay(ghsAmountWithFee.toFixed(2));
         } else {
-          const usdAmount = payVal > 0 ? payVal - totalFeeUSD : 0;
-          setCryptoVal((usdAmount / exchangeRate).toFixed(8));
+          const usdAmountWithoutFee = payVal > 0 ? payVal : 0;
+          const usdAmountWithFee = usdAmountWithoutFee + totalFeeUSD;
+          setCryptoVal((usdAmountWithFee / exchangeRate).toFixed(8));
+          setGhsAmountToPay((usdAmountWithFee * ghsRate).toFixed(2));
         }
       } else {
         setCryptoVal(0);
+        setGhsAmountToPay(0);
       }
     } catch (error) {
       exchangeRateError("Error fetching exchange rate!");
@@ -579,12 +587,14 @@ const Buy = ({ allCoins }) => {
       setTotalFee(totalFee);
       setBuyFee(totalFee);
 
+      const totalPay = (fiatEquivalent + totalFee) * ghsRate;
+      setGhsAmountToPay(totalPay);
       // Calculate the total amount to pay including fees
       if (payWith.symbol === "GHS") {
-        const totalPay = (fiatEquivalent + totalFee) * ghsRate; // Convert back to GHS if needed
-        setPayVal(totalPay.toFixed(2));
+        setPayVal((fiatEquivalent * ghsRate).toFixed(2));
+       
       } else {
-        setPayVal((fiatEquivalent + totalFee).toFixed(2));
+        setPayVal(fiatEquivalent.toFixed(2));
       }
 
     } catch (error) {
@@ -662,7 +672,7 @@ const Buy = ({ allCoins }) => {
     merchantAccountNumber: merchantId,
     cancellationUrl: "https://theplutushome.com/payment/failed",
     clientReference: `Payment_${Date.now()}`,
-    amountGHS: payWith.symbol === "GHS" ? payVal : payVal * ghsRate,
+    amountGHS: ghsAmountToPay,
   };
 
 
@@ -964,7 +974,11 @@ const Buy = ({ allCoins }) => {
         </div>
         <div className="line">
           <h3>Fee</h3>
-          <p>{buyFee}</p>
+          <p>{buyFee} USD</p>
+        </div>
+        <div className="line">
+          <h3>Amount To Pay</h3>
+          <p>{ghsAmountToPay} GHS</p>
         </div>
       </div>
 
