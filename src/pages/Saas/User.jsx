@@ -47,7 +47,6 @@ const User = () => {
 
 
   useEffect(() => {
-    console.log(location.state);
     if (location.state?.reload) {
       navigate(location.pathname, { replace: true, state: {} }); // Reset state
       window.location.reload();
@@ -377,7 +376,7 @@ const Dashboard = ({ handleCopy }) => {
 };
 
 const Buy = ({ allCoins }) => {
-  const { domain, apiKey, addNotification } = useContext(ContextVariables);
+  const { domain, apiKey } = useContext(ContextVariables);
   const { authInfo } = useContext(AuthContext);
   const ghsRate = 15.6;
   // const fees = {
@@ -420,6 +419,10 @@ const Buy = ({ allCoins }) => {
   const [selPay, setSelPay] = useState(false);
   const [exPay, setExPay] = useState(false);
   const [exBuy, setExBuy] = useState(false);
+  const [payValError, setPayValError] = useState("");
+  const [walletError, setWalletError] = useState("");
+  const [exchangeRateError, setExchangeRateError] = useState("");
+  const [formError, setFormError] = useState("");
 
   const [buyFee, setBuyFee] = useState(0);
   const [exRate, setExRate] = useState(0);
@@ -442,25 +445,25 @@ const Buy = ({ allCoins }) => {
       ))
     ) {
       // alert(`Invalid wallet address!`);
-      addNotification("Error", `Invalid ${buying?.symbol?.toUpperCase()} address!`);
+      setWalletError(`Invalid ${buying?.symbol?.toUpperCase()} address!`);
       return;
     }
 
     if (!walletAddress.trim()) {
       // alert("Please enter a valid wallet address.");
-      addNotification("Error", `Please enter a valid ${buying?.symbol?.toUpperCase()} address.`);
+      setWalletError(`Please enter a valid ${buying?.symbol?.toUpperCase()} address.`);
       return;
     }
 
 
     setCryptoWallet(walletAddress);
-    addNotification("Success", `${buying?.symbol?.toUpperCase()} address successfully verified!`);
+    setWalletError("");
 
     setWalletAddress(
       walletAddress
         .split('')
         .map((char, index) =>
-          index < 4 || index >= walletAddress.length - 4 ? char : '*'
+          index < 7 || index >= walletAddress.length - 7 ? char : '*'
         )
         .join('')
     );
@@ -488,7 +491,7 @@ const Buy = ({ allCoins }) => {
 
       // Determine fee based on the purchase amount
       let additionalFee = 0;
-      const purchaseAmountUSD = payWith?.symbol?.toUpperCase() === "GHS" ? (payVal / ghsRate) : payVal;
+      const purchaseAmountUSD = payWith?.symbol === "GHS" ? (payVal / ghsRate) : payVal;
 
       if (purchaseAmountUSD >= 0 && purchaseAmountUSD <= 50) {
         additionalFee = 3;
@@ -499,6 +502,26 @@ const Buy = ({ allCoins }) => {
       }
 
       const totalFeeUSD = withdrawalFee + additionalFee;
+      const totalFeeGHS = totalFeeUSD * ghsRate;
+      const minimumGhsAmount = totalFeeGHS + 50;
+      const minimumUsdAmount = totalFeeUSD + 2;
+
+      if (payWith?.symbol === "GHS" && payVal < minimumGhsAmount) {
+        setPayValError(`Minimum ghs amount to buy is ${minimumGhsAmount.toFixed(2)}`);
+        setPayVal(minimumGhsAmount.toFixed(2));
+        setCryptoVal(0);
+        setExBuy(false);
+        return;
+      } else if (payWith?.symbol === "USD" && payVal < minimumUsdAmount) {
+        setPayValError(`Minimum usd amount to buy is ${minimumUsdAmount.toFixed(2)}`);
+        setPayVal(minimumUsdAmount.toFixed(2));
+        setCryptoVal(0);
+        setExBuy(false);
+        return;
+      } else {
+        setPayValError("");
+      }
+
       setTotalFee(totalFeeUSD);
       setBuyFee(totalFee);
 
@@ -516,7 +539,7 @@ const Buy = ({ allCoins }) => {
         setCryptoVal(0);
       }
     } catch (error) {
-      addNotification("Error", "Error fetching exchange ghsRate!");
+      exchangeRateError("Error fetching exchange rate!");
       setCryptoVal(0);
     } finally {
       setExBuy(false);
@@ -571,7 +594,7 @@ const Buy = ({ allCoins }) => {
       }
 
     } catch (error) {
-      addNotification("Error", "Error fetching exchange ghsRate!");
+      exchangeRateError("Error fetching exchange rate!");
       setPayVal(0);
     } finally {
       setExPay(false);
@@ -645,7 +668,7 @@ const Buy = ({ allCoins }) => {
     merchantAccountNumber: "2022959",
     cancellationUrl: "https://theplutushome.com/payment/failed",
     clientReference: `Payment_${Date.now()}`,
-    amountGHS: payWith.symbol === "GHS" ? payVal : payVal * ghsRate ,
+    amountGHS: payWith.symbol === "GHS" ? payVal : payVal * ghsRate,
   };
 
 
@@ -661,20 +684,26 @@ const Buy = ({ allCoins }) => {
   const buyCryptoCoin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log(loading);
-    if (
-      !buying?.symbol ||
-      payVal <= 0 ||
-      cryptoWallet?.length === 0 ||
-      cryptoVal <= 0
-    ) {
-      addNotification("Error", "Invalid Form inputs");
-      setLoading(false);
-      return;
-    } else {
-      generate_payment_link_hubtel(domain, apiKey, addNotification, authInfo?.token, paymentData, orderData, () => setLoading(false));
+    let error = "";
+
+    if (!buying?.symbol) {
+      error = "Please select a cryptocurrency to buy.";
+    } else if (payVal <= 0) {
+      error = "Please enter a valid payment amount.";
+    } else if (cryptoWallet?.length === 0) {
+      error = "Please enter a valid wallet address.";
+    } else if (cryptoVal <= 0) {
+      error = "Please enter a valid cryptocurrency amount.";
     }
 
+    if (error) {
+      setLoading(false);
+      setFormError(error);
+      setTimeout(() => setFormError(""), 2000);
+      return;
+    } else {
+      generate_payment_link_hubtel(domain, apiKey, formError, authInfo?.token, paymentData, orderData, () => setLoading(false));
+    }
   };
 
 
@@ -685,6 +714,7 @@ const Buy = ({ allCoins }) => {
   useEffect(() => {
     getExchangeRateP(buying?.symbol?.toLowerCase());
     getExchangeRateB(buying?.symbol?.toLowerCase());
+    setFormError("");
   }, [buying]);
 
   useEffect(() => {
@@ -697,8 +727,6 @@ const Buy = ({ allCoins }) => {
           headers: { "X-API-KEY": apiKey }
         });
 
-        // Assuming the API returns a structure where the fee is directly accessible
-        // Adjust the path according to your API response structure
         const feeFromApi = parseFloat(response?.data?.result[0]?.withdrawalFee);
         setBuyFee(feeFromApi.toFixed(2));
       } catch (error) {
@@ -713,6 +741,21 @@ const Buy = ({ allCoins }) => {
   return (
     <>
       {/* Pay With Section */}
+      <AnimatePresence>
+        {formError && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="error"
+            style={{ fontSize: "12px", color: "red", marginTop: "3px" }}
+          >
+            <i className="bx bxs-error bx-tada"></i>
+            {formError}
+            <i className="bx bxs-error bx-tada"></i>
+          </motion.p>
+        )}
+      </AnimatePresence>
       <div className="opt">
         <h4>You Pay</h4>
         <div className="select">
@@ -770,7 +813,10 @@ const Buy = ({ allCoins }) => {
                 type="number"
                 inputMode="decimal"
                 value={payVal}
-                onChange={(e) => setPayVal(e.target.value)} // Let the value update as typed
+                onChange={(e) => {
+                  setPayVal(e.target.value);
+                  setPayValError("");
+                }} // Let the value update as typed
                 onBlur={(e) => {
                   setPayVal(parseFloat(e.target.value).toFixed(2));
                   getExchangeRateP(buying?.symbol?.toLowerCase());
@@ -780,6 +826,21 @@ const Buy = ({ allCoins }) => {
             )}
           </div>
         </div>
+        <AnimatePresence>
+          {payValError && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="error"
+              style={{ fontSize: "10px", color: "red" }}
+            >
+              <i className="bx bxs-error bx-tada"></i>
+              {payValError}
+              <i className="bx bxs-error bx-tada"></i>
+            </motion.p>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Buy Section */}
@@ -861,9 +922,13 @@ const Buy = ({ allCoins }) => {
               type="text"
               placeholder="Enter valid wallet address"
               value={walletAddress}
-              onClick={() => setShowVerifyButton(true)}
+              onClick={() => {
+                setShowVerifyButton(true);
+                setWalletAddress(cryptoWallet);
+              }}
               onChange={(e) => {
                 setWalletAddress(e.target.value);
+                setWalletError("");
               }}
             />
             {showVerifyButton ? (
@@ -876,6 +941,21 @@ const Buy = ({ allCoins }) => {
               </div>
             )}
           </form>
+          <AnimatePresence>
+            {walletError && (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="error"
+                style={{ fontSize: "12px", color: "red", marginTop: "3px" }}
+              >
+                <i className="bx bxs-error bx-tada"></i>
+                {walletError}
+                <i className="bx bxs-error bx-tada"></i>
+              </motion.p>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
@@ -917,163 +997,11 @@ const Buy = ({ allCoins }) => {
   );
 };
 
-const Hash = ({ allCoins }) => {
-  const { addNotification } = useContext(ContextVariables);
-  var domain = "";
-  const apiKey = process.env.REACT_APP_TOKENVIEW_KEY;
-  const allowedCoins = ["btc", "ltc", "usdt", "xmr"];
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredCoins, setFilteredCoins] = useState([]);
-  const [cryptoType, setCryptoType] = useState("");
-  const [hash, setHash] = useState("");
-  const [transactionHash, setTransactionHash] = useState("");
-  const [status, setStatus] = useState("");
-  const [blockHeight, setBlockHeight] = useState("");
-  const [fee, setFee] = useState("");
-  const [transactionDate, setTransactionDate] = useState("");
-
-  const getCoins = () => {
-    setFilteredCoins(
-      allCoins.filter(
-        (coin) =>
-          allowedCoins.includes(coin.symbol.toLowerCase()) && // Include only allowed coins
-          (coin.name.toLowerCase().includes(searchTerm.toLowerCase()) || // Match by name
-            coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())) // Match by symbol
-      )
-    );
-  };
-
-  useEffect(() => {
-    getCoins();
-  }, [allCoins]);
-
-  const handleVerifyHash = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    if (!cryptoType) {
-      addNotification("Error", "Please select a cryto type!");
-      setIsLoading(false);
-      return;
-    }
-    if (!hash) {
-      addNotification("Error", "Please enter a valid hash!");
-      setIsLoading(false);
-      return;
-    }
-
-    if (cryptoType === "usdt") {
-      domain = `https://services.tokenview.io/vipapi/usdt/txdetail/${hash}?apiKey=${apiKey}`;
-    } else {
-      domain = `https://services.tokenview.io/vipapi/tx/${cryptoType}/${hash}?apiKey=${apiKey}`;
-    }
-
-    // Verify hash
-    await axios
-      .get(`${domain}`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        if (response.status === 200) {
-          return response.data;
-        }
-        addNotification("Error", "Network response was not ok.");
-        throw new Error("Network response was not ok.");
-      })
-      .then((data) => {
-        addNotification("Success", "Hash ID Verified!.");
-        setIsLoading(false);
-        if (data.code === 1) {
-          displayResults(data);
-        }
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        addNotification("Error", "An error occurred. Please try again.");
-      });
-  };
-
-  //Create use this results
-  function displayResults(response) {
-    const data = response.data;
-    setTransactionHash(data.txid);
-    setStatus(data.confirmations > 0 ? "Confirmed" : "Pending");
-    setBlockHeight(data.block_no);
-    setFee(`${data.fee} LTC`);
-    setTransactionDate(new Date(data.time * 1000).toLocaleString());
-  }
-
-  return (
-    <>
-      <div className="opt">
-        <h4>Select Cryptocurrency</h4>
-        <select
-          name=""
-          id=""
-          value={cryptoType}
-          onChange={(e) => setCryptoType(e.target.value)}
-        >
-          <option value="">Choose Cryptocurrency</option>
-          {filteredCoins?.map((coin, index) => (
-            <option key={index} value={coin?.symbol?.toUpperCase()}>
-              {coin?.symbol?.toUpperCase()}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="opt">
-        <h4>Enter Transaction Hash</h4>
-        <form onSubmit={handleVerifyHash} className="input">
-          <input
-            type="text"
-            placeholder="Enter hash"
-            value={hash}
-            onChange={(e) => setHash(e.target.value)}
-          />
-        </form>
-      </div>
-      <div className="stats">
-        <div className="line">
-          <h3>Trans. hash</h3>
-          <p>{transactionHash || "N/A"}</p>
-        </div>
-        <div className="line">
-          <h3>Status</h3>
-          <p>{status || "N/A"}</p>
-        </div>
-        <div className="line">
-          <h3>Block Height</h3>
-          <p>{blockHeight || "N/A"}</p>
-        </div>
-        <div className="line">
-          <h3>Fee</h3>
-          <p>{fee || "N/A"}</p>
-        </div>
-        <div className="line">
-          <h3>Date</h3>
-          <p>{transactionDate || "N/A"}</p>
-        </div>
-      </div>
-      <button onClick={handleVerifyHash}>
-        {isLoading ? (
-          <>
-            <i className="bx bx-loader bx-spin"></i>#Verifying...
-          </>
-        ) : (
-          <>#Verify</>
-        )}
-      </button>
-    </>
-  );
-};
 
 const Referrals = ({ handleCopy }) => {
   const { domain, apiKey, addNotification } = useContext(ContextVariables);
   const { authInfo } = useContext(AuthContext);
+  const [redeemError, setRedeemError] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -1112,10 +1040,10 @@ const Referrals = ({ handleCopy }) => {
         addNotification("Success", "Points redeemed successfully!");
       } else {
         const data = await response.json();
-        addNotification("Error", data?.message);
+        redeemError(`${data?.message}`);
       }
     } catch (error) {
-      addNotification("Error", "An error occurred. Please try again later.");
+      redeemError("An error occurred. Please try again later.");
     } finally {
       setLoading(false);
       setTimeout(() => {
@@ -1127,6 +1055,21 @@ const Referrals = ({ handleCopy }) => {
   return (
     <>
       <div className="referralSlab">
+        <AnimatePresence>
+          {redeemError && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="error"
+              style={{ fontSize: "12px", color: "red", marginTop: "3px" }}
+            >
+              <i className="bx bxs-error bx-tada"></i>
+              {redeemError}
+              <i className="bx bxs-error bx-tada"></i>
+            </motion.p>
+          )}
+        </AnimatePresence>
         <div className="left">
           <div className="text">
             <h5>Your Referral Code</h5>
@@ -1134,6 +1077,7 @@ const Referrals = ({ handleCopy }) => {
               <h3>{authInfo?.referralCode || "N/A"}</h3>
               <Button
                 onClick={() => {
+                  setRedeemError("");
                   navigator.clipboard.writeText(authInfo?.referralCode || ""); // Copy referral code
                   handleCopy(); // Trigger notification
                 }}

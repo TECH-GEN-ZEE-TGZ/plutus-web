@@ -742,6 +742,11 @@ export const StyledUser = styled(motion.main)`
           isolation: isolate;
           /* row-gap: 10%; */
 
+          > .error {
+            font-size: ${fixedHeight(2)}px;
+            color: red;
+          }
+
           > h4 {
             font-size: ${fixedHeight(1.75)}px;
           }

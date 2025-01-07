@@ -203,7 +203,7 @@ export const makeapiCall = (
     })
 };
 
-export const generate_payment_link_hubtel = (domain, apiKey, addNotification, token, paymentData, orderData, onSuccess) => {
+export const generate_payment_link_hubtel = (domain, apiKey, formError, token, paymentData, orderData, onSuccess) => {
 
   const url = domain + "/optimus/v1/api/payment/generate";
   const adjustedAmountGHS = parseFloat(paymentData.amountGHS) + (parseFloat(paymentData.amountGHS) * 0.02);
@@ -242,16 +242,16 @@ export const generate_payment_link_hubtel = (domain, apiKey, addNotification, to
         onSuccess();
         window.location.href = paymentUrl;
       } else {
-        addNotification("Error", "Error generating payment link");
+        formError("Error generating payment link");
         onSuccess();
       }
     })
     .catch((error) => {
       if (error.status === 400) {
-        addNotification("Error", "Amount not feasible, please reduce or contact admin!");
+        formError("Amount not feasible, please reduce or contact admin!");
         onSuccess();
       } else {
-        addNotification("Error", "Unexpected Error");
+        formError("Unexpected Error");
         onSuccess();
       }
     });
