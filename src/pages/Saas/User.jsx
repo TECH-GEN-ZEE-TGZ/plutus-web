@@ -558,44 +558,43 @@ const Buy = ({ allCoins }) => {
 
     try {
       const response = await axios.get(
-        `${domain}/optimus/v1/api/cryptomus/exchange-rate/${coin.toUpperCase()}?to=USD`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-API-KEY": apiKey,
-          },
-        }
+      `${domain}/optimus/v1/api/cryptomus/exchange-rate/${coin.toUpperCase()}?to=USD`,
+      {
+        headers: {
+        "Content-Type": "application/json",
+        "X-API-KEY": apiKey,
+        },
+      }
       );
 
-
-      const exchangeRate = parseFloat(response?.data?.result[0]?.course).toFixed(2);
-      const withdrawalFee = Math.ceil(parseFloat(response?.data?.result[0]?.withdrawalFee) * 100) / 100;
+      const exchangeRate = new Decimal(response?.data?.result[0]?.course).toFixed(2);
+      const withdrawalFee = new Decimal(response?.data?.result[0]?.withdrawalFee).toDecimalPlaces(2, Decimal.ROUND_UP);
 
       // Calculate the fiat amount before fees to determine the fee tier
-      let fiatEquivalent = cryptoVal * exchangeRate;
-      let additionalFee = 0;
+      let fiatEquivalent = new Decimal(cryptoVal).times(exchangeRate);
+      let additionalFee = new Decimal(0);
 
       // Apply fee rules based on fiat amount
-      if (fiatEquivalent >= 0 && fiatEquivalent <= 50) {
-        additionalFee = 3;
-      } else if (fiatEquivalent > 50 && fiatEquivalent <= 100) {
-        additionalFee = 4;
-      } else if (fiatEquivalent > 100) {
-        additionalFee = 0.05 * fiatEquivalent; // 5% of the purchase amount
+      if (fiatEquivalent.greaterThanOrEqualTo(0) && fiatEquivalent.lessThanOrEqualTo(50)) {
+      additionalFee = new Decimal(3);
+      } else if (fiatEquivalent.greaterThan(50) && fiatEquivalent.lessThanOrEqualTo(100)) {
+      additionalFee = new Decimal(4);
+      } else if (fiatEquivalent.greaterThan(100)) {
+      additionalFee = fiatEquivalent.times(0.05); // 5% of the purchase amount
       }
 
-      const totalFee = withdrawalFee + additionalFee;
-      setTotalFee(totalFee);
-      // setBuyFee(totalFee);
+      const totalFee = withdrawalFee.plus(additionalFee);
+      setTotalFee(totalFee.toFixed(2));
+      setBuyFee(totalFee.toFixed(2));
 
-      const totalPay = (fiatEquivalent + totalFee) * ghsRate;
-      setGhsAmountToPay(totalPay);
+      const totalPay = fiatEquivalent.plus(totalFee).times(ghsRate);
+      setGhsAmountToPay(totalPay.toFixed(2));
+
       // Calculate the total amount to pay including fees
       if (payWith.symbol === "GHS") {
-        setPayVal((fiatEquivalent * ghsRate).toFixed(2));
-
+      setPayVal(fiatEquivalent.times(ghsRate).toFixed(2));
       } else {
-        setPayVal(fiatEquivalent.toFixed(2));
+      setPayVal(fiatEquivalent.toFixed(2));
       }
 
     } catch (error) {
@@ -717,8 +716,12 @@ const Buy = ({ allCoins }) => {
   }, [allCoins]);
 
   useEffect(() => {
-    getExchangeRateP(buying?.symbol?.toLowerCase());
     getExchangeRateB(buying?.symbol?.toLowerCase());
+    setFormError("");
+  }, [payWith]);
+
+  useEffect(() => {
+    getExchangeRateP(buying?.symbol?.toLowerCase());
     setFormError("");
   }, [buying]);
 
@@ -737,13 +740,13 @@ const Buy = ({ allCoins }) => {
         setExRate(exchange.toFixed(2));
         setBuyFee(feeFromApi.toFixed(2));
       } catch (error) {
-        setExchangeRateError('Error fetching fee');
+        setWalletError('Error fetching fee');
         setBuyFee(0); // Reset to default or handle error as needed
       }
     };
 
     fetchFee();
-  }, [buying]); // Depen
+  }, [buying, payWith]); // Depen
 
   return (
     <>
