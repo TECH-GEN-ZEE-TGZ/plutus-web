@@ -1,0 +1,289 @@
+[33mcommit fa7101f8285ae4e1423f5a111dc1e6f50ef135f2[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Tue Jan 7 20:47:27 2025 +0000
+
+    fix tha amount calculation issue
+
+[33mcommit 2e66b4077b6f5e26b0bc240a7a454b01bba3daad[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Tue Jan 7 18:01:02 2025 +0000
+
+    Update: Made the merchang Id an env variable
+
+[33mcommit 2697886eee1ac62871a40a5074c95a24851eb0b3[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Tue Jan 7 17:57:31 2025 +0000
+
+    Update: Made the cedi rate an environmental variable
+
+[33mcommit efd8f195e6007d60564fd39082a8627102590dd5[m[33m ([m[1;31mvercel/main[m[33m)[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Tue Jan 7 17:07:43 2025 +0000
+
+    change the notifications aarea to in doc
+
+[33mcommit 4640a54946ebd0857e9e10294b45c3f96b64fc19[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Tue Jan 7 00:50:26 2025 +0000
+
+    update
+
+[33mcommit 70ca4aacbb2e0cf54fdec5c9bb1d5f9f27ff0a17[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Mon Jan 6 23:42:39 2025 +0000
+
+    updated to fix the generating url error
+
+[33mcommit 02172cf4fd3a5b8ed5b8da0cd2ec0e3894e17a3e[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Mon Jan 6 23:28:55 2025 +0000
+
+    update
+
+[33mcommit a27a070d5257b0658b84c942bc8d82c3f9a88bc4[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Mon Jan 6 22:31:46 2025 +0000
+
+    Fix: removed validaiton for bitcoin address
+
+[33mcommit bef76a01d6da5cd0f0523a58382e216d627c3525[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Mon Jan 6 22:07:56 2025 +0000
+
+    final update in the vite config
+
+[33mcommit e71c58e05dd4f62c191c82f1371197c988db9ee4[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Mon Jan 6 21:09:24 2025 +0000
+
+    update
+
+[33mcommit c71a76f1a997a7cf1cc0a11bcb493a29d37dad2c[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Mon Jan 6 21:02:33 2025 +0000
+
+    update
+
+[33mcommit 2382fc9f75e9e1a9ecb1936b640067be23bcac1b[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Mon Jan 6 20:57:31 2025 +0000
+
+    update
+
+[33mcommit 9217ab987770d78b04d7deff2009fac329e06670[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Mon Jan 6 20:40:06 2025 +0000
+
+    update
+
+[33mcommit 31982a40f8259ef468beb2ac52e325a3377af5f6[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Mon Jan 6 20:34:24 2025 +0000
+
+    update
+
+[33mcommit 463ff1a6c1c73d598d43c7bc7ccd0aca65035454[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Mon Jan 6 20:22:16 2025 +0000
+
+    Fix: fixed bitcoin address not validating
+
+[33mcommit 0fe03c0bcec3ed9686b8551ba07bda8081a62dab[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Mon Jan 6 20:16:17 2025 +0000
+
+    Fix: fixed bitcoin address not validating
+
+[33mcommit 0d16bc6fc5525ea8d15e5bc7bdd9f4ccdda7ed87[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Mon Jan 6 19:57:50 2025 +0000
+
+    Fix: fixed bitcoin address not validating
+
+[33mcommit 24b3788cda0756ecf3c2f174604d30fcee63263b[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Mon Jan 6 18:45:32 2025 +0000
+
+    Change: fixed the exchange rate section and the fee calculation
+
+[33mcommit 9bf6323cebcf56b2dabefc9de40d2ef72b739a8a[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Mon Jan 6 17:51:18 2025 +0000
+
+    Change: the algorith for calculating the fee
+
+[33mcommit 4bc5630ae7cfb2c752b872cf0c6c4fb5a0cff74f[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Mon Jan 6 13:07:42 2025 +0000
+
+    Add: added error message to handle amount not feasible
+
+[33mcommit 4936b95d540e55e5f94ffce9fcbb45597ddcc682[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Mon Jan 6 10:24:57 2025 +0000
+
+    Fix: suffered to fix the crypto chart
+
+[33mcommit d28872733831cd40da4b58fc80202c1bd29ccf38[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Mon Jan 6 09:31:44 2025 +0000
+
+    Change: change the referral slab backgorung
+
+[33mcommit ba08015ff1f1e240626c77aaac629a86bfaf8810[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Mon Jan 6 00:55:54 2025 +0000
+
+    Change: changed the ghs amount back to  original value
+
+[33mcommit 1bbb5e9c7bb429ab1e86cbb65a88864986140588[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Mon Jan 6 00:55:01 2025 +0000
+
+    Change: remove the verification logic using the checkoutId
+
+[33mcommit 2ad7d8c3ece857791657a22758cb93b3dbf34fbe[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Mon Jan 6 00:43:19 2025 +0000
+
+    Fix: suffered to fix the crypto chart
+
+[33mcommit 370f59ad4f73b0a7edcc8a7b6812d7bc2e3b5c21[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sun Jan 5 20:28:52 2025 +0000
+
+    update
+
+[33mcommit b18db9c565a85007e1724866164806adbfa2a916[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sun Jan 5 14:04:35 2025 +0000
+
+    update
+
+[33mcommit 364525505f5be7d41dedf03ee97b0402788606a9[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sun Jan 5 13:13:27 2025 +0000
+
+    update
+
+[33mcommit bae5a8e45a7e5ea0d2529463c9830defbe9102d6[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sun Jan 5 13:02:05 2025 +0000
+
+    update
+
+[33mcommit 20703650a56f89c1c0fc5f1e46c86f8a66008308[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sun Jan 5 12:50:59 2025 +0000
+
+    update
+
+[33mcommit 29ce07161adae6d5d8c7710ce44fad0193bd04f5[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sun Jan 5 12:39:38 2025 +0000
+
+    update
+
+[33mcommit 04e6571f19914f461637f91450e1e53057caefc4[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sun Jan 5 12:26:13 2025 +0000
+
+    update
+
+[33mcommit 48c714fc434867e8d206cea662570a0e91962fa3[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sun Jan 5 11:00:56 2025 +0000
+
+    update
+
+[33mcommit 2ab7254e4c52f9eb375bc43d6e01773b522be670[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sun Jan 5 10:40:33 2025 +0000
+
+    update
+
+[33mcommit a634fa5eb82f9705cf0b9c9d8f533d68aee1bfbe[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sun Jan 5 10:26:10 2025 +0000
+
+    update
+
+[33mcommit c3c44d0131a56e604d44daaa546528504b19c960[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sun Jan 5 10:23:22 2025 +0000
+
+    update
+
+[33mcommit 75c3e2f302346f771bed71af7245077d9d042eb3[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sun Jan 5 10:10:31 2025 +0000
+
+    update
+
+[33mcommit 700704ec6976c28ab8d084f40c59c24ef0da13ce[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sun Jan 5 02:57:34 2025 +0000
+
+    update
+
+[33mcommit 00986836bd8330296bd1260a199aa4ee005fa1b7[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sun Jan 5 01:17:08 2025 +0000
+
+    update
+
+[33mcommit 6f9d380396d1558caf2f02f63fb209f10ceaba6d[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sun Jan 5 01:09:45 2025 +0000
+
+    update
+
+[33mcommit 3ed30aef0af57352e2237bcd83b55efe5cd3c73f[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sun Jan 5 00:41:49 2025 +0000
+
+    update
+
+[33mcommit fcff5c04b1c0a775fb893613edb482bb11f0ce1a[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sun Jan 5 00:34:15 2025 +0000
+
+    update
+
+[33mcommit f4f63f5c4164a7a3d3d06b14529591b15cda38be[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sun Jan 5 00:24:34 2025 +0000
+
+    update
+
+[33mcommit d294a24cba2833c554f54333b3f42f1b0680fc4f[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sun Jan 5 00:19:44 2025 +0000
+
+    update
+
+[33mcommit 35d0088a228ba1e6d7889a1158ef9992290aae46[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sat Jan 4 23:32:07 2025 +0000
+
+    update
+
+[33mcommit c50254aa3e22daeeedbcb5ed7406650478027795[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sat Jan 4 22:50:23 2025 +0000
+
+    update
+
+[33mcommit 65250573d3a9c73b2e552e821a67fa1ac13eaf80[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sat Jan 4 22:31:02 2025 +0000
+
+    update
+
+[33mcommit 1fd6465a22734b794558cf316d43899de838d070[m
+Author: Young Plutus <malicksamah3@gmail.com>
+Date:   Sat Jan 4 22:18:28 2025 +0000
+
+    update
+
+[33mcommit 5fe9ed3ae9d89f3f516a

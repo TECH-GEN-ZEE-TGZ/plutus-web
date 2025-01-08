@@ -520,15 +520,14 @@ const Buy = ({ allCoins }) => {
       }
 
       setTotalFee(totalFeeUSD);
-      setBuyFee(totalFee);
+      // setBuyFee(totalFee);
 
       // Update the state with calculated values
-      setExRate(exchangeRate);
       if (exchangeRate) {
         if (payWith.symbol === "GHS") {
           const ghsAmountWithoutFee = payVal > 0 ? payVal : 0;
           const ghsAmountWithFee = ghsAmountWithoutFee + (totalFeeUSD * ghsRate); // Convert fee back to GHS to subtract
-          setCryptoVal((ghsAmountWithoutFee / ghsRate / exchangeRate).toFixed(8));
+          setCryptoVal(((ghsAmountWithoutFee / ghsRate) / exchangeRate).toFixed(8));
           setGhsAmountToPay(ghsAmountWithFee.toFixed(2));
         } else {
           const usdAmountWithoutFee = payVal > 0 ? payVal : 0;
@@ -537,11 +536,12 @@ const Buy = ({ allCoins }) => {
           setGhsAmountToPay((usdAmountWithFee * ghsRate).toFixed(2));
         }
       } else {
+        setFormError("Exchange rate is null");
         setCryptoVal(0);
         setGhsAmountToPay(0);
       }
     } catch (error) {
-      exchangeRateError("Error fetching exchange rate!");
+      setExchangeRateError("Error fetching exchange rate!");
       setCryptoVal(0);
     } finally {
       setExBuy(false);
@@ -567,6 +567,7 @@ const Buy = ({ allCoins }) => {
         }
       );
 
+
       const exchangeRate = parseFloat(response?.data?.result[0]?.course).toFixed(2);
       const withdrawalFee = Math.ceil(parseFloat(response?.data?.result[0]?.withdrawalFee) * 100) / 100;
 
@@ -585,7 +586,7 @@ const Buy = ({ allCoins }) => {
 
       const totalFee = withdrawalFee + additionalFee;
       setTotalFee(totalFee);
-      setBuyFee(totalFee);
+      // setBuyFee(totalFee);
 
       const totalPay = (fiatEquivalent + totalFee) * ghsRate;
       setGhsAmountToPay(totalPay);
@@ -598,7 +599,7 @@ const Buy = ({ allCoins }) => {
       }
 
     } catch (error) {
-      exchangeRateError("Error fetching exchange rate!");
+      setExchangeRateError("Error fetching exchange rate!");
       setPayVal(0);
     } finally {
       setExPay(false);
@@ -661,7 +662,7 @@ const Buy = ({ allCoins }) => {
       case "xmr":
         return await validateMoneroAddress(walletAddress);
       default:
-        return false; // Unsupported crypto type
+        return false;
     }
   };
 
@@ -732,9 +733,11 @@ const Buy = ({ allCoins }) => {
         });
 
         const feeFromApi = parseFloat(response?.data?.result[0]?.withdrawalFee);
+        const exchange = parseFloat(response?.data?.result[0].course);
+        setExRate(exchange.toFixed(2));
         setBuyFee(feeFromApi.toFixed(2));
       } catch (error) {
-        console.error('Error fetching fee');
+        setExchangeRateError('Error fetching fee');
         setBuyFee(0); // Reset to default or handle error as needed
       }
     };
