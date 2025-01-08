@@ -486,7 +486,7 @@ const Buy = ({ allCoins }) => {
 
       // Determine fee based on the purchase amount
       let additionalFee = 0;
-      const purchaseAmountUSD = payWith?.symbol === "GHS" ? (payVal / ghsRate) : payVal;
+      const purchaseAmountUSD = payWith?.symbol === "GHS" ? (parseFloat(payVal) / parseFloat(ghsRate)) : parseFloat(payVal);
 
       if (purchaseAmountUSD >= 0 && purchaseAmountUSD <= 50) {
         additionalFee = 3;
@@ -519,19 +519,19 @@ const Buy = ({ allCoins }) => {
         setPayValError("");
       }
 
-      setTotalFee(totalFeeUSD);
-      // setBuyFee(totalFee);
+      setTotalFee(totalFeeUSD.toFixed(2));
+      setBuyFee(totalFeeUSD.toFixed(2));
 
       // Update the state with calculated values
       if (exchangeRate) {
-        if (payWith.symbol === "GHS") {
-          const ghsAmountWithoutFee = payVal > 0 ? payVal : 0;
-          const ghsAmountWithFee = ghsAmountWithoutFee + (totalFeeUSD * ghsRate); // Convert fee back to GHS to subtract
+        if (payWith?.symbol === "GHS") {
+          const ghsAmountWithoutFee = parseFloat(payVal) > 0 ? parseFloat(payVal) : 0;
+          const ghsAmountWithFee = ghsAmountWithoutFee + parseFloat(totalFeeGHS);
           setCryptoVal(((ghsAmountWithoutFee / ghsRate) / exchangeRate).toFixed(8));
           setGhsAmountToPay(ghsAmountWithFee.toFixed(2));
         } else {
-          const usdAmountWithoutFee = payVal > 0 ? payVal : 0;
-          const usdAmountWithFee = usdAmountWithoutFee + totalFeeUSD;
+          const usdAmountWithoutFee = parseFloat(payVal) > 0 ? parseFloat(payVal) : 0;
+          const usdAmountWithFee = usdAmountWithoutFee + parseFloat(totalFeeUSD);
           setCryptoVal((usdAmountWithFee / exchangeRate).toFixed(8));
           setGhsAmountToPay((usdAmountWithFee * ghsRate).toFixed(2));
         }
@@ -593,7 +593,7 @@ const Buy = ({ allCoins }) => {
       // Calculate the total amount to pay including fees
       if (payWith.symbol === "GHS") {
         setPayVal((fiatEquivalent * ghsRate).toFixed(2));
-       
+
       } else {
         setPayVal(fiatEquivalent.toFixed(2));
       }
