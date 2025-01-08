@@ -214,11 +214,6 @@ export const generate_payment_link_hubtel = (domain, apiKey, formError, token, p
   };
 
   const data = {
-    "description": paymentData.description,
-    "callbackUrl": paymentData.callbackUrl,
-    "returnUrl": paymentData.returnUrl,
-    "merchantAccountNumber": paymentData.merchantAccountNumber,
-    "cancellationUrl": paymentData.cancellationUrl,
     "clientReference": paymentData.clientReference,
     "currency": "GHS",
     "amountGHS": adjustedAmountGHS,

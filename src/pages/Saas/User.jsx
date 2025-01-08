@@ -666,11 +666,6 @@ const Buy = ({ allCoins }) => {
   };
 
   const paymentData = {
-    description: `Item Purchase`,
-    callbackUrl: `${domain}/optimus/v1/api/payment/callback`,
-    returnUrl: "https://theplutushome.com/payment/success",
-    merchantAccountNumber: merchantId,
-    cancellationUrl: "https://theplutushome.com/payment/failed",
     clientReference: `Payment_${Date.now()}`,
     amountGHS: ghsAmountToPay,
   };
@@ -681,7 +676,7 @@ const Buy = ({ allCoins }) => {
     fee: totalFee,
     crypto: buying?.symbol?.toUpperCase(),
     email: authInfo?.email,
-    ghsRate: ghsRate,
+    rate: ghsRate,
     address: cryptoWallet,
   };
 
