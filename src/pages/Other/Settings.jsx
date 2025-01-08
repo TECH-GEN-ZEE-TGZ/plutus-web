@@ -20,11 +20,13 @@ const Settings = () => {
 
     if(!oldPassword || !newPassword){
       setError("No input found");
+      setTimeout(() => setError(""), 2000);
       return;
     }
 
     if (newPassword !== confirmPassword) {
       setError("New password and confirm password do not match.");
+      setTimeout(() => setError(""), 2000);
       return;
     }
 
@@ -60,10 +62,10 @@ const Settings = () => {
         addNotification("Success", "Password changed successfully");
       } else {
         const data = await response.json();
-        addNotification("Error", data.message);
+        setError(data.message);
       }
     } catch (error) {
-      addNotification("Error", error.message);
+      setError(error.message);
     } finally {
       setLoading(false);
       setTimeout(() => {
