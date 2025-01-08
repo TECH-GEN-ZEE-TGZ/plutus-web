@@ -18,6 +18,11 @@ const Settings = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    if(!oldPassword || !newPassword){
+      setError("No input found");
+      return;
+    }
+
     if (newPassword !== confirmPassword) {
       setError("New password and confirm password do not match.");
       return;
