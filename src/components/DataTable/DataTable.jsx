@@ -47,7 +47,7 @@ const TableContainer = styled.div`
             height: ${fixedHeight(4)}px;
             border-radius: 100px;
             padding: 0 2.5%;
-            font-size: ${fixedHeight(1.75 )}px;
+            font-size: ${fixedHeight(1.75)}px;
 
             @media only screen and (max-width: 768px) {
               &{
@@ -151,9 +151,13 @@ const PaginationControls = styled.div`
   }
 
   @media only screen and (max-width: 768px) {
-    & {
-      gap: 5px;
-      // display: none;
+    gap: 3px;
+    button {
+      width: ${fixedHeight(2.5)}px;
+      height: ${fixedHeight(2.5)}px;
+      > ion-icon {
+        font-size: ${fixedHeight(1.5)}px;
+      }
     }
   }
 `;
@@ -577,56 +581,56 @@ const CryptoDataTable = ({ handleCopy }) => {
                 .getMinutes()
                 .toString()
                 .padStart(2, '0')}`;
-            return (
+          return (
             <li key={index}>
               <h3 style={{ display: 'flex', alignItems: 'baseline', alignContent: 'baseline' }}>
-              <span>Hash:</span>
-              <span style={{ marginLeft: '5px' }}>
-                {transaction?.transactionId
-                ? `${transaction.transactionId.slice(0, 10)}**********${transaction.transactionId.slice(-10)}`
-                : 'N/A'}
-              </span>
-              {transaction?.transactionId && (
-                <Button
-                style={{
-                  marginLeft: '10px',
-                  display: 'inline-flex',
-                  alignItems: 'center', // Center items inside the button
-                  position: 'relative', // Allows manual adjustment
-                  top: '3px', // Adjust this value based on visual alignment
-                }}
-                onClick={() => {
-                  navigator.clipboard.writeText(transaction?.transactionId || "");
-                  handleCopy(); // Trigger notification
-                }}
-                >
-                <ion-icon name="copy-outline" style={{ fontSize: '15px' }}></ion-icon>
-                </Button>
-              )}
+                <span>Hash:</span>
+                <span style={{ marginLeft: '5px' }}>
+                  {transaction?.transactionId
+                    ? `${transaction.transactionId.slice(0, 10)}**********${transaction.transactionId.slice(-10)}`
+                    : 'N/A'}
+                </span>
+                {transaction?.transactionId && (
+                  <Button
+                    style={{
+                      marginLeft: '10px',
+                      display: 'inline-flex',
+                      alignItems: 'center', // Center items inside the button
+                      position: 'relative', // Allows manual adjustment
+                      top: '3px', // Adjust this value based on visual alignment
+                    }}
+                    onClick={() => {
+                      navigator.clipboard.writeText(transaction?.transactionId || "");
+                      handleCopy(); // Trigger notification
+                    }}
+                  >
+                    <ion-icon name="copy-outline" style={{ fontSize: '15px' }}></ion-icon>
+                  </Button>
+                )}
               </h3>
               <h3 style={{ display: 'flex', alignItems: 'baseline' }}>
-              <span>Crypto:</span> <span style={{ marginLeft: '5px' }}>{transaction?.crypto?.toUpperCase()}</span>
+                <span>Crypto:</span> <span style={{ marginLeft: '5px' }}>{transaction?.crypto?.toUpperCase()}</span>
               </h3>
               <h3 style={{ display: 'flex', alignItems: 'baseline' }}>
-              <span>Address:</span> <span style={{ marginLeft: '5px' }}>{transaction?.address}</span>
+                <span>Address:</span> <span style={{ marginLeft: '5px' }}>{transaction?.address}</span>
               </h3>
               <h3 style={{ display: 'flex', alignItems: 'baseline' }}>
-              <span>Amount (GHS):</span> <span style={{ marginLeft: '5px' }}>{transaction?.amountGHS?.toFixed(2)?.toUpperCase()}</span>
+                <span>Amount (GHS):</span> <span style={{ marginLeft: '5px' }}>{transaction?.amountGHS?.toFixed(2)?.toUpperCase()}</span>
               </h3>
               <h3 style={{ display: 'flex', alignItems: 'baseline' }}>
-              <span>Crypto Amount:</span> <span style={{ marginLeft: '5px' }}>{transaction?.cryptoAmount?.toLocaleString()?.toUpperCase()}</span>
+                <span>Crypto Amount:</span> <span style={{ marginLeft: '5px' }}>{transaction?.cryptoAmount?.toLocaleString()?.toUpperCase()}</span>
               </h3>
               <h3 style={{ display: 'flex', alignItems: 'baseline' }}>
-              <span>Rate:</span> <span style={{ marginLeft: '5px' }}>{transaction?.rate?.toLocaleString()?.toUpperCase()}</span>
+                <span>Rate:</span> <span style={{ marginLeft: '5px' }}>{transaction?.rate?.toLocaleString()?.toUpperCase()}</span>
               </h3>
               <h3 style={{ display: 'flex', alignItems: 'baseline' }}>
-              <span>Status:</span> <span style={{ marginLeft: '5px' }}>{transaction?.status?.toUpperCase()}</span>
+                <span>Status:</span> <span style={{ marginLeft: '5px' }}>{transaction?.status?.toUpperCase()}</span>
               </h3>
               <h3 style={{ display: 'flex', alignItems: 'baseline' }}>
-              <span>Date:</span> <span style={{ marginLeft: '5px' }}>{formattedDate || "N/A"}</span>
+                <span>Date:</span> <span style={{ marginLeft: '5px' }}>{formattedDate || "N/A"}</span>
               </h3>
             </li>
-            );
+          );
         })}
       </CryptoCardContainer>
     </TableContainer>

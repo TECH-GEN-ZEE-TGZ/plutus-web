@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
 import styled from "styled-components";
-import { fixedHeight, fixedWidth } from "../../Functions";
+import { fixedHeight, fixedWidth, inMobileView } from "../../Functions";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import AuthContext from "../../context/AuthContext";
-import Logo from "../../assets/img/log.png"
+import Logo from "../../assets/img/pee.jpg"
+import { FontWeight } from "@cloudinary/url-gen/qualifiers";
 
 const StyledNav = styled(motion.nav)`
   /* position: fixed; */
@@ -12,32 +13,40 @@ const StyledNav = styled(motion.nav)`
   left: 0;
   width: 100%;
   height: 7.5%;
-  padding-right: 5%;
-  padding-left: 2%;
+  padding-right: 3%;
+  padding-left: 3%;
   padding-top: 2%;
   padding-bottom: 2%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   z-index: 20;
+    > p {
+      display: none;
+      color: black;
+      font-size: ${fixedHeight(3.5)}px;
+      font-weight: 900;
+      cursor: pointer;
+      padding-right : 2;
+
+  }
+
   > .logo {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     cursor: pointer;
-    border-radius: 50%;
     overflow: hidden;
-    width: ${fixedHeight(10)}px;
-    height: ${fixedHeight(10)}px;
+    width: ${fixedHeight(13)}px;
+    height: ${fixedHeight(8)}px;
+    margin-left : 4;
 
-    > p {
-      display: none;
-      color: black;
-      font-size: ${fixedHeight(2.5)}px;
-      font-weight: 900;
-      cursor: pointer;
+    @media (max-width: 768px) {
+      width: ${fixedHeight(6)}px;
+      height: ${fixedHeight(6)}px;
     }
   }
+
   > .links {
     display: flex;
     align-items: center;
@@ -139,8 +148,10 @@ const SaasNav = () => {
           navigate("/user/buy");
         }}
       >
-        <p>The Plutus Home</p>
-        <img src={Logo} alt=""/>
+        {!inMobileView() && (
+          <p style={{ fontWeight: "bold", color: "rgb(133, 43, 153)" }}>The Plutus Home</p>
+        )}
+        <img src={Logo} alt="" />
       </div>
       {!authInfo?.token && (
         <ul className="links">

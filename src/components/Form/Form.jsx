@@ -15,8 +15,9 @@ export const StyledForm = styled(motion.form)`
   background: transparent;
   row-gap: ${fixedHeight(1.5)}px;
   > h3 {
-    font-size: ${fixedHeight(5)}px;
+    font-size: ${fixedHeight(4)}px;
     color: hsl(288.75, 40%, 30%);
+    align-self : center;
   }
   > p {
     font-size: ${fixedHeight(1.75)}px;
@@ -32,11 +33,12 @@ export const StyledForm = styled(motion.form)`
   > .logo {
     display: flex;
     align-items: center;
+    align-self : center;
     justify-content: flex-center;
     cursor: pointer;
     overflow: hidden;
-    width: ${fixedHeight(50)}px;
-    height: ${fixedHeight(30)}px;
+    width: ${fixedHeight(20)}px;
+    height: ${fixedHeight(20)}px;
   }
   > input,
   select {

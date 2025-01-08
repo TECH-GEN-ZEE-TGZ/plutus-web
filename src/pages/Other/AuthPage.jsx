@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import styled from "styled-components";
 import { fixedHeight } from "../../Functions";
-import I5 from "../../assets/img/img5.jpeg";
+import I5 from "../../assets/img/bg.jpg";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Login from "./Login";
 import Signup from "./Signup";

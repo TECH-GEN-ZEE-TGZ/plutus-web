@@ -7,7 +7,7 @@ import AuthContext from "../../context/AuthContext";
 import { makeapiCall } from "../../Functions";
 import ContextVariables from "../../context/ContextVariables";
 import { Helmet } from 'react-helmet';
-import Logo from "../../assets/img/log.png"
+import Logo from "../../assets/img/pee.jpg";
 
 
 const Login = () => {
