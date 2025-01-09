@@ -634,7 +634,7 @@ export const StyledUser = styled(motion.main)`
           column-gap: ${fixedWidth(0.5)}px;
           > .left {
             border-radius: 15px;
-            width: 45%;
+            width: 100%;
             height: 100%;
             /* background: red; */
             overflow: hidden;

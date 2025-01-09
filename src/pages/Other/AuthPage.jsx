@@ -6,6 +6,7 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import Login from "./Login";
 import Signup from "./Signup";
 import User from "../Saas/User";
+import ForgotPassword from "./ForgotPassword";
 
 export const StyledAuth = styled(motion.section)`
   width: 100%;
@@ -54,7 +55,7 @@ const AuthPage = () => {
   const navigate = useNavigate()
   return (
     <StyledAuth>
-      <div className="left" onClick={()=>{navigate("/")}}>
+      <div className="left" onClick={() => { navigate("/") }}>
         <img src={I5} alt="" />
       </div>
       <div className="right center">
@@ -75,7 +76,16 @@ const AuthPage = () => {
               </AnimatePresence>
             }
           />
-          
+
+          <Route
+            path="/forgotpassword/*"
+            element={
+              <AnimatePresence>
+                <ForgotPassword />
+              </AnimatePresence>
+            }
+          />
+
         </Routes>
       </div>
     </StyledAuth>

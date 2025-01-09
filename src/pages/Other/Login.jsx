@@ -144,46 +144,46 @@ const Login = () => {
           <button
             onClick={(e) => {
               e.preventDefault();
-              setAgree(!agree);
-            }}
-          >
-            {agree ? (
-              <ion-icon name="checkbox"></ion-icon>
+                setAgree(!agree);
+              }}
+              >
+              {agree ? (
+                <ion-icon name="checkbox"></ion-icon>
+              ) : (
+                <ion-icon name="square"></ion-icon>
+              )}
+              </button>
+              Remember me
+            </p>
+            <NavLink to="/auth/forgotpassword">Forgotten Password?</NavLink>
+            </div>
+
+            {loading ? (
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              type="submit"
+              disabled={loading}
+            >
+              <span>
+              <i className="bx bx-loader bx-spin"></i> Logging in
+              </span>
+            </motion.button>
             ) : (
-              <ion-icon name="square"></ion-icon>
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              type="submit"
+              disabled={loading}
+            >
+              <span>
+              Login <ion-icon name="arrow-forward"></ion-icon>
+              </span>
+            </motion.button>
             )}
-          </button>
-          Remember me
-        </p>
-        <NavLink>Forgotten Password?</NavLink>
-      </div>
 
-      {loading ? (
-        <motion.button
-          whileTap={{ scale: 0.95 }}
-          type="submit"
-          disabled={loading}
-        >
-          <span>
-            <i className="bx bx-loader bx-spin"></i> Logging in
-          </span>
-        </motion.button>
-      ) : (
-        <motion.button
-          whileTap={{ scale: 0.95 }}
-          type="submit"
-          disabled={loading}
-        >
-          <span>
-            Login <ion-icon name="arrow-forward"></ion-icon>
-          </span>
-        </motion.button>
-      )}
-
-      <div className="switch">
-        <p>Not a member?</p>
-        <button
-          onClick={(e) => {
+            <div className="switch">
+            <p>Not a member?</p>
+            <button
+              onClick={(e) => {
             e.preventDefault();
             navigate("/auth/signup");
           }}

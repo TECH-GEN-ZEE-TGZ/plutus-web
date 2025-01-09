@@ -10,7 +10,7 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import Login from "./Login";
 import Signup from "./Signup";
 import { StyledForm } from "../../components/Form/Form";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 
 export const StyledPay = styled(motion.section)`
@@ -60,7 +60,7 @@ export const StyledPay = styled(motion.section)`
           fill: red;
         }
         > svg.success {
-          fill: lime;
+          fill: green;
         }
       }
       > h1 {
@@ -68,6 +68,15 @@ export const StyledPay = styled(motion.section)`
       }
       > p {
         font-size: ${fixedHeight(2.25)}px;
+      }
+
+      @media only screen and (max-width: 768px) {
+        & {
+          width: 100%;
+          > h3 {
+            text-align: center;
+          }
+        }
       }
     }
 
@@ -83,20 +92,20 @@ export const StyledPay = styled(motion.section)`
       border-radius: 10px;
       padding: ${fixedHeight(5)}px;
       
-       > .progress-bar {
-          width: 90%;
-          background-color: #ddd;
-          border-radius: 5px;
-          overflow: hidden;
-          margin-bottom: 20px;
+      > .progress-bar {
+        width: 90%;
+        background-color: #ddd;
+        border-radius: 5px;
+        overflow: hidden;
+        margin-bottom: 20px;
 
-          > .progress {
-            height: 100%;
-            background-color: hsl(288.75, 40%, 30%);
-            width: 0%; 
-            transition: width 0.4s ease-in-out;
-          }
+        > .progress {
+          height: 100%;
+          background-color: hsl(288.75, 40%, 30%);
+          width: 0%; 
+          transition: width 0.4s ease-in-out;
         }
+      }
       > .step1, .step2, .step3 {
           width: ${fixedWidth(27.5)}px;
           display: flex;
@@ -122,7 +131,8 @@ export const StyledPay = styled(motion.section)`
         }
           
         > .error {
-          font-size: ${fixedHeight(2)}px;
+          font-size: ${fixedHeight(1.7)}px;
+          align-self: center;
           color: red;
         }
       
@@ -134,6 +144,10 @@ export const StyledPay = styled(motion.section)`
           padding: 0 5%;
           margin: 2% 0;
           font-size: ${fixedHeight(2)}px;
+          margin-bottom: ${fixedHeight(2.5)}px;
+          &:focus {
+            border-color: hsl(288.75, 40%, 30%);
+          }
         }
         > button {
           border-radius: 7.5px;
@@ -156,13 +170,86 @@ export const StyledPay = styled(motion.section)`
           font-size: ${fixedHeight(2.1)}px;
           font-weight: 700;
         }
+
+        > .codeArea {
+          margin: 2% 0;
+          margin-bottom: ${fixedHeight(2.5)}px;
+          >  h1 {
+            font-size: ${fixedHeight(2.5)}px;
+            color: black;
+            align-self: center;
+          }
+
+          > input {
+            font-size: ${fixedHeight(2.5)}px;
+            &:focus {
+            border-color: hsl(288.75, 40%, 30%);
+            }
+          }
+          
+        }
       }
+
+      > .step2 {
+        padding-bottom: ${fixedHeight(2)}px;
+      }
+
+      > .step3 {
+        row-gap: ${fixedHeight(1.5)}px;
+        padding-bottom: ${fixedHeight(2)}px;
+        > h3 {
+          font-size: ${fixedHeight(3)}px;
+
+        }
+      } 
 
       @media only screen and (max-width: 768px) {
         & {
           width: 100%;
           > h3 {
             text-align: center;
+          }
+        }
+        height: 40%;
+        width: 90%;
+        padding: ${fixedHeight(3)}px;
+        > .step1, .step2, .step3 {
+          width: 100%;
+          padding: ${fixedHeight(3)}px;
+          > h3 {
+            font-size: ${fixedHeight(2.5)}px;
+          }
+          > p {
+            font-size: ${fixedHeight(1.5)}px;
+            > span {
+              font-size: ${fixedHeight(1.75)}px;
+            }
+          }
+          > .error {
+            font-size: ${fixedHeight(1.5)}px;
+          }
+          > input,
+          select {
+            height: ${fixedHeight(5)}px;
+            font-size: ${fixedHeight(1.75)}px;
+          }
+          > button, > .cancel {
+            height: ${fixedHeight(5)}px;
+            font-size: ${fixedHeight(1.75)}px;
+          }
+          > .codeArea {
+            margin-bottom: ${fixedHeight(2)}px;
+            > h1 {
+              font-size: ${fixedHeight(2)}px;
+            }
+            > input {
+              font-size: ${fixedHeight(2)}px;
+            }
+          }
+        }
+        > .step3 {
+          > h3 {
+            font-size: ${fixedHeight(2.4)}px;
           }
         }
       }
@@ -288,15 +375,44 @@ const PayDone = ({ type }) => {
 
 
 function PaymentProcess() {
+  const { authInfo } = useContext(AuthContext);
   const [currentStep, setCurrentStep] = useState(1);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
+  const [initial, setInitial] = useState("MKFG");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [amountRemaining, setAmountRemaining] = useState(100);
+  const [input1, setInput1] = useState('');
+  const [input2, setInput2] = useState('');
+  const [input3, setInput3] = useState('');
+  const [input4, setInput4] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!authInfo?.token) {
+      navigate("/auth/login");
+    } 
+  }, [navigate]);
+
 
   const handlePhoneNumberSubmit = () => {
     console.log('Phone number submitted:', phoneNumber);
+    if (!/^\d{12}$/.test(phoneNumber)) {
+      setError("Phone number must be 12 digits long.");
+      setTimeout(() => { setError(""); }, 3000);
+      return;
+    }
+    if (!/^233[25]/.test(phoneNumber)) {
+      setError("Phone number must begin with 233 and be followed by 5 or 2.");
+      setTimeout(() => { setError(""); }, 3000);
+      return;
+    }
+    if (!/^\d+$/.test(phoneNumber)) {
+      setError("Phone number must contain only numbers.");
+      setTimeout(() => { setError(""); }, 3000);
+      return;
+    }
     setLoading(true);
     // Simulate API call
     setTimeout(() => {
@@ -306,6 +422,11 @@ function PaymentProcess() {
   };
 
   const handleVerificationSubmit = () => {
+    if (input1 === '' || input2 === '' || input3 === '' || input4 === '') {
+      setError("Code must be four digits");
+      setTimeout(() => { setError(""); }, 2000);
+      return;
+    }
     console.log('Verification code submitted:', verificationCode);
     setLoading(true);
     // Simulate API call
@@ -317,18 +438,51 @@ function PaymentProcess() {
 
   const handlePayment = () => {
     console.log('Payment processed');
-    navigate('/payment/success'); // Redirect on successful payment
+    setLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      // setError("Payment Incomplete");
+      // setTimeout(() => { setError("") }, 1000);
+      // setAmountRemaining(25.4);
+      // setLoading(false);
+      navigate('/payment/success'); // Redirect on successful payment
+    }, 1000);
   };
 
   const handleCancel = () => {
+    setInput1("");
+    setInput2("");
+    setInput3("");
+    setInput4("");
+    setPhoneNumber("");
+    setError("");
     setCurrentStep(1); // Reset to first step or handle cancellation
     setPhoneNumber('');
     setVerificationCode('');
   };
 
+  const handleChangeNumber = () => {
+    setCurrentStep(1);
+  }
+
   const closePage = () => {
     navigate('/payment/failed'); // Redirect on successful payment
   }
+
+  const handleCodeInput = (value, setter, nextInputRef) => {
+    setError("");
+    if (value === '' || (value.match(/[0-9]/) && value.length === 1)) {
+      setter(value);
+      if (nextInputRef && value !== '') {
+        nextInputRef.current.focus();
+      }
+    }
+  };
+
+  // Refs to access input fields
+  const inputRef2 = React.createRef();
+  const inputRef3 = React.createRef();
+  const inputRef4 = React.createRef();
 
   return (
     <div className="paymentProcess">
@@ -336,7 +490,7 @@ function PaymentProcess() {
         <ion-icon name="close" size="large"></ion-icon>
       </button>
       <div className="progress-bar">
-        <div style={{ width: `${(currentStep / 3) * 100}%`, height: '5px', backgroundColor: 'hsl(288.75, 40%, 30%);' }} className="progress"></div>
+        <div style={{ width: `${(currentStep / 3) * 100}%`, height: '10px', backgroundColor: 'hsl(288.75, 40%, 30%);' }} className="progress"></div>
       </div>
       {
         currentStep === 1 && (
@@ -344,8 +498,15 @@ function PaymentProcess() {
             <h3>Enter your payment number</h3>
             <AnimatePresence>
               {error && (
-                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="error">
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="error"
+                >
+                  <i className="bx bxs-error bx-tada"></i>
                   {error}
+                  <i className="bx bxs-error bx-tada"></i>
                 </motion.p>
               )}
             </AnimatePresence>
@@ -383,12 +544,59 @@ function PaymentProcess() {
         currentStep === 2 && (
           <div className="step2">
             <h3>Enter Verification Code</h3>
-            <input
-              type="text"
-              value={verificationCode}
-              onChange={(e) => setVerificationCode(e.target.value)}
-              placeholder="Verification Code"
-            />
+
+            <div className="codeArea" style={{ display: 'flex', justifyContent: 'center', gap: '10px', height: fixedHeight(5) }}>
+              <h1 style={{ alignSelf: 'center' }}>{initial} - </h1>
+              <input
+                type="text"
+                value={input1}
+                onChange={(e) => handleCodeInput(e.target.value, setInput1, inputRef2)}
+                maxLength="1"
+                style={{ width: '50px', textAlign: 'center' }}
+                inputMode="decimal"
+              />
+              <input
+                ref={inputRef2}
+                type="text"
+                value={input2}
+                onChange={(e) => handleCodeInput(e.target.value, setInput2, inputRef3)}
+                maxLength="1"
+                style={{ width: '50px', textAlign: 'center' }}
+                inputMode="decimal"
+              />
+              <input
+                ref={inputRef3}
+                type="text"
+                value={input3}
+                onChange={(e) => handleCodeInput(e.target.value, setInput3, inputRef4)}
+                maxLength="1"
+                style={{ width: '50px', textAlign: 'center' }}
+                inputMode="decimal"
+              />
+              <input
+                ref={inputRef4}
+                type="text"
+                value={input4}
+                onChange={(e) => handleCodeInput(e.target.value, setInput4, null)}
+                maxLength="1"
+                style={{ width: '50px', textAlign: 'center' }}
+                inputMode="decimal"
+              />
+            </div>
+            <AnimatePresence>
+              {error && (
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="error"
+                >
+                  <i className="bx bxs-error bx-tada"></i>
+                  {error}
+                  <i className="bx bxs-error bx-tada"></i>
+                </motion.p>
+              )}
+            </AnimatePresence>
             {loading ? (
               <motion.button
                 whileTap={{ scale: 0.95 }}
@@ -409,24 +617,64 @@ function PaymentProcess() {
                   Verify <ion-icon name="arrow-forward"></ion-icon>
                 </span>
               </motion.button>
+
             )}
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              type="button"
+              className="cancel"
+              onClick={handleChangeNumber}
+            >
+              <span>
+                Change Number <ion-icon name="arrow-back"></ion-icon>
+              </span>
+            </motion.button>
           </div>
         )
       }
       {
         currentStep === 3 && (
           <div className="step3">
-            <h3>Confirm Payment</h3>
-            <p>Make Payment of Amount to #123456789</p>
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              type="button"
-              onClick={handlePayment}
-            >
-              <span>
-                Payment Made <ion-icon name="arrow-forward"></ion-icon>
-              </span>
-            </motion.button>
+            <h3>Make Payment on <span style={{ color: 'green' }}>*713*5713#</span></h3>
+            <h3>Name - <span style={{ color: 'green' }}>The Plutus Home</span></h3>
+            <h3>Amount Remaining - <span style={{ color: 'green' }}>GH₵ {amountRemaining}</span></h3>
+
+            <AnimatePresence>
+              {error && (
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="error"
+                >
+                  <i className="bx bxs-error bx-tada"></i>
+                  {error}
+                  <i className="bx bxs-error bx-tada"></i>
+                </motion.p>
+              )}
+            </AnimatePresence>
+
+            {loading ? (
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                type="button"
+                disabled={loading}
+              >
+                <span>
+                  <i className="bx bx-loader bx-spin"></i> Checking Payment...
+                </span>
+              </motion.button>
+            ) : (
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                type="button"
+                onClick={handlePayment}
+              >
+                <span>
+                  Payment Made <ion-icon name="arrow-forward"></ion-icon>
+                </span>
+              </motion.button>
+            )}
             <motion.button
               whileTap={{ scale: 0.95 }}
               type="button"

@@ -27,7 +27,7 @@ export const StyledForm = styled(motion.form)`
     }
   }
   > .error {
-    font-size: ${fixedHeight(2)}px;
+    font-size: ${fixedHeight(1.8)}px;
     color: red;
   }
   > .logo {
@@ -77,7 +77,7 @@ export const StyledForm = styled(motion.form)`
           font-size: ${fixedHeight(3)}px;
           color: silver;
           &[name="checkbox"] {
-            color: lime;
+            color:  hsl(289.09, 55%, 45%);
           }
         }
       }
@@ -104,7 +104,7 @@ export const StyledForm = styled(motion.form)`
         font-size: ${fixedHeight(3)}px;
 
         &[name="checkbox"] {
-          color: lime;
+          color: hsl(289.09, 55%, 45%);
         }
       }
     }
@@ -222,7 +222,7 @@ export const StyledFormS = styled(motion.form)`
           font-size: ${fixedHeight(3)}px;
           color: silver;
           &[name="checkbox"] {
-            color: lime;
+            color: hsl(289.09, 55%, 45%);
           }
         }
       }
@@ -249,7 +249,7 @@ export const StyledFormS = styled(motion.form)`
         font-size: ${fixedHeight(3)}px;
 
         &[name="checkbox"] {
-          color: lime;
+          color: hsl(289.09, 55%, 45%);
         }
       }
     }

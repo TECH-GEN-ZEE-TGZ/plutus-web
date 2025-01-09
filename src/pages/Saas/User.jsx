@@ -262,30 +262,11 @@ const Dashboard = ({ handleCopy }) => {
               <div className="txt">
                 <h1>The latest Upcoming News</h1>
                 <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias
-                  consequuntur velit natus, quas nisi sunt.
+                  Bitcoin is decreasing steadily. Should traders be worried?
                 </p>
               </div>
             </div>
-            <div className="right">
-              <ul className="scrollable">
-                {recentNotifs?.map((notif, idx) => (
-                  <li key={idx}>
-                    <div className="icon center">
-                      {/* <i className="bx bx-download"></i> */}
-                      <img src={I2} alt="" />
-                    </div>
-                    <div className="info">
-                      <h3>Crypto convert christmas exclusive!!!</h3>
-                      <p>
-                        Lorem ipsum dolor, sit amet consectetur adipisicing
-                        elit. Est, atque!
-                      </p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
+         
           </div>
         </div>
         <div className="right">
@@ -986,7 +967,7 @@ const Buy = ({ allCoins }) => {
         </div>
         <div className="line">
           <h3>Amount To Pay</h3>
-          <p>{ghsAmountToPay} GHS</p>
+          <p>GH₵ {ghsAmountToPay}</p>
         </div>
       </div>
 

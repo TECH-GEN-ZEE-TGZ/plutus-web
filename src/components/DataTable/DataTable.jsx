@@ -498,7 +498,7 @@ const CryptoDataTable = ({ handleCopy }) => {
               Address
             </TableHeader>
             <TableHeader onClick={() => handleSort("amountGHS")}>
-              Amount (GHS)
+              Amount (GH₵)
             </TableHeader>
             <TableHeader onClick={() => handleSort("cryptoAmount")}>
               Crypto Amount
@@ -615,7 +615,7 @@ const CryptoDataTable = ({ handleCopy }) => {
                 <span>Address:</span> <span style={{ marginLeft: '5px' }}>{transaction?.address}</span>
               </h3>
               <h3 style={{ display: 'flex', alignItems: 'baseline' }}>
-                <span>Amount (GHS):</span> <span style={{ marginLeft: '5px' }}>{transaction?.amountGHS?.toFixed(2)?.toUpperCase()}</span>
+                <span>Amount (GH₵):</span> <span style={{ marginLeft: '5px' }}>{transaction?.amountGHS?.toFixed(2)?.toUpperCase()}</span>
               </h3>
               <h3 style={{ display: 'flex', alignItems: 'baseline' }}>
                 <span>Crypto Amount:</span> <span style={{ marginLeft: '5px' }}>{transaction?.cryptoAmount?.toLocaleString()?.toUpperCase()}</span>
