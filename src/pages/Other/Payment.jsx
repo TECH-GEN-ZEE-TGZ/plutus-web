@@ -1,11 +1,16 @@
 import { AnimatePresence, motion } from "framer-motion";
+import { useSearchParams } from "react-router-dom";
+import axios from "axios";
+import ContextVariables from "../../context/ContextVariables";
+import AuthContext from "../../context/AuthContext";
 import styled from "styled-components";
 import { fixedHeight, fixedWidth } from "../../Functions";
 import I5 from "../../assets/img/img5.jpeg";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Login from "./Login";
 import Signup from "./Signup";
-import { useContext, useEffect } from "react";
+import { StyledForm } from "../../components/Form/Form";
+import { useContext, useEffect, useState } from "react";
 
 
 export const StyledPay = styled(motion.section)`
@@ -24,6 +29,7 @@ export const StyledPay = styled(motion.section)`
       position: absolute;
       z-index: 1;
     }
+
     > h1 {
       color: white;
       font-size: ${fixedHeight(5)}px;
@@ -33,11 +39,13 @@ export const StyledPay = styled(motion.section)`
   > .right {
     width: 100%;
     height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     > .payDone {
       width: 40%;
       min-height: ${fixedHeight(40)}px;
       height: auto;
-      /* border: 1px solid red; */
       flex-direction: column;
       row-gap: ${fixedHeight(2.5)}px;
       > h3 {
@@ -62,15 +70,119 @@ export const StyledPay = styled(motion.section)`
         font-size: ${fixedHeight(2.25)}px;
       }
     }
+
+    > .paymentProcess {
+      background-color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      height: 50%;
+      border: 1px solid white;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      padding: ${fixedHeight(5)}px;
+      
+       > .progress-bar {
+          width: 90%;
+          background-color: #ddd;
+          border-radius: 5px;
+          overflow: hidden;
+          margin-bottom: 20px;
+
+          > .progress {
+            height: 100%;
+            background-color: hsl(288.75, 40%, 30%);
+            width: 0%; 
+            transition: width 0.4s ease-in-out;
+          }
+        }
+      > .step1, .step2, .step3 {
+          width: ${fixedWidth(27.5)}px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          padding: ${fixedHeight(5)}px;
+          background: transparent;
+          row-gap: ${fixedHeight(1.5)}px;
+
+        > h3 {
+          font-size: ${fixedHeight(3)}px;
+          color: hsl(288.75, 40%, 30%);
+          align-self: center;
+        }
+
+        > p {
+          font-size: ${fixedHeight(1.75)}px;
+
+          > span {
+            font-size: ${fixedHeight(2)}px;
+            font-weight: 600;
+          }
+        }
+          
+        > .error {
+          font-size: ${fixedHeight(2)}px;
+          color: red;
+        }
+      
+        > input,
+        select {
+          border: 1px solid silver;
+          border-radius: 7.5px;
+          height: ${fixedHeight(6)}px;
+          padding: 0 5%;
+          margin: 2% 0;
+          font-size: ${fixedHeight(2)}px;
+        }
+        > button {
+          border-radius: 7.5px;
+          height: ${fixedHeight(6)}px;
+          background: linear-gradient(
+            135deg,
+            hsl(288.75, 40%, 30%),
+            hsl(289.09, 55%, 45%)
+          );
+          color: white;
+          font-size: ${fixedHeight(2.1)}px;
+        }
+
+        > .cancel {
+          border-radius: 7.5px;
+          height: ${fixedHeight(6)}px;
+          background: transparent;
+          color: hsl(288.75, 40%, 30%);
+          border: 2px solid hsl(288.75, 40%, 30%);
+          font-size: ${fixedHeight(2.1)}px;
+          font-weight: 700;
+        }
+      }
+
+      @media only screen and (max-width: 768px) {
+        & {
+          width: 100%;
+          > h3 {
+            text-align: center;
+          }
+        }
+      }
+    }
   }
 `;
 
 const Payment = () => {
-  const navigate = useNavigate();
   return (
     <StyledPay>
-      <div className="right center">
+      <div className="right">
         <Routes>
+          <Route
+            path="/"
+            element={
+              <AnimatePresence>
+                <PaymentProcess />
+              </AnimatePresence>
+            }
+          />
           <Route
             path="/success/*"
             element={
@@ -95,18 +207,12 @@ const Payment = () => {
 
 export default Payment;
 
-import { useSearchParams } from "react-router-dom";
-import axios from "axios";
-import ContextVariables from "../../context/ContextVariables";
-import AuthContext from "../../context/AuthContext";
+
 
 const PayDone = ({ type }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const checkoutId = searchParams.get("checkoutid");
-  const { domain, apiKey } = useContext(ContextVariables);
-  const { authInfo } = useContext(AuthContext);
-
   useEffect(() => {
     // const performCheckoutActions = async () => {
     //   if (checkoutId) {
@@ -136,8 +242,8 @@ const PayDone = ({ type }) => {
     //     navigate("/user/buy", { state: { reload: true } });
     //   }, 2000);
     // };
-
     // performCheckoutActions();
+
     setTimeout(() => {
       navigate("/user/buy", { state: { reload: true } });
     }, 2000);
@@ -179,3 +285,161 @@ const PayDone = ({ type }) => {
     </div>
   );
 };
+
+
+function PaymentProcess() {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [verificationCode, setVerificationCode] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handlePhoneNumberSubmit = () => {
+    console.log('Phone number submitted:', phoneNumber);
+    setLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      setLoading(false);
+      setCurrentStep(2); // Move to next step only on success
+    }, 1000);
+  };
+
+  const handleVerificationSubmit = () => {
+    console.log('Verification code submitted:', verificationCode);
+    setLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      setLoading(false);
+      setCurrentStep(3); // Move to final step only on success
+    }, 1000);
+  };
+
+  const handlePayment = () => {
+    console.log('Payment processed');
+    navigate('/payment/success'); // Redirect on successful payment
+  };
+
+  const handleCancel = () => {
+    setCurrentStep(1); // Reset to first step or handle cancellation
+    setPhoneNumber('');
+    setVerificationCode('');
+  };
+
+  const closePage = () => {
+    navigate('/payment/failed'); // Redirect on successful payment
+  }
+
+  return (
+    <div className="paymentProcess">
+      <button onClick={closePage} style={{ position: 'absolute', top: '10px', right: '10px', background: 'transparent', border: 'none', cursor: 'pointer', color: 'red' }}>
+        <ion-icon name="close" size="large"></ion-icon>
+      </button>
+      <div className="progress-bar">
+        <div style={{ width: `${(currentStep / 3) * 100}%`, height: '5px', backgroundColor: 'hsl(288.75, 40%, 30%);' }} className="progress"></div>
+      </div>
+      {
+        currentStep === 1 && (
+          <div className="step1">
+            <h3>Enter your payment number</h3>
+            <AnimatePresence>
+              {error && (
+                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="error">
+                  {error}
+                </motion.p>
+              )}
+            </AnimatePresence>
+            <input
+              type="text"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              placeholder="233XXXXXXXXX"
+            />
+            {loading ? (
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                type="button"
+                disabled={loading}
+              >
+                <span>
+                  <i className="bx bx-loader bx-spin"></i> Sending Code...
+                </span>
+              </motion.button>
+            ) : (
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                type="button"
+                onClick={handlePhoneNumberSubmit}
+              >
+                <span>
+                  Send Code <ion-icon name="arrow-forward"></ion-icon>
+                </span>
+              </motion.button>
+            )}
+          </div>
+        )
+      }
+      {
+        currentStep === 2 && (
+          <div className="step2">
+            <h3>Enter Verification Code</h3>
+            <input
+              type="text"
+              value={verificationCode}
+              onChange={(e) => setVerificationCode(e.target.value)}
+              placeholder="Verification Code"
+            />
+            {loading ? (
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                type="button"
+                disabled={loading}
+              >
+                <span>
+                  <i className="bx bx-loader bx-spin"></i> Verifying...
+                </span>
+              </motion.button>
+            ) : (
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                type="button"
+                onClick={handleVerificationSubmit}
+              >
+                <span>
+                  Verify <ion-icon name="arrow-forward"></ion-icon>
+                </span>
+              </motion.button>
+            )}
+          </div>
+        )
+      }
+      {
+        currentStep === 3 && (
+          <div className="step3">
+            <h3>Confirm Payment</h3>
+            <p>Make Payment of Amount to #123456789</p>
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              type="button"
+              onClick={handlePayment}
+            >
+              <span>
+                Payment Made <ion-icon name="arrow-forward"></ion-icon>
+              </span>
+            </motion.button>
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              type="button"
+              className="cancel"
+              onClick={handleCancel}
+            >
+              <span>
+                Cancel <ion-icon name="arrow-back"></ion-icon>
+              </span>
+            </motion.button>
+          </div>
+        )
+      }
+    </div>
+  );
+}

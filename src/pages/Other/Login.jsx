@@ -101,10 +101,8 @@ const Login = () => {
       <Helmet>
         <script src="https://www.google.com/recaptcha/api.js?render=6LeG0KEqAAAAAB0ij0gsJi4IFC6RC1dU-UpLFjfQ" async defer></script>
       </Helmet>
-      <div
-        className="logo"
-      >
-        <img src={Logo} alt="" />
+      <div className="logo">
+        <img src={Logo} alt=""/>
       </div>
       <h3>Log in to account.</h3>
       <AnimatePresence>

@@ -21,6 +21,8 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination } from "swiper/modules";
 import { generate_payment_link_hubtel, inMobileView } from "../../Functions";
+import Decimal from 'decimal.js';
+
 
 const Button = styled.button`
   border: none;
@@ -571,7 +573,11 @@ const Buy = ({ allCoins }) => {
       const withdrawalFee = new Decimal(response?.data?.result[0]?.withdrawalFee).toDecimalPlaces(2, Decimal.ROUND_UP);
 
       // Calculate the fiat amount before fees to determine the fee tier
+      console.log(`The exchange is ${exchangeRate}`);
+      console.log(`The withdrawal is ${withdrawalFee}`);
+      
       let fiatEquivalent = new Decimal(cryptoVal).times(exchangeRate);
+      console.log(`The fee equivalent ${fiatEquivalent}`);
       let additionalFee = new Decimal(0);
 
       // Apply fee rules based on fiat amount
@@ -591,14 +597,15 @@ const Buy = ({ allCoins }) => {
       setGhsAmountToPay(totalPay.toFixed(2));
 
       // Calculate the total amount to pay including fees
-      if (payWith.symbol === "GHS") {
+      if (payWith?.symbol === "GHS") {
       setPayVal(fiatEquivalent.times(ghsRate).toFixed(2));
       } else {
       setPayVal(fiatEquivalent.toFixed(2));
       }
 
     } catch (error) {
-      setExchangeRateError("Error fetching exchange rate!");
+      console.log(error);
+      setFormError("Error fetching exchange rate!");
       setPayVal(0);
     } finally {
       setExPay(false);
