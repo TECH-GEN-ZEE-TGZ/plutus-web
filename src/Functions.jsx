@@ -251,3 +251,83 @@ export const generate_payment_link_hubtel = (domain, apiKey, formError, token, p
       }
     });
 }
+
+export const begin_payment = (domain, apiKey, formError, token, paymentData, orderData, onSuccess) => {
+
+  const url = domain + "/optimus/v1/api/payment/initiate";
+  const adjustedAmountGHS = (parseFloat(paymentData.amountGHS) + (parseFloat(paymentData.amountGHS) * 0.02)).toFixed(2);
+  const headers = {
+    "X-API-KEY": apiKey,
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + token
+  };
+
+  const data = {
+    "clientReference": paymentData.clientReference,
+    "amountGHS": adjustedAmountGHS,
+    "cryptoAmount": parseFloat(orderData.cryptoAmount),
+    "fee": orderData.fee,
+    "crypto": orderData.crypto,
+    "email": orderData.email,
+    "rate": orderData.rate,
+    "address": orderData.address,
+  };
+
+  console.log(JSON.stringify(data, null, 2));
+
+  axios
+    .post(url, data, { headers })
+    .then((response) => {
+      updatePlutusAuth("clientReference", paymentData.clientReference);
+      updatePlutusAuth("amount", adjustedAmountGHS);
+      const result = response.data;
+      console.log(result);
+      onSuccess();
+      window.location.href = "/payment";
+    })
+    .catch((error) => {
+      if (error.status === 400) {
+        formError("Amount not feasible, please reduce or contact admin!");
+        onSuccess();
+      } else {
+        console.log(error);
+        formError("Unexpected Error");
+        onSuccess();
+      }
+    });
+}
+
+// Function to fetch a particular string from plutusAuth
+export const fetchPlutusAuthKey = (key) => {
+  const storedData = localStorage.getItem("plutusAuth");
+  if (storedData) {
+    const parsedData = JSON.parse(storedData);
+    return parsedData[key] || null; // Return the value or null if the key doesn't exist
+  }
+  return null; // Return null if plutusAuth doesn't exist
+}
+
+// Function to remove a particular string (key-value pair) from plutusAuth
+export const removePlutusAuthKey = (key) => {
+  const storedData = localStorage.getItem("plutusAuth");
+  if (storedData) {
+    const parsedData = JSON.parse(storedData);
+
+    if (key in parsedData) {
+      delete parsedData[key]; // Remove the key-value pair
+      localStorage.setItem("plutusAuth", JSON.stringify(parsedData)); // Save updated data
+    }
+  }
+}
+
+export const updatePlutusAuth = (key, value) => {
+  // Retrieve the existing object from localStorage
+  const storedData = localStorage.getItem("plutusAuth");
+  let plutusAuth = storedData ? JSON.parse(storedData) : {};
+
+  // Add or update the specified key-value pair
+  plutusAuth[key] = value;
+
+  // Save the updated object back to localStorage
+  localStorage.setItem("plutusAuth", JSON.stringify(plutusAuth));
+}

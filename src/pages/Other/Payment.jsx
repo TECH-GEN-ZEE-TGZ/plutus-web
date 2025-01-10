@@ -4,7 +4,7 @@ import axios from "axios";
 import ContextVariables from "../../context/ContextVariables";
 import AuthContext from "../../context/AuthContext";
 import styled from "styled-components";
-import { fixedHeight, fixedWidth } from "../../Functions";
+import { fetchPlutusAuthKey, fixedHeight, fixedWidth, removePlutusAuthKey, updatePlutusAuth } from "../../Functions";
 import I5 from "../../assets/img/img5.jpeg";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Login from "./Login";
@@ -301,36 +301,6 @@ const PayDone = ({ type }) => {
   const [searchParams] = useSearchParams();
   const checkoutId = searchParams.get("checkoutid");
   useEffect(() => {
-    // const performCheckoutActions = async () => {
-    //   if (checkoutId) {
-    //     try {
-    //       const response = await axios.get(
-    //         `${domain}/optimus/v1/api/payment/verify/${checkoutId}`,
-    //         {
-    //           headers: {
-    //             'Authorization': `Bearer ${authInfo?.token}`,
-    //             'X-API-KEY': apiKey,
-    //             'Content-Type': 'application/json'
-    //           }
-    //         }
-    //       );
-
-    //       if (response.status === 200) {
-    //         console.log("Payment verification successful:");
-    //       } else {
-    //         console.error("Payment verification failed:");
-    //       }
-    //     } catch (error) {
-    //       console.log(`The apiKey is: ${apiKey}`);
-    //       console.error(error.response.data);
-    //     }
-    //   }
-    //   setTimeout(() => {
-    //     navigate("/user/buy", { state: { reload: true } });
-    //   }, 2000);
-    // };
-    // performCheckoutActions();
-
     setTimeout(() => {
       navigate("/user/buy", { state: { reload: true } });
     }, 2000);
@@ -375,14 +345,19 @@ const PayDone = ({ type }) => {
 
 
 function PaymentProcess() {
+  const clientReference = fetchPlutusAuthKey("clientReference");
+  const token = fetchPlutusAuthKey("token");
+  const amount = fetchPlutusAuthKey("amount");
+  const step = fetchPlutusAuthKey("step");
+  const prefix = fetchPlutusAuthKey("prefix");
+  const { domain, apiKey, merchantUSSD } = useContext(ContextVariables);
   const { authInfo } = useContext(AuthContext);
   const [currentStep, setCurrentStep] = useState(1);
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [verificationCode, setVerificationCode] = useState('');
-  const [initial, setInitial] = useState("MKFG");
+  const [initial, setInitial] = useState("XXXX");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [amountRemaining, setAmountRemaining] = useState(100);
+  const [amountRemaining, setAmountRemaining] = useState(amount);
   const [input1, setInput1] = useState('');
   const [input2, setInput2] = useState('');
   const [input3, setInput3] = useState('');
@@ -392,7 +367,14 @@ function PaymentProcess() {
   useEffect(() => {
     if (!authInfo?.token) {
       navigate("/auth/login");
-    } 
+    } else {
+      if (step) {
+        setCurrentStep(step);
+      }
+      if (prefix) {
+        setInitial(prefix);
+      }
+    }
   }, [navigate]);
 
 
@@ -414,11 +396,42 @@ function PaymentProcess() {
       return;
     }
     setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setLoading(false);
-      setCurrentStep(2); // Move to next step only on success
-    }, 1000);
+
+    const url = domain + "/optimus/v1/api/payment/sendCode";
+    const headers = {
+      "X-API-KEY": apiKey,
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    };
+
+    const data = {
+      "phoneNumber": phoneNumber,
+      "clientReference": clientReference
+    };
+
+    console.log(JSON.stringify(data, null, 2));
+
+    axios
+      .post(url, data, { headers })
+      .then((response) => {
+        const result = response.data;
+        setInitial(prefix || result);
+        updatePlutusAuth("prefix", result);
+        setLoading(false);
+        setCurrentStep(2); // Move to next step only on success
+        updatePlutusAuth("step", 2);
+      })
+      .catch((error) => {
+        console.log(` The client refernce is ${clientReference} and the token is ${token}`);
+        console.log(error);
+        if (error.status === 400) {
+          setError("Error sending code");
+          setLoading(false);
+        } else {
+          setError("Unexpected Error");
+          setLoading(false);
+        }
+      });
   };
 
   const handleVerificationSubmit = () => {
@@ -427,46 +440,118 @@ function PaymentProcess() {
       setTimeout(() => { setError(""); }, 2000);
       return;
     }
-    console.log('Verification code submitted:', verificationCode);
+
+    const otpCode = input1 + input2 + input3 + input4;
     setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setLoading(false);
-      setCurrentStep(3); // Move to final step only on success
-    }, 1000);
+    const url = domain + "/optimus/v1/api/payment/verifyCode";
+    const headers = {
+      "X-API-KEY": apiKey,
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    };
+
+    const data = {
+      "otpCode": otpCode,
+      "clientReference": clientReference
+    };
+
+    console.log(JSON.stringify(data, null, 2));
+
+    axios
+      .post(url, data, { headers })
+      .then((response) => {
+        setLoading(false);
+        setCurrentStep(3); // Move to next step only on success
+        updatePlutusAuth("step", 3);
+      })
+      .catch((error) => {
+        if (error.status === 400) {
+          setError("Invalid Otp Code");
+          setTimeout(() => { setError("") }, 1000);
+          setLoading(false);
+        } else {
+          setError("Unexpected Error");
+          setLoading(false);
+        }
+      });
   };
 
   const handlePayment = () => {
-    console.log('Payment processed');
     setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      // setError("Payment Incomplete");
-      // setTimeout(() => { setError("") }, 1000);
-      // setAmountRemaining(25.4);
-      // setLoading(false);
-      navigate('/payment/success'); // Redirect on successful payment
-    }, 1000);
+    const url = domain + `/optimus/v1/api/payment/checkPayment/${clientReference}`;
+    const headers = {
+      "X-API-KEY": apiKey,
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    };
+
+    axios
+      .post(url, null, { headers })
+      .then((response) => {
+        if (response.data.amountRemaining === 0) {
+          reset();
+          navigate('/payment/success'); // Redirect on successful payment
+
+        }
+
+        if (response.data.amountRemaining > 0) {
+          console.log(`The amount remaining ${response.data.amountRemaining}`)
+          setError("Payment Incomplete");
+          setTimeout(() => { setError("") }, 1000);
+          setAmountRemaining(response.data.amountRemaining);
+          setLoading(false);
+        }
+      })
+      .catch((error) => {
+        setError("Error checking payment");
+        setLoading(false);
+      });
   };
 
   const handleCancel = () => {
+    closePage();
+  };
+
+  const reset = () => {
+    removePlutusAuthKey("prefix");
+    updatePlutusAuth("step", 1);
+    setError("");
     setInput1("");
     setInput2("");
     setInput3("");
     setInput4("");
-    setPhoneNumber("");
-    setError("");
-    setCurrentStep(1); // Reset to first step or handle cancellation
-    setPhoneNumber('');
-    setVerificationCode('');
-  };
+    removePlutusAuthKey("clientReference");
+    removePlutusAuthKey("step");
+    removePlutusAuthKey("amount");
+  }
 
   const handleChangeNumber = () => {
     setCurrentStep(1);
+    reset();
   }
 
   const closePage = () => {
-    navigate('/payment/failed'); // Redirect on successful payment
+    const url = domain + `/optimus/v1/api/payment/cancel/${clientReference}`;
+    const headers = {
+      "X-API-KEY": apiKey,
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    };
+
+    axios
+      .post(url, null, { headers })
+      .then((response) => {
+        reset();
+        navigate('/payment/failed');
+      })
+      .catch((error) => {
+        if (error.status === 401) {
+          navigate("/auth/login")
+          localStorage.clear();
+        }
+        setError("Order Not Found")
+      });
+
   }
 
   const handleCodeInput = (value, setter, nextInputRef) => {
@@ -513,7 +598,7 @@ function PaymentProcess() {
             <input
               type="text"
               value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
+              onChange={(e) => { setPhoneNumber(e.target.value); setError("") }}
               placeholder="233XXXXXXXXX"
             />
             {loading ? (
@@ -682,7 +767,7 @@ function PaymentProcess() {
               onClick={handleCancel}
             >
               <span>
-                Cancel <ion-icon name="arrow-back"></ion-icon>
+                Cancel <ion-icon name="close"></ion-icon>
               </span>
             </motion.button>
           </div>

@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { StyledForm } from "../../components/Form/Form";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import AuthContext from "../../context/AuthContext";
@@ -10,14 +10,14 @@ import { TextAlignment } from "@cloudinary/url-gen/qualifiers";
 const ForgotPassword = () => {
     const { authInfo, seAuthInfo } = useContext(AuthContext);
     const { domain, apiKey } = useContext(ContextVariables);
-
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [verificationCode, setVerificationCode] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const [verifyEmail, setVerifyEmail] = useState(false);
+    const [showEmailVerification, setshowEmailVerification] = useState(false);
     const [enterNewPassword, setEnterNewPassword] = useState(false);
 
     const handleChange = (e) => {
@@ -41,7 +41,7 @@ const ForgotPassword = () => {
         setConfirmPassword(e.target.value);
     }
 
-    const handleEmailValidation = (email) => {
+    const handleEmailVerificationalidation = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     };
@@ -55,48 +55,44 @@ const ForgotPassword = () => {
             setError("Please enter your email");
             return;
         }
-        if (!handleEmailValidation(email)) {
+        if (!handleEmailVerificationalidation(email)) {
             setError("Please enter a valid email address.");
             return;
         }
 
         setLoading(true);
-        setTimeout(() => { setLoading(false); setVerifyEmail(true) }, 2000);
-        // try {
-        //   await axios
-        //     .post(
-        //       `${domain}/optimus/v1/api/users/forgotPassword`,
-        //       {email},
-        //       {
-        //         headers: {
-        //           "Content-Type": "application/json",
-        //           "X-API-KEY": apiKey,
-        //         },
-        //       }
-        //     )
-        //     .then((response) => {
-        //       if (response.status === 201) {
-        //         setVerifyEmail(true);
-        //       } else if (response.status === 400) {
-        //         setError(response.data.message || "Error processing request");
-        //       }
-        //     })
-        //     .catch((err) => {
-        //       setError(
-        //         err?.response?.data?.message || "An error occurred. Please try again."
-        //       );
-        //     });
-        // } catch (err) {
-        //   // Handle error
-        //   setError(
-        //     err?.response?.data?.message || "An error occurred. Please try again."
-        //   );
-        // } finally {
-        //   setLoading(false);
-        // }
+        try {
+            await axios
+                .post(
+                    `${domain}/optimus/v1/api/users/reset/sendOtp`,
+                    { email: email },
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-API-KEY": apiKey,
+                        },
+                    }
+                )
+                .then((response) => {
+                    if (response.data.code === "00") {
+                        setLoading(false);
+                        setshowEmailVerification(true);
+                    }
+                })
+                .catch((err) => {
+                    setError(
+                        err?.response?.data?.message || "An error occurred. Please try again."
+                    );
+                });
+        } catch (err) {
+            // Handle error
+            setError(
+                err?.response?.data?.message || "An error occurred. Please try again."
+            );
+        }
     };
 
-    const handleVerifyEmail = async (e) => {
+    const handleEmailVerification = async (e) => {
         e.preventDefault();
         setError("");
 
@@ -106,57 +102,81 @@ const ForgotPassword = () => {
         }
 
         setLoading(true);
-        setTimeout(() => { setLoading(false); setEnterNewPassword(true) }, 2000);
-        // try {
-        //   await axios
-        //     .post(
-        //       `${domain}/optimus/v1/api/users/verifyOtp`,
-        //       { email: email, otpCode: verification },
-        //       {
-        //         headers: {
-        //           "Content-Type": "application/json",
-        //           "X-API-KEY": apiKey,
-        //         },
-        //       }
-        //     )
-        //     .then((response) => {
-        //       if (response.status === 200) {
-        //         setVerifyEmail(false);
-        //         setEnterNewPassword(true);
-        //         // window.location.href = "/auth/login";
-        //       } else {
-        //         setError(response.data.message || "Error verifying OTP");
-        //       }
-        //     })
-        //     .catch((err) => {
-        //       setError(
-        //         err?.response?.data?.message || "An error occurred. Please try again."
-        //       );
-        //     });
-        // } catch (err) {
-        //   // Handle error
-        //   setError(
-        //     err?.response?.data?.message || "An error occurred. Please try again."
-        //   );
-        // } finally {
-        //   setLoading(false);
-        // }
+
+        try {
+            await axios
+                .post(
+                    `${domain}/optimus/v1/api/users/reset/verifyOtp`,
+                    { email: email, otpCode: verificationCode },
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-API-KEY": apiKey,
+                        },
+                    }
+                )
+                .then((response) => {
+                    if (response.data.code === "00") {
+                        setLoading(false);
+                        setEnterNewPassword(true);
+                    }
+                })
+                .catch((err) => {
+                    setError(
+                        err?.response?.data?.message || "An error occurred. Please try again."
+                    );
+                });
+        } catch (err) {
+            // Handle error
+            setError(
+                err?.response?.data?.message || "An error occurred. Please try again."
+            );
+        }
     };
 
     const submitPassword = async (e) => {
         e.preventDefault();
         setError("");
 
-        if(password != confirmPassword){
+        if (password != confirmPassword) {
             setError("Passwords do not match");
             return;
         }
         setLoading(true);
-        setTimeout(() => {
+
+        try {
+            await axios
+                .put(
+                    `${domain}/optimus/v1/api/users/reset`,
+                    { username: email.substring(0, email.indexOf('@')), newPassword: password },
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-API-KEY": apiKey,
+                        },
+                    }
+                )
+                .then((response) => {
+                    if (response.data.code === "00") {
+                        setLoading(false);
+                        setEnterNewPassword(false);
+                        localStorage.clear();
+                        navigate("/auth/login");
+                    }
+                })
+                .catch((err) => {
+                    setLoading(false);
+                    setError(
+                        err?.response?.data?.message || "An error occurred. Please try again."
+                    );
+                });
+        } catch (err) {
             setLoading(false);
-            setEnterNewPassword(true);
-            window.location.href = "/auth/login";
-        }, 2000);
+            // Handle error
+            setError(
+                err?.response?.data?.message || "An error occurred. Please try again."
+            );
+        }
 
     }
 
@@ -165,9 +185,8 @@ const ForgotPassword = () => {
             initial={{ opacity: 0, scale: 0.75 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.75 }}
-            onSubmit={verifyEmail ? (enterNewPassword ? submitPassword : handleVerifyEmail) : handleEmailCapture}
-        >
-            {verifyEmail ? ((enterNewPassword ?
+            onSubmit={showEmailVerification ? (enterNewPassword ? submitPassword : handleEmailVerification) : handleEmailCapture}>
+            {showEmailVerification ? (enterNewPassword ?
                 <NewPassword
                     error={error}
                     password={password}
@@ -176,15 +195,15 @@ const ForgotPassword = () => {
                     handleConfirmPasswordChange={handleConfirmPasswordChange}
                     loading={loading}
                 /> :
-                <EmailV
+                <EmailVerification
                     error={error}
                     email={email}
                     verificationCode={verificationCode}
                     handleCodeChange={handleCodeChange}
                     loading={loading}
                 />
-            )) : (
-                <EmailNV
+            ) : (
+                <EmailCapture
                     error={error}
                     email={email}
                     handleChange={handleChange}
@@ -197,7 +216,7 @@ const ForgotPassword = () => {
 
 export default ForgotPassword;
 
-const EmailNV = ({
+const EmailCapture = ({
     error,
     email,
     handleChange,
@@ -246,7 +265,7 @@ const EmailNV = ({
         </>
     );
 };
-const EmailV = ({
+const EmailVerification = ({
     error,
     email,
     verificationCode,

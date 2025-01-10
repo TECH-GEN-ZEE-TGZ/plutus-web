@@ -20,7 +20,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination } from "swiper/modules";
-import { generate_payment_link_hubtel, inMobileView } from "../../Functions";
+import { begin_payment, generate_payment_link_hubtel, inMobileView } from "../../Functions";
 import Decimal from 'decimal.js';
 
 
@@ -359,7 +359,7 @@ const Dashboard = ({ handleCopy }) => {
 };
 
 const Buy = ({ allCoins }) => {
-  const { domain, apiKey, cediRate, merchantId } = useContext(ContextVariables);
+  const { domain, apiKey, cediRate } = useContext(ContextVariables);
   const { authInfo } = useContext(AuthContext);
   const ghsRate = parseFloat(cediRate);
   const [ghsAmountToPay, setGhsAmountToPay] = useState(0);
@@ -399,7 +399,6 @@ const Buy = ({ allCoins }) => {
   const [exBuy, setExBuy] = useState(false);
   const [payValError, setPayValError] = useState("");
   const [walletError, setWalletError] = useState("");
-  const [exchangeRateError, setExchangeRateError] = useState("");
   const [formError, setFormError] = useState("");
 
   const [buyFee, setBuyFee] = useState(0);
@@ -515,7 +514,7 @@ const Buy = ({ allCoins }) => {
         } else {
           const usdAmountWithoutFee = parseFloat(payVal) > 0 ? parseFloat(payVal) : 0;
           const usdAmountWithFee = usdAmountWithoutFee + parseFloat(totalFeeUSD);
-          setCryptoVal((usdAmountWithFee / exchangeRate).toFixed(8));
+          setCryptoVal((usdAmountWithoutFee / exchangeRate).toFixed(8));
           setGhsAmountToPay((usdAmountWithFee * ghsRate).toFixed(2));
         }
       } else {
@@ -524,7 +523,7 @@ const Buy = ({ allCoins }) => {
         setGhsAmountToPay(0);
       }
     } catch (error) {
-      setExchangeRateError("Error fetching exchange rate!");
+      setFormError("Error fetching exchange rate!");
       setCryptoVal(0);
     } finally {
       setExBuy(false);
@@ -689,7 +688,8 @@ const Buy = ({ allCoins }) => {
       setTimeout(() => setFormError(""), 2000);
       return;
     } else {
-      generate_payment_link_hubtel(domain, apiKey, formError, authInfo?.token, paymentData, orderData, () => setLoading(false));
+      // generate_payment_link_hubtel(domain, apiKey, setFormError, authInfo?.token, paymentData, orderData, () => setLoading(false));
+      begin_payment(domain, apiKey, setFormError, authInfo?.token, paymentData, orderData, () => setLoading(false));
     }
   };
 
